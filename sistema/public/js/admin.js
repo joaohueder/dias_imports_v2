@@ -98,15 +98,24 @@
     };
     const showProcessing = (form, submitter = null) => {
         if (!form) return;
-        const action = form.getAttribute('action') || window.location.pathname;
-        const op = processingOperations.find(o => action.includes(o.match));
-        if (op) {
-            showProcessingOverlay(op.title, op.message);
-        } else {
-            const title = form.dataset.processingTitle || 'Processando sua solicitação';
-            const message = form.dataset.processingMessage || 'Estamos cuidando dos detalhes com segurança.';
-            showProcessingOverlay(title, message);
-        }
+        const action = submitter?.formAction || form.action || form.getAttribute('action') || window.location.pathname;
+        let pathname = '';
+        try { pathname = new URL(action, window.location.href).pathname; } catch { pathname = ''; }
+        const confirmedOperations = {
+            default: { title: 'Definindo o WhatsApp padrão', message: 'Atualizando o número principal dos atendimentos.' },
+            activate: { title: 'Ativando o WhatsApp', message: 'Liberando o número para os atendimentos.' },
+            deactivate: { title: 'Inativando o WhatsApp', message: 'Atualizando a disponibilidade do número.' },
+            delete: { title: 'Excluindo o WhatsApp', message: 'Removendo o número dos dados de atendimento.' },
+            'evolution-default': { title: 'Atualizando a instância padrão', message: 'Salvando a preferência para os próximos envios.' },
+            'evolution-logout': { title: 'Desconectando a instância', message: 'Encerrando a sessão do WhatsApp com segurança.' },
+            'evolution-delete': { title: 'Excluindo a instância', message: 'Removendo a instância e seus vínculos da Evolution API.' },
+        };
+        const operation = confirmedOperations[form.dataset.confirmAction] || processingOperations.find(({ match }) => pathname.includes(match));
+        form.dataset.processingActive = 'true';
+        showProcessingOverlay(
+            form.dataset.processingTitle || operation?.title || 'Processando sua solicitação',
+            form.dataset.processingMessage || operation?.message || 'Validando e salvando as informações com segurança.',
+        );
     };
 
     // Interceptar navegação de links do menu para mostrar tela de carregamento
@@ -147,25 +156,6 @@
             showProcessingOverlay(title, message);
         });
     });
-        const action = submitter?.formAction || form.action;
-        let pathname = '';
-        try { pathname = new URL(action, window.location.href).pathname; } catch { pathname = ''; }
-        const confirmedOperations = {
-            default: { title: 'Definindo o WhatsApp padrão', message: 'Atualizando o número principal dos atendimentos.' },
-            activate: { title: 'Ativando o WhatsApp', message: 'Liberando o número para os atendimentos.' },
-            deactivate: { title: 'Inativando o WhatsApp', message: 'Atualizando a disponibilidade do número.' },
-            delete: { title: 'Excluindo o WhatsApp', message: 'Removendo o número dos dados de atendimento.' },
-            'evolution-default': { title: 'Atualizando a instância padrão', message: 'Salvando a preferência para os próximos envios.' },
-            'evolution-logout': { title: 'Desconectando a instância', message: 'Encerrando a sessão do WhatsApp com segurança.' },
-            'evolution-delete': { title: 'Excluindo a instância', message: 'Removendo a instância e seus vínculos da Evolution API.' },
-        };
-        const operation = confirmedOperations[form.dataset.confirmAction] || processingOperations.find(({ match }) => pathname.includes(match));
-        form.dataset.processingActive = 'true';
-        showProcessingOverlay(
-            form.dataset.processingTitle || operation?.title || 'Processando sua solicitação',
-            form.dataset.processingMessage || operation?.message || 'Validando e salvando as informações com segurança.',
-        );
-    };
 
     // Helper global para sincronizar CSRF em todos os formulários da página
     const getCsrfToken = () => {
