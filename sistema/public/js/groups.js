@@ -33,15 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             currentStatus = btn.dataset.status;
-            loadGroups();
+            applyFilters();
         });
     });
 
     // Busca rápida
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(loadGroups, 350);
+            applyFilters();
         });
     }
 
@@ -49,8 +48,39 @@ document.addEventListener('DOMContentLoaded', () => {
         btnClearSearch.addEventListener('click', () => {
             searchInput.value = '';
             btnClearSearch.remove();
-            loadGroups();
+            applyFilters();
         });
+    }
+
+    function applyFilters() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const cards = document.querySelectorAll('[data-group-card]');
+        const emptyState = document.querySelector('.users-empty-search');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.dataset.name || '';
+            const desc = card.dataset.description || '';
+            const cat = card.dataset.category || '';
+            const status = card.dataset.status || '';
+
+            const matchesSearch = !query || name.includes(query) || desc.includes(query) || cat.includes(query);
+            
+            let matchesStatus = true;
+            if (currentStatus === 'active') {
+                matchesStatus = (status === 'active');
+            } else if (currentStatus === 'inactive') {
+                matchesStatus = (status === 'inactive');
+            }
+
+            const visible = matchesSearch && matchesStatus;
+            card.style.display = visible ? 'flex' : 'none';
+            if (visible) visibleCount++;
+        });
+
+        if (emptyState) {
+            emptyState.style.display = (visibleCount === 0) ? 'flex' : 'none';
+        }
     }
 
     function openModal(dialog) {
@@ -342,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.success) {
                 groupsContainer.innerHTML = data.htmlCards;
+                applyFilters();
                 
                 // Atualiza contadores
                 const badgeAll = document.getElementById('badge-all');

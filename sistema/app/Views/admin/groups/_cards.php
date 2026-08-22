@@ -14,7 +14,13 @@
     </div>
 <?php else: ?>
     <?php foreach ($groups as $group): ?>
-        <article class="user-card-item group-item-card <?= $group['status'] === 'inactive' ? 'is-inactive' : '' ?>" data-id="<?= esc($group['id']) ?>">
+        <article class="user-card-item group-item-card <?= $group['status'] === 'inactive' ? 'is-inactive' : '' ?>"
+                 data-group-card
+                 data-id="<?= esc($group['id']) ?>"
+                 data-name="<?= esc(mb_strtolower($group['name'])) ?>"
+                 data-description="<?= esc(mb_strtolower($group['description'] ?? '')) ?>"
+                 data-category="<?= esc(mb_strtolower($group['category'] ?? '')) ?>"
+                 data-status="<?= esc($group['status']) ?>">
             <div class="user-card-header">
                 <?php if (!empty($group['avatar_url'])): ?>
                     <img src="<?= esc($group['avatar_url']) ?>" alt="<?= esc($group['name']) ?>" class="group-avatar-img">
