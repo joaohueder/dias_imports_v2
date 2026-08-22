@@ -72,7 +72,7 @@
                 <?php 
                     $token = env('app.cronToken') ?: env('app_cronToken') ?: 'cron_secret_token';
                     $cronUrl = site_url("cron/process-jobs?token={$token}");
-                    $curlCommand = "* * * * * curl -s \"{$cronUrl}\" > /dev/null 2>&1";
+                    $curlCommand = "* * * * * curl -sL \"{$cronUrl}\" > /dev/null 2>&1";
                 ?>
                 <div class="job-cron-input-group">
                     <input type="text" class="job-cron-input" readonly id="cron-url-input" value="<?= esc($curlCommand) ?>">
