@@ -7,27 +7,31 @@
     <?php
     $pageSeoTitle = !empty($landing['seo_title']) ? $landing['seo_title'] : ($landing['headline'] ?? 'Grupo VIP Dias Imports');
     $pageSeoDesc = !empty($landing['seo_description']) ? $landing['seo_description'] : ($landing['subheadline'] ?? 'Receba oportunidades imperdíveis de importados em primeira mão.');
-    $shareImageUrl = base_url('favicon.svg');
+    $shareImageUrl = base_url('og-image.png');
     ?>
     <title><?= esc($pageSeoTitle) ?> | Dias Imports</title>
     <meta name="description" content="<?= esc($pageSeoDesc) ?>"/>
+    <meta itemprop="name" content="<?= esc($pageSeoTitle) ?> | Dias Imports"/>
+    <meta itemprop="description" content="<?= esc($pageSeoDesc) ?>"/>
+    <meta itemprop="image" content="<?= esc($shareImageUrl) ?>"/>
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="<?= current_url() ?>"/>
-    <meta property="og:title" content="<?= esc($pageSeoTitle) ?>"/>
+    <meta property="og:title" content="<?= esc($pageSeoTitle) ?> | Dias Imports"/>
     <meta property="og:description" content="<?= esc($pageSeoDesc) ?>"/>
     <meta property="og:image" content="<?= esc($shareImageUrl) ?>"/>
     <meta property="og:image:secure_url" content="<?= esc($shareImageUrl) ?>"/>
-    <meta property="og:image:type" content="image/svg+xml"/>
-    <meta property="og:image:width" content="512"/>
-    <meta property="og:image:height" content="512"/>
+    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:image:width" content="600"/>
+    <meta property="og:image:height" content="600"/>
+    <meta property="og:image:alt" content="Dias Imports - DI"/>
     <meta property="og:site_name" content="Dias Imports"/>
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:card" content="summary"/>
     <meta name="twitter:url" content="<?= current_url() ?>"/>
-    <meta name="twitter:title" content="<?= esc($pageSeoTitle) ?>"/>
+    <meta name="twitter:title" content="<?= esc($pageSeoTitle) ?> | Dias Imports"/>
     <meta name="twitter:description" content="<?= esc($pageSeoDesc) ?>"/>
     <meta name="twitter:image" content="<?= esc($shareImageUrl) ?>"/>
 

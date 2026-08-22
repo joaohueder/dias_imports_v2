@@ -569,7 +569,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                 <span class="share-preview-badge"><i class="ti ti-brand-whatsapp"></i> Prévia de Compartilhamento no WhatsApp / Redes Sociais</span>
                                 <div class="share-preview-card">
                                     <div class="share-preview-thumb">
-                                        <img src="<?= base_url('favicon.svg') ?>" alt="Ícone Dias Imports" width="70" height="70">
+                                        <img src="<?= base_url('og-image.png') ?>" alt="Ícone Dias Imports" width="70" height="70">
                                     </div>
                                     <div class="share-preview-content">
                                         <span class="share-preview-domain"><?= parse_url(base_url(), PHP_URL_HOST) ?: 'diasimports.com.br' ?></span>
