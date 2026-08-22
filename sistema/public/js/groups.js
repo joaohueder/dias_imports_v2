@@ -113,6 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchInstanceGroups() {
         if (!instanceGroupsLoading || !instanceGroupsItems) return;
         
+        // Dispara a tela de bloqueio e processamento global do sistema
+        const processingScreen = document.querySelector('[data-processing-screen]');
+        const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+        const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+        const appShell = document.querySelector('.app-shell');
+
+        if (processingScreen && processingHeading && processingMessage) {
+            processingHeading.textContent = 'Buscando grupos';
+            processingMessage.textContent = 'Consultando a Evolution API para listar os grupos da instância ativa. Isso pode levar alguns segundos.';
+            processingScreen.hidden = false;
+            processingScreen.setAttribute('aria-hidden', 'false');
+            appShell?.setAttribute('inert', '');
+            document.body.classList.add('processing-locked');
+            document.body.style.overflow = 'hidden';
+        }
+
         instanceGroupsLoading.style.display = 'flex';
         instanceGroupsEmpty.style.display = 'none';
         instanceGroupsItems.innerHTML = '';
@@ -145,6 +161,15 @@ document.addEventListener('DOMContentLoaded', () => {
             instanceGroupsEmpty.style.display = 'flex';
             const hint = instanceGroupsEmpty.querySelector('span');
             if (hint) hint.textContent = 'Erro de comunicação ao consultar a Evolution API.';
+        } finally {
+            // Remove a tela de bloqueio
+            if (processingScreen) {
+                processingScreen.hidden = true;
+                processingScreen.setAttribute('aria-hidden', 'true');
+                appShell?.removeAttribute('inert');
+                document.body.classList.remove('processing-locked');
+                document.body.style.overflow = '';
+            }
         }
     }
 
@@ -363,6 +388,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btn-sync-groups') || document.getElementById('btn-sync-empty');
         if (!btn) return;
 
+        const processingScreen = document.querySelector('[data-processing-screen]');
+        const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+        const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+        const appShell = document.querySelector('.app-shell');
+
+        if (processingScreen && processingHeading && processingMessage) {
+            processingHeading.textContent = 'Sincronizando grupos';
+            processingMessage.textContent = 'Buscando informações atualizadas dos grupos na Evolution API...';
+            processingScreen.hidden = false;
+            processingScreen.setAttribute('aria-hidden', 'false');
+            appShell?.setAttribute('inert', '');
+            document.body.classList.add('processing-locked');
+            document.body.style.overflow = 'hidden';
+        }
+
         const originalHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Sincronizando...</span>';
@@ -389,6 +429,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             btn.disabled = false;
             btn.innerHTML = originalHtml;
+            if (processingScreen) {
+                processingScreen.hidden = true;
+                processingScreen.setAttribute('aria-hidden', 'true');
+                appShell?.removeAttribute('inert');
+                document.body.classList.remove('processing-locked');
+                document.body.style.overflow = '';
+            }
         }
     }
 

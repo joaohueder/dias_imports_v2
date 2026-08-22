@@ -275,8 +275,8 @@ class EvolutionApiService
             $apiKey = service('encrypter')->decrypt($encrypted);
             $options = [
                 'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json', 'apikey' => $apiKey],
-                'connect_timeout' => 3,
-                'timeout' => 10,
+                'connect_timeout' => 10,
+                'timeout' => 60,
                 'http_errors' => false,
                 'allow_redirects' => false,
                 'verify' => $this->resolveTlsVerification(),
@@ -346,7 +346,7 @@ class EvolutionApiService
             || str_contains($detail, 'timed out')
             || str_contains($detail, 'timeout')
         ) {
-            return ['timeout', 'A Evolution API não respondeu dentro de 10 segundos. Verifique servidor, proxy e firewall.'];
+            return ['timeout', 'A Evolution API não respondeu a tempo (timeout). Verifique servidor, proxy e firewall.'];
         }
         if (preg_match('/(?:curl error|erro curl).*?6\b/', $detail)
             || str_contains($detail, 'resolve host')
