@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('login', 'Auth::login');
 $routes->post('login', 'Auth::loginProcess', ['filter' => 'csrf']);
 $routes->post('logout', 'Auth::logout', ['filter' => ['auth', 'csrf']]);
+$routes->post('recarregar-permissoes', 'Auth::refreshPermissions', ['filter' => ['auth', 'csrf']]);
 
 // Landing page pública de captura de leads e submissão
 $routes->get('leads', 'Landing::index');
@@ -13,9 +14,20 @@ $routes->post('leads/capture', 'Landing::submitLead', ['filter' => 'csrf']);
 
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Home::index');
-    $routes->get('grupos-whatsapp', 'Home::whatsappGroups');
-    $routes->get('produtos', 'Home::products');
-    $routes->get('leads-vip', 'Home::vipLeads');
+
+    // Grupos de WhatsApp
+    $routes->get('grupos-whatsapp', 'Home::whatsappGroups', ['filter' => 'permission:whatsapp_groups,view']);
+
+    // Produtos
+    $routes->get('produtos', 'Home::products', ['filter' => 'permission:products,view']);
+
+    // Leads VIP
+    $routes->get('leads-vip', 'VipLeads::index', ['filter' => 'permission:vip_leads,view']);
+    $routes->get('leads-vip/feed', 'VipLeads::feed', ['filter' => 'permission:vip_leads,view']);
+    $routes->post('leads-vip/(:num)/editar', 'VipLeads::update/$1', ['filter' => ['permission:vip_leads,edit', 'csrf']]);
+    $routes->post('leads-vip/(:num)/excluir', 'VipLeads::delete/$1', ['filter' => ['permission:vip_leads,delete', 'csrf']]);
+
+    // Usuários (Apenas administradores)
     $routes->get('usuarios', 'Users::index');
     $routes->get('usuarios/novo', 'Users::create');
     $routes->post('usuarios/novo', 'Users::store', ['filter' => 'csrf']);
@@ -24,27 +36,29 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('usuarios/(:num)/redefinir-senha', 'Users::resetPassword/$1', ['filter' => 'csrf']);
     $routes->post('usuarios/(:num)/status', 'Users::toggleStatus/$1', ['filter' => 'csrf']);
     $routes->post('usuarios/(:num)/excluir', 'Users::delete/$1', ['filter' => 'csrf']);
+
+    // Configurações gerais
     $routes->get('configuracoes', 'Home::settings');
-    $routes->post('configuracoes/layout', 'Home::saveLayoutSettings', ['filter' => 'csrf']);
-    $routes->post('configuracoes/empresa', 'Home::saveCompanySettings', ['filter' => 'csrf']);
-    $routes->post('configuracoes/empresa/whatsapp', 'Home::saveCompanyWhatsapp', ['filter' => 'csrf']);
-    $routes->post('configuracoes/empresa/whatsapp/(:num)/padrao', 'Home::setDefaultCompanyWhatsapp/$1', ['filter' => 'csrf']);
-    $routes->post('configuracoes/empresa/whatsapp/(:num)/status', 'Home::toggleCompanyWhatsapp/$1', ['filter' => 'csrf']);
-    $routes->post('configuracoes/empresa/whatsapp/(:num)/excluir', 'Home::deleteCompanyWhatsapp/$1', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution', 'Evolution::saveSettings', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/testar', 'Evolution::testConnection', ['filter' => 'csrf']);
-    $routes->get('configuracoes/evolution/instancias/status', 'Evolution::instanceStatuses');
-    $routes->post('configuracoes/evolution/instancias', 'Evolution::createInstance', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/instancias/conectar', 'Evolution::connectInstance', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/instancias/padrao', 'Evolution::setDefaultInstance', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/instancias/testar-envio', 'Evolution::sendTestMessage', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/instancias/desconectar', 'Evolution::logoutInstance', ['filter' => 'csrf']);
-    $routes->post('configuracoes/evolution/instancias/excluir', 'Evolution::deleteInstance', ['filter' => 'csrf']);
-    $routes->post('configuracoes/meta-ads', 'MetaAds::saveSettings', ['filter' => 'csrf']);
-    $routes->post('configuracoes/meta-ads/testar', 'MetaAds::testConnection', ['filter' => 'csrf']);
-    $routes->post('configuracoes/modelos-mensagens', 'Home::saveMessageTemplate', ['filter' => 'csrf']);
-    $routes->post('configuracoes/modelos-mensagens/(:num)/status', 'Home::toggleMessageTemplate/$1', ['filter' => 'csrf']);
-    $routes->post('configuracoes/modelos-mensagens/(:num)/excluir', 'Home::deleteMessageTemplate/$1', ['filter' => 'csrf']);
-    $routes->post('configuracoes/landing-leads', 'Home::saveLandingLeadSettings', ['filter' => 'csrf']);
+    $routes->post('configuracoes/layout', 'Home::saveLayoutSettings', ['filter' => ['permission:layout,edit', 'csrf']]);
+    $routes->post('configuracoes/empresa', 'Home::saveCompanySettings', ['filter' => ['permission:company,edit', 'csrf']]);
+    $routes->post('configuracoes/empresa/whatsapp', 'Home::saveCompanyWhatsapp', ['filter' => ['permission:company,create', 'csrf']]);
+    $routes->post('configuracoes/empresa/whatsapp/(:num)/padrao', 'Home::setDefaultCompanyWhatsapp/$1', ['filter' => ['permission:company,edit', 'csrf']]);
+    $routes->post('configuracoes/empresa/whatsapp/(:num)/status', 'Home::toggleCompanyWhatsapp/$1', ['filter' => ['permission:company,edit', 'csrf']]);
+    $routes->post('configuracoes/empresa/whatsapp/(:num)/excluir', 'Home::deleteCompanyWhatsapp/$1', ['filter' => ['permission:company,delete', 'csrf']]);
+    $routes->post('configuracoes/evolution', 'Evolution::saveSettings', ['filter' => ['permission:evolution,edit', 'csrf']]);
+    $routes->post('configuracoes/evolution/testar', 'Evolution::testConnection', ['filter' => ['permission:evolution,view', 'csrf']]);
+    $routes->get('configuracoes/evolution/instancias/status', 'Evolution::instanceStatuses', ['filter' => 'permission:evolution,view']);
+    $routes->post('configuracoes/evolution/instancias', 'Evolution::createInstance', ['filter' => ['permission:evolution,create', 'csrf']]);
+    $routes->post('configuracoes/evolution/instancias/conectar', 'Evolution::connectInstance', ['filter' => ['permission:evolution,edit', 'csrf']]);
+    $routes->post('configuracoes/evolution/instancias/padrao', 'Evolution::setDefaultInstance', ['filter' => ['permission:evolution,edit', 'csrf']]);
+    $routes->post('configuracoes/evolution/instancias/testar-envio', 'Evolution::sendTestMessage', ['filter' => ['permission:evolution,edit', 'csrf']]);
+    $routes->post('configuracoes/evolution/instancias/desconectar', 'Evolution::logoutInstance', ['filter' => ['permission:evolution,edit', 'csrf']]);
+    $routes->post('configuracoes/evolution/instancias/excluir', 'Evolution::deleteInstance', ['filter' => ['permission:evolution,delete', 'csrf']]);
+    $routes->post('configuracoes/meta-ads', 'MetaAds::saveSettings', ['filter' => ['permission:meta_ads,edit', 'csrf']]);
+    $routes->post('configuracoes/meta-ads/testar', 'MetaAds::testConnection', ['filter' => ['permission:meta_ads,view', 'csrf']]);
+    $routes->post('configuracoes/modelos-mensagens', 'Home::saveMessageTemplate', ['filter' => ['permission:message_templates,create', 'csrf']]);
+    $routes->post('configuracoes/modelos-mensagens/(:num)/status', 'Home::toggleMessageTemplate/$1', ['filter' => ['permission:message_templates,edit', 'csrf']]);
+    $routes->post('configuracoes/modelos-mensagens/(:num)/excluir', 'Home::deleteMessageTemplate/$1', ['filter' => ['permission:message_templates,delete', 'csrf']]);
+    $routes->post('configuracoes/landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
 });
 

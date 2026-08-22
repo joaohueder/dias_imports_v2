@@ -13,14 +13,27 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 ?>
 <section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>">
     <div class="settings-tabs" role="tablist" aria-label="Categorias de configurações">
-        <button class="settings-tab <?= $activeSettingsTab === 'layout' ? 'active' : '' ?>" type="button" role="tab" id="layout-tab" aria-selected="<?= $activeSettingsTab === 'layout' ? 'true' : 'false' ?>" aria-controls="layout-panel" data-settings-tab="layout">Layout</button>
-        <button class="settings-tab <?= $activeSettingsTab === 'empresa' ? 'active' : '' ?>" type="button" role="tab" id="company-tab" aria-selected="<?= $activeSettingsTab === 'empresa' ? 'true' : 'false' ?>" aria-controls="company-panel" data-settings-tab="empresa">Empresa</button>
-        <button class="settings-tab <?= $activeSettingsTab === 'evolution' ? 'active' : '' ?>" type="button" role="tab" id="evolution-tab" aria-selected="<?= $activeSettingsTab === 'evolution' ? 'true' : 'false' ?>" aria-controls="evolution-panel" data-settings-tab="evolution">Evolution API</button>
-        <button class="settings-tab <?= $activeSettingsTab === 'meta-ads' ? 'active' : '' ?>" type="button" role="tab" id="meta-ads-tab" aria-selected="<?= $activeSettingsTab === 'meta-ads' ? 'true' : 'false' ?>" aria-controls="meta-ads-panel" data-settings-tab="meta-ads">Meta Ads</button>
-        <button class="settings-tab <?= $activeSettingsTab === 'modelos-mensagens' ? 'active' : '' ?>" type="button" role="tab" id="templates-tab" aria-selected="<?= $activeSettingsTab === 'modelos-mensagens' ? 'true' : 'false' ?>" aria-controls="templates-panel" data-settings-tab="modelos-mensagens">Modelos de Mensagens</button>
-        <button class="settings-tab <?= $activeSettingsTab === 'landing-leads' ? 'active' : '' ?>" type="button" role="tab" id="landing-leads-tab" aria-selected="<?= $activeSettingsTab === 'landing-leads' ? 'true' : 'false' ?>" aria-controls="landing-leads-panel" data-settings-tab="landing-leads">Landing Page de Leads</button>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'layout' ? 'active' : '' ?>" type="button" role="tab" id="layout-tab" aria-selected="<?= $activeSettingsTab === 'layout' ? 'true' : 'false' ?>" aria-controls="layout-panel" data-settings-tab="layout">Layout</button>
+        <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'empresa' ? 'active' : '' ?>" type="button" role="tab" id="company-tab" aria-selected="<?= $activeSettingsTab === 'empresa' ? 'true' : 'false' ?>" aria-controls="company-panel" data-settings-tab="empresa">Empresa</button>
+        <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'evolution' ? 'active' : '' ?>" type="button" role="tab" id="evolution-tab" aria-selected="<?= $activeSettingsTab === 'evolution' ? 'true' : 'false' ?>" aria-controls="evolution-panel" data-settings-tab="evolution">Evolution API</button>
+        <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('meta_ads', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'meta-ads' ? 'active' : '' ?>" type="button" role="tab" id="meta-ads-tab" aria-selected="<?= $activeSettingsTab === 'meta-ads' ? 'true' : 'false' ?>" aria-controls="meta-ads-panel" data-settings-tab="meta-ads">Meta Ads</button>
+        <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'modelos-mensagens' ? 'active' : '' ?>" type="button" role="tab" id="templates-tab" aria-selected="<?= $activeSettingsTab === 'modelos-mensagens' ? 'true' : 'false' ?>" aria-controls="templates-panel" data-settings-tab="modelos-mensagens">Modelos de Mensagens</button>
+        <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'landing-leads' ? 'active' : '' ?>" type="button" role="tab" id="landing-leads-tab" aria-selected="<?= $activeSettingsTab === 'landing-leads' ? 'true' : 'false' ?>" aria-controls="landing-leads-panel" data-settings-tab="landing-leads">Landing Page de Leads</button>
+        <?php endif; ?>
     </div>
 
+    <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
     <form action="<?= site_url('configuracoes/layout') ?>" method="post" data-layout-form>
         <?= csrf_field() ?>
         <input type="hidden" name="layout_max_width" value="<?= esc($layoutMaxWidth) ?>" data-width-input>
@@ -52,6 +65,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
         </div>
 
+        <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'edit')): ?>
         <div class="save-bar" data-save-bar hidden>
             <p><strong>Alterações não salvas</strong><span>A prévia está aplicada apenas nesta tela.</span></p>
             <div class="save-actions">
@@ -59,8 +73,11 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
             </div>
         </div>
+        <?php endif; ?>
     </form>
+    <?php endif; ?>
 
+    <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'view')): ?>
     <div class="settings-tab-panel company-panel" id="company-panel" role="tabpanel" aria-labelledby="company-tab" data-settings-panel="empresa" <?= $activeSettingsTab !== 'empresa' ? 'hidden' : '' ?>>
         <form action="<?= site_url('configuracoes/empresa') ?>" method="post" data-dirty-form>
             <?= csrf_field() ?>
@@ -79,24 +96,30 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <label class="form-field field-public-url"><span>Endereço público do site</span><input type="url" name="public_url" maxlength="255" required inputmode="url" placeholder="https://diasimports.com.br" value="<?= esc(old('public_url', $companyProfile['public_url'] ?? '')) ?>"><small>Base dos links das landing pages e do catálogo da Meta. Deve começar com https:// e ser um domínio público.</small></label>
             </div>
 
+            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit')): ?>
             <div class="company-save-bar save-bar" data-form-save-bar hidden>
                 <p><strong>Alterações não salvas</strong><span>Revise os dados antes de salvar.</span></p>
                 <div class="save-actions"><button class="button secondary" type="reset">Cancelar</button><button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button></div>
             </div>
+            <?php endif; ?>
         </form>
 
         <section class="whatsapp-section" aria-labelledby="whatsapp-title">
             <div class="section-title-row">
                 <div><h2 id="whatsapp-title">WhatsApps da Empresa</h2><p>Cadastre os números de atendimento e escolha o padrão usado quando nenhum número específico for selecionado.</p></div>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'create')): ?>
                 <button class="button outline" type="button" data-open-whatsapp><i class="ti ti-plus" aria-hidden="true"></i>Novo WhatsApp</button>
+                <?php endif; ?>
             </div>
 
+            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'create') || \App\Libraries\UserPermissions::hasPermission('company', 'edit')): ?>
             <form class="whatsapp-editor" action="<?= site_url('configuracoes/empresa/whatsapp') ?>" method="post" data-whatsapp-editor hidden>
                 <?= csrf_field() ?><input type="hidden" name="whatsapp_id" data-whatsapp-id>
                 <label class="form-field"><span>Identificação</span><input type="text" name="whatsapp_name" maxlength="80" required placeholder="Ex.: Loja 1" data-whatsapp-name></label>
                 <label class="form-field"><span>WhatsApp</span><input type="tel" name="whatsapp_phone" maxlength="20" required inputmode="tel" autocomplete="tel" placeholder="(17) 98800-4745" data-whatsapp-phone></label>
                 <div class="editor-actions"><button class="button secondary" type="button" data-close-whatsapp>Cancelar</button><button class="button primary" type="submit">Salvar WhatsApp</button></div>
             </form>
+            <?php endif; ?>
 
             <div class="whatsapp-list">
                 <?php if ($companyWhatsapps === []): ?>
@@ -105,17 +128,23 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <article class="whatsapp-item <?= (int) $whatsapp['is_active'] !== 1 ? 'inactive' : '' ?>">
                         <div class="whatsapp-identity"><strong><?= esc($whatsapp['name']) ?></strong><span>— <?= esc($whatsapp['phone']) ?></span><?php if ((int) $whatsapp['is_default'] === 1): ?><span class="default-badge">Padrão</span><?php elseif ((int) $whatsapp['is_active'] !== 1): ?><span class="inactive-badge">Inativo</span><?php endif; ?></div>
                         <div class="whatsapp-actions">
-                            <?php if ((int) $whatsapp['is_default'] !== 1 && (int) $whatsapp['is_active'] === 1): ?><form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/padrao') ?>" method="post" data-confirm-action="default" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact" type="submit">Tornar padrão</button></form><?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit') && (int) $whatsapp['is_default'] !== 1 && (int) $whatsapp['is_active'] === 1): ?><form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/padrao') ?>" method="post" data-confirm-action="default" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact" type="submit">Tornar padrão</button></form><?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit')): ?>
                             <button class="button secondary compact" type="button" data-edit-whatsapp data-id="<?= esc($whatsapp['id']) ?>" data-name="<?= esc($whatsapp['name']) ?>" data-phone="<?= esc($whatsapp['phone']) ?>">Editar</button>
                             <form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/status') ?>" method="post" data-confirm-action="<?= (int) $whatsapp['is_active'] === 1 ? 'deactivate' : 'activate' ?>" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact" type="submit"><?= (int) $whatsapp['is_active'] === 1 ? 'Inativar' : 'Ativar' ?></button></form>
+                            <?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'delete')): ?>
                             <form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/excluir') ?>" method="post" data-confirm-action="delete" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact danger" type="submit">Excluir</button></form>
+                            <?php endif; ?>
                         </div>
                     </article>
                 <?php endforeach; endif; ?>
             </div>
         </section>
     </div>
+    <?php endif; ?>
 
+    <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'view')): ?>
     <div class="settings-tab-panel evolution-panel" id="evolution-panel" role="tabpanel" aria-labelledby="evolution-tab" data-settings-panel="evolution" <?= $activeSettingsTab !== 'evolution' ? 'hidden' : '' ?>>
         <form action="<?= site_url('configuracoes/evolution') ?>" method="post" data-evolution-form>
             <?= csrf_field() ?>
@@ -145,23 +174,29 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <?php if (($evolutionSettings['last_test_status'] ?? null) !== null): ?><small class="last-test <?= esc($evolutionSettings['last_test_status']) ?>"><i class="ti <?= $evolutionSettings['last_test_status'] === 'success' ? 'ti-circle-check' : 'ti-alert-circle' ?>" aria-hidden="true"></i>Último teste: <?= $evolutionSettings['last_test_status'] === 'success' ? 'concluído' : 'falhou' ?><?= ($evolutionSettings['last_tested_at'] ?? null) ? ' em ' . esc(date('d/m/Y H:i', strtotime($evolutionSettings['last_tested_at']))) : '' ?></small><?php endif; ?>
             </div>
 
+            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit')): ?>
             <div class="save-bar" data-evolution-save-bar hidden>
                 <p><strong>Alterações não salvas</strong><span>As credenciais serão armazenadas somente no servidor.</span></p>
                 <div class="save-actions"><button class="button secondary" type="reset">Cancelar</button><button class="button primary" type="submit" <?= ! $evolutionEncryptionReady ? 'disabled' : '' ?>><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Configuração</button></div>
             </div>
+            <?php endif; ?>
         </form>
 
         <section class="evolution-instances" aria-labelledby="instances-title">
             <div class="section-title-row">
                 <div><h2 id="instances-title">Instâncias Cadastradas</h2><p>Lista sincronizada diretamente com a Evolution API.</p></div>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'create')): ?>
                 <button class="button outline" type="button" data-open-instance <?= ($evolutionSettings['api_key_encrypted'] ?? '') === '' ? 'disabled' : '' ?>><i class="ti ti-plus" aria-hidden="true"></i>Nova Instância</button>
+                <?php endif; ?>
             </div>
 
+            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'create')): ?>
             <form class="instance-editor" action="<?= site_url('configuracoes/evolution/instancias') ?>" method="post" data-instance-editor hidden>
                 <?= csrf_field() ?>
                 <label class="form-field"><span>Nome da instância</span><input type="text" name="instance_name" minlength="3" maxlength="80" required pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,79}" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Ex.: dias-imports-atendimento" data-instance-name><small>Somente letras sem acento, números, _ e -; espaços não são permitidos.</small></label>
                 <div class="editor-actions"><button class="button secondary" type="button" data-close-instance>Cancelar</button><button class="button primary" type="submit">Criar Instância</button></div>
             </form>
+            <?php endif; ?>
 
             <?php if ($evolutionLoadError): ?><div class="settings-alert error" role="alert"><i class="ti ti-cloud-off" aria-hidden="true"></i><?= esc($evolutionLoadError) ?></div><?php endif; ?>
 
@@ -178,19 +213,25 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         </div>
                         <dl class="instance-data"><div><dt>Status</dt><dd class="connection-status <?= $instance['connected'] ? 'connected' : 'disconnected' ?>" data-instance-status aria-live="polite"><i class="ti <?= $instance['connected'] ? 'ti-circle-check-filled' : 'ti-circle-x-filled' ?>" aria-hidden="true"></i><span><?= $instance['connected'] ? 'Conectada' : esc(ucfirst($instance['state'])) ?></span></dd></div><?php if ($instance['number'] !== ''): ?><div><dt>Número</dt><dd><?= esc($instance['number']) ?></dd></div><?php endif; ?></dl>
                         <div class="instance-actions">
-                            <?php if (! $isDefaultInstance): ?><form action="<?= site_url('configuracoes/evolution/instancias/padrao') ?>" method="post" data-confirm-action="evolution-default" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit">Tornar padrão</button></form><?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit') && ! $isDefaultInstance): ?><form action="<?= site_url('configuracoes/evolution/instancias/padrao') ?>" method="post" data-confirm-action="evolution-default" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit">Tornar padrão</button></form><?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit')): ?>
                             <form action="<?= site_url('configuracoes/evolution/instancias/conectar') ?>" method="post" data-qr-connect-form data-instance-label="<?= esc($instance['profile_name']) ?>" <?= $instance['connected'] ? 'hidden' : '' ?>><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit">Conectar</button></form>
                             <button class="button secondary compact send-test-trigger" type="button" data-instance-send-test data-instance-name="<?= esc($instance['name']) ?>" data-instance-label="<?= esc($instance['profile_name']) ?>" <?= $instance['connected'] ? '' : 'hidden' ?>><i class="ti ti-send" aria-hidden="true"></i>Testar envio</button>
                             <form action="<?= site_url('configuracoes/evolution/instancias/desconectar') ?>" method="post" data-confirm-action="evolution-logout" data-action-name="<?= esc($instance['name']) ?>" data-instance-disconnect <?= $instance['connected'] ? '' : 'hidden' ?>><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit">Desconectar</button></form>
+                            <?php endif; ?>
+                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'delete')): ?>
                             <form action="<?= site_url('configuracoes/evolution/instancias/excluir') ?>" method="post" data-confirm-action="evolution-delete" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact danger" type="submit">Excluir</button></form>
+                            <?php endif; ?>
                         </div>
                     </article>
                 <?php endforeach; endif; ?>
             </div>
         </section>
     </div>
+    <?php endif; ?>
 
     <!-- Aba Meta Ads -->
+    <?php if (\App\Libraries\UserPermissions::hasPermission('meta_ads', 'view')): ?>
     <div class="settings-tab-panel meta-ads-panel" id="meta-ads-panel" role="tabpanel" aria-labelledby="meta-ads-tab" data-settings-panel="meta-ads" <?= $activeSettingsTab !== 'meta-ads' ? 'hidden' : '' ?>>
         <form action="<?= site_url('configuracoes/meta-ads') ?>" method="post" data-meta-ads-form>
             <?= csrf_field() ?>
@@ -297,6 +338,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 </div>
             </div>
 
+            <?php if (\App\Libraries\UserPermissions::hasPermission('meta_ads', 'edit')): ?>
             <div class="save-bar" data-meta-ads-save-bar hidden>
                 <p><strong>Alterações não salvas</strong><span>O Token de Acesso será armazenado de forma criptografada e segura.</span></p>
                 <div class="save-actions">
@@ -304,9 +346,12 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <button class="button primary" type="submit" <?= ! ($metaAdsEncryptionReady ?? false) ? 'disabled' : '' ?>><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Configurações</button>
                 </div>
             </div>
+            <?php endif; ?>
         </form>
     </div>
+    <?php endif; ?>
 
+    <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'view')): ?>
     <div class="settings-tab-panel templates-panel" id="templates-panel" role="tabpanel" aria-labelledby="templates-tab" data-settings-panel="modelos-mensagens" <?= $activeSettingsTab !== 'modelos-mensagens' ? 'hidden' : '' ?>>
         <div class="section-title-row">
             <div class="setting-intro">
@@ -319,7 +364,9 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <button type="button" class="filter-btn" data-filter="active">Ativos</button>
                     <button type="button" class="filter-btn" data-filter="inactive">Inativos</button>
                 </div>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'create')): ?>
                 <button class="button outline" type="button" data-open-template><i class="ti ti-plus" aria-hidden="true"></i>Novo Modelo</button>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -350,6 +397,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         <div class="template-card-footer">
                             <span class="template-meta">Criado em <?= $tpl['created_at'] ? date('d/m/Y', strtotime($tpl['created_at'])) : date('d/m/Y') ?></span>
                             <div class="template-actions">
+                                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'edit')): ?>
                                 <button class="button secondary compact icon-btn" type="button" data-edit-template data-id="<?= esc($tpl['id']) ?>" data-name="<?= esc($tpl['name']) ?>" data-content="<?= esc($tpl['content']) ?>" title="Editar Modelo">
                                     <i class="ti ti-edit" aria-hidden="true"></i> Editar
                                 </button>
@@ -360,12 +408,15 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                         <?= (int)$tpl['is_active'] === 1 ? 'Inativar' : 'Ativar' ?>
                                     </button>
                                 </form>
+                                <?php endif; ?>
+                                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'delete')): ?>
                                 <form action="<?= site_url('configuracoes/modelos-mensagens/' . $tpl['id'] . '/excluir') ?>" method="post" data-confirm-action="delete" data-action-name="<?= esc($tpl['name']) ?>">
                                     <?= csrf_field() ?>
                                     <button class="button secondary compact danger" type="submit" title="Excluir Modelo">
                                         <i class="ti ti-trash" aria-hidden="true"></i> Excluir
                                     </button>
                                 </form>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </article>
@@ -373,8 +424,10 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
 
     <!-- Aba Landing Page de Leads -->
+    <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'view')): ?>
     <div class="settings-tab-panel" id="landing-leads-panel" role="tabpanel" aria-labelledby="landing-leads-tab" data-settings-panel="landing-leads" <?= $activeSettingsTab !== 'landing-leads' ? 'hidden' : '' ?>>
         <div class="setting-intro">
             <div class="setting-intro-header">
@@ -979,6 +1032,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
 
             <!-- Barra Flutuante Salvar/Cancelar -->
+            <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'edit')): ?>
             <div class="save-bar" data-landing-save-bar hidden aria-hidden="true">
                 <p>
                     <strong>Alterações não salvas na Landing Page</strong>
@@ -989,8 +1043,10 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
                 </div>
             </div>
+            <?php endif; ?>
         </form>
     </div>
+    <?php endif; ?>
 
     <!-- Modal de Recorte de Imagem (Cropper) -->
     <div class="template-dialog" id="cropper_modal" hidden aria-hidden="true">

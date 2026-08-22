@@ -18,6 +18,7 @@
     <section class="module-grid" aria-label="Módulos administrativos">
         <?php foreach ($navigation as $key => $item): ?>
             <?php if ($key === 'overview') continue; ?>
+            <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
             <a class="module-card" href="<?= site_url($item['path']) ?>">
                 <div class="module-card-top">
                     <span class="module-icon" aria-hidden="true"><i class="ti <?= esc($item['icon']) ?>"></i></span>

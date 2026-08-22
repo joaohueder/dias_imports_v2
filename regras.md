@@ -16,8 +16,9 @@
 - O projeto deve ser documentado "doc/" granularmente para que o claude code não demore e nem consulma muitos tokens analisando todo o projeto, monte os arquivos com um index capaz de direcionar o claude code para economia e velocidade.
 - Se houver algum SQL para executar no banco, avise no final do chat em destaque colorido.
 - Leia o arquivo "/doc/index.md" para entender em qual doc está a documentação da solicitação atual, utilize para não sair do padrão e nem gastar tokens tendo que ler todo o projeto.
-- Sempre altere a versão do sistema a cada e qualquer alteração no sistema. o modelo da versão é "ano.mesatual.sequencia" exempl "2026.08.0001". Atualize também no arquivo "/README.me".
+- Sempre altere a versão do sistema a cada e qualquer alteração no sistema (ao enviar qualquer comando no chat). o modelo da versão é "ano.mesatual.sequencia" exempl "2026.08.0001". Atualize também no arquivo "/README.me".
 - Sempre teste as funcionalidades, implantações e correções aplicadas.
+- Nunca faça push no Git (`git push`). O push será feito manualmente pelo usuário.
 
 
 ## BANCO DE DADOS

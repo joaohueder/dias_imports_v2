@@ -95,8 +95,12 @@ class Home extends BaseController
         return $this->renderPage('users');
     }
 
-    public function settings(): string
+    public function settings(): string|RedirectResponse
     {
+        if (! \App\Libraries\UserPermissions::hasAnySettingsPermission()) {
+            return redirect()->to('/')->with('error', 'Você não tem permissão para acessar as configurações.');
+        }
+
         return $this->renderPage('settings');
     }
 
@@ -421,7 +425,27 @@ class Home extends BaseController
             $companyProfile = (new CompanyProfileModel())->first();
             $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
             $requestedTab = (string) $this->request->getGet('tab');
-            $activeSettingsTab = in_array($requestedTab, ['empresa', 'evolution', 'meta-ads', 'modelos-mensagens', 'landing-leads'], true) ? $requestedTab : 'layout';
+
+            // Determinar aba padrão autorizada para o usuário
+            $tabPermissions = [
+                'layout' => \App\Libraries\UserPermissions::hasPermission('layout', 'view'),
+                'empresa' => \App\Libraries\UserPermissions::hasPermission('company', 'view'),
+                'evolution' => \App\Libraries\UserPermissions::hasPermission('evolution', 'view'),
+                'meta-ads' => \App\Libraries\UserPermissions::hasPermission('meta_ads', 'view'),
+                'modelos-mensagens' => \App\Libraries\UserPermissions::hasPermission('message_templates', 'view'),
+                'landing-leads' => \App\Libraries\UserPermissions::hasPermission('landing_leads', 'view'),
+            ];
+
+            if ($requestedTab !== '' && isset($tabPermissions[$requestedTab]) && $tabPermissions[$requestedTab]) {
+                $activeSettingsTab = $requestedTab;
+            } else {
+                foreach ($tabPermissions as $tKey => $isAllowed) {
+                    if ($isAllowed) {
+                        $activeSettingsTab = $tKey;
+                        break;
+                    }
+                }
+            }
 
             try {
                 $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();

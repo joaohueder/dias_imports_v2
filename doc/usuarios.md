@@ -22,6 +22,10 @@ Gerenciamento completo de usuários, perfis de acesso (Administrador / Usuário 
 - **Papéis (Roles)**:
   - `admin`: Acesso total e irrestrito a todas as áreas e funcionalidades do painel. A tabela de permissões fica desabilitada e marcada informativamente.
   - `user`: Acesso personalizado conforme as marcações na matriz de permissões.
+- **Enforcement & Bloqueio por URL**:
+  - Filtro `PermissionFilter` aplicado nas rotas bloqueia acesso direto via URL quando o usuário não possui a permissão requerida.
+  - Módulos e subpáginas bloqueados não aparecem no menu lateral, barra de navegação mobile, cards de visão geral ou abas de configurações.
+  - Botões de criação, edição, inativação e exclusão são omitidos quando o usuário não possui a respectiva permissão granular.
 - **Auto-proteção**: O usuário logado não pode inativar ou excluir a sua própria conta nem rebaixar seu papel de administrador.
 - **Hierarquia de Permissões**: Marcar qualquer ação de escrita (Criar, Editar, Excluir) marca e exige automaticamente a permissão de visualização (`view`) da respectiva área.
 - **Segurança de Senha**: Senhas armazenadas com hash `PASSWORD_DEFAULT` (Bcrypt) com validação mínima de 6 caracteres.

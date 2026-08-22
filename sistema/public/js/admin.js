@@ -82,6 +82,8 @@
         { match: '/usuarios/redefinir-senha', title: 'Redefinindo a senha', message: 'Criptografando e atualizando as novas credenciais.' },
         { match: '/usuarios/novo', title: 'Criando usuário', message: 'Cadastrando o novo usuário e configurando suas permissões.' },
         { match: '/usuarios/editar', title: 'Salvando alterações', message: 'Atualizando os dados cadastrais e permissões do usuário.' },
+        { match: '/leads-vip/excluir', title: 'Excluindo lead', message: 'Removendo permanentemente o contato captado.' },
+        { match: '/leads-vip/editar', title: 'Atualizando lead', message: 'Salvando as informações do contato.' },
     ];
     const showProcessingOverlay = (title, message) => {
         if (!processingScreen || !processingHeading || !processingMessage || !processingJoke) return;
@@ -116,10 +118,36 @@
         );
     };
 
+    // Helper global para sincronizar CSRF em todos os formulários da página
+    const getCsrfToken = () => {
+        const name = 'csrf_cookie_name=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        const meta = document.querySelector('meta[name="csrf-hash"]');
+        return meta ? meta.getAttribute('content') : '';
+    };
+
+    const syncFormCsrf = (form) => {
+        if (!form) return;
+        const currentToken = getCsrfToken();
+        if (!currentToken) return;
+        const csrfInput = form.querySelector('input[name="csrf_test_name"]');
+        if (csrfInput) {
+            csrfInput.value = currentToken;
+        }
+    };
+
     document.addEventListener('submit', (event) => {
         const form = event.target;
         if (event.defaultPrevented || !(form instanceof HTMLFormElement) || form.method.toLowerCase() !== 'post') return;
-        if (form.matches('[data-qr-connect-form]')) return;
+        syncFormCsrf(form);
+        if (form.matches('[data-qr-connect-form]') || form.matches('[data-confirm-action]')) return;
         if (form.dataset.processingActive === 'true') {
             event.preventDefault();
             return;
@@ -199,6 +227,8 @@
             'user-status-ativar': { title: 'Ativar este usuário?', message: (name) => `O usuário “${name}” voltará a ter acesso ao sistema.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
             'user-status-inativar': { title: 'Inativar este usuário?', message: (name) => `O usuário “${name}” perderá o acesso ao sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
             'user-delete': { title: 'Excluir este usuário?', message: (name) => `O usuário “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'lead-delete': { title: 'Excluir este lead?', message: (name) => `O lead “${name}” será excluído permanentemente da lista. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            logout: { title: 'Deseja realmente sair?', message: () => 'Sua sessão atual será encerrada no navegador com segurança.', label: 'Sim, sair agora', icon: 'ti-logout', buttonIcon: 'ti-logout', variant: 'danger' },
         };
         const closeActionDialog = () => {
             actionDialog.classList.remove('open');
@@ -207,7 +237,10 @@
             pendingActionForm = null;
             actionTrigger?.focus();
         };
-        document.querySelectorAll('[data-confirm-action]').forEach((form) => form.addEventListener('submit', (event) => {
+        // Delegação global para formulários com confirmação (inclusive os inseridos dinamicamente)
+        document.addEventListener('submit', (event) => {
+            const form = event.target.closest('[data-confirm-action]');
+            if (!form) return;
             event.preventDefault();
             const config = actions[form.dataset.confirmAction];
             if (!config) return;
@@ -223,16 +256,17 @@
             confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
             confirmAction.disabled = false;
             actionDialog.hidden = false;
-            window.requestAnimationFrame(() => actionDialog.classList.add('open'));
+            actionDialog.classList.add('open');
             document.body.style.overflow = 'hidden';
             cancelAction.focus();
-        }));
+        });
         cancelAction.addEventListener('click', closeActionDialog);
         actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
         document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
         confirmAction.addEventListener('click', () => {
             if (!pendingActionForm) return;
             confirmAction.disabled = true;
+            syncFormCsrf(pendingActionForm);
             showProcessing(pendingActionForm, actionTrigger);
             pendingActionForm.submit();
         });

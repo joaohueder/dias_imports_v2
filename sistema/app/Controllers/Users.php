@@ -10,6 +10,16 @@ class Users extends BaseController
 {
     protected $helpers = ['form', 'url'];
 
+    public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
+    {
+        parent::initController($request, $response, $logger);
+
+        if (! UserPermissions::hasPermission('users', 'view')) {
+            header('Location: ' . site_url('/'));
+            exit;
+        }
+    }
+
     public function index(): string
     {
         $userModel = new UserModel();
@@ -59,13 +69,21 @@ class Users extends BaseController
         ]);
     }
 
-    public function create(): string
+    public function create(): string|RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'create')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para cadastrar novos usuários.');
+        }
+
         return $this->renderForm();
     }
 
     public function edit(int $id): string|RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'edit')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para editar usuários.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->find($id);
 
@@ -111,6 +129,10 @@ class Users extends BaseController
 
     public function store(): RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'create')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para cadastrar novos usuários.');
+        }
+
         $rules = [
             'name' => 'required|min_length[3]|max_length[120]',
             'email' => 'required|valid_email|max_length[190]|is_unique[users.email]',
@@ -143,6 +165,10 @@ class Users extends BaseController
 
     public function update(int $id): RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'edit')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para editar usuários.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->find($id);
 
@@ -200,6 +226,10 @@ class Users extends BaseController
 
     public function resetPassword(int $id): RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'edit')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para redefinir senhas de usuários.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->find($id);
 
@@ -228,6 +258,10 @@ class Users extends BaseController
 
     public function toggleStatus(int $id): RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'edit')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para alterar o status de usuários.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->find($id);
 
@@ -254,6 +288,10 @@ class Users extends BaseController
 
     public function delete(int $id): RedirectResponse
     {
+        if (! UserPermissions::hasPermission('users', 'delete')) {
+            return redirect()->to('/usuarios')->with('error', 'Você não tem permissão para excluir usuários.');
+        }
+
         $userModel = new UserModel();
         $user = $userModel->find($id);
 

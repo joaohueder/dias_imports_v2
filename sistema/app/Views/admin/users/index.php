@@ -32,12 +32,14 @@ $helperInitials = static function(string $name): string {
             </button>
         </div>
 
+        <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'create')): ?>
         <div class="users-create-action">
             <a href="<?= site_url('usuarios/novo') ?>" class="button primary">
                 <i class="ti ti-user-plus" aria-hidden="true"></i>
                 <span>Novo Usuário</span>
             </a>
         </div>
+        <?php endif; ?>
     </div>
 
     <!-- Cards Grid -->
@@ -114,35 +116,42 @@ $helperInitials = static function(string $name): string {
                 </div>
 
                 <div class="user-card-actions">
-                    <a href="<?= site_url('usuarios/' . $u['id'] . '/editar') ?>" class="btn-card-action">
-                        Editar
-                    </a>
+                    <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'edit')): ?>
+                        <a href="<?= site_url('usuarios/' . $u['id'] . '/editar') ?>" class="btn-card-action">
+                            Editar
+                        </a>
 
-                    <button type="button" class="btn-card-action" data-open-reset-pwd data-user-id="<?= esc($u['id']) ?>" data-user-name="<?= esc($u['name']) ?>">
-                        Redefinir Senha
-                    </button>
+                        <button type="button" class="btn-card-action" data-open-reset-pwd data-user-id="<?= esc($u['id']) ?>" data-user-name="<?= esc($u['name']) ?>">
+                            Redefinir Senha
+                        </button>
 
-                    <?php if (! $isSelf): ?>
-                        <form action="<?= site_url('usuarios/' . $u['id'] . '/status') ?>" method="post" data-confirm-action="user-status-<?= $isActive ? 'inativar' : 'ativar' ?>" data-action-name="<?= esc($u['name']) ?>">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn-card-action">
-                                <?= $isActive ? 'Inativar' : 'Ativar' ?>
+                        <?php if (! $isSelf): ?>
+                            <form action="<?= site_url('usuarios/' . $u['id'] . '/status') ?>" method="post" data-confirm-action="user-status-<?= $isActive ? 'inativar' : 'ativar' ?>" data-action-name="<?= esc($u['name']) ?>">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn-card-action">
+                                    <?= $isActive ? 'Inativar' : 'Ativar' ?>
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <button type="button" class="btn-card-action disabled" disabled title="Não é possível alterar seu próprio status">
+                                Inativar
                             </button>
-                        </form>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
-                        <form action="<?= site_url('usuarios/' . $u['id'] . '/excluir') ?>" method="post" data-confirm-action="user-delete" data-action-name="<?= esc($u['name']) ?>">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn-card-action text-danger">
+                    <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'delete')): ?>
+                        <?php if (! $isSelf): ?>
+                            <form action="<?= site_url('usuarios/' . $u['id'] . '/excluir') ?>" method="post" data-confirm-action="user-delete" data-action-name="<?= esc($u['name']) ?>">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn-card-action text-danger">
+                                    Excluir
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <button type="button" class="btn-card-action disabled" disabled title="Não é possível excluir seu próprio usuário">
                                 Excluir
                             </button>
-                        </form>
-                    <?php else: ?>
-                        <button type="button" class="btn-card-action disabled" disabled title="Não é possível alterar seu próprio status">
-                            Inativar
-                        </button>
-                        <button type="button" class="btn-card-action disabled" disabled title="Não é possível excluir seu próprio usuário">
-                            Excluir
-                        </button>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </article>

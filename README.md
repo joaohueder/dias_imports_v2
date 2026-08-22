@@ -2,4 +2,4 @@
 
 ## DADOS DO SISTEMA
 
-Versão: 2026.08.0002
+Versão: 2026.08.0020

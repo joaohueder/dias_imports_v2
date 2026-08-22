@@ -36,6 +36,15 @@ class UserPermissions
                 ],
             ],
         ],
+        'users' => [
+            'label' => 'USUÁRIOS',
+            'modules' => [
+                'users' => [
+                    'label' => 'Usuários',
+                    'actions' => ['view', 'create', 'edit', 'delete'],
+                ],
+            ],
+        ],
         'settings' => [
             'label' => 'CONFIGURAÇÕES',
             'modules' => [
@@ -76,5 +85,49 @@ class UserPermissions
 
         $permissions = session()->get('user_permissions') ?? [];
         return !empty($permissions[$module][$action]);
+    }
+
+    public static function hasAnyPermissionInGroup(string $groupKey): bool
+    {
+        $role = session()->get('user_role');
+        if ($role === 'admin') {
+            return true;
+        }
+
+        $group = self::MODULE_GROUPS[$groupKey] ?? null;
+        if (! $group || empty($group['modules'])) {
+            return false;
+        }
+
+        foreach (array_keys($group['modules']) as $modKey) {
+            if (self::hasPermission($modKey, 'view')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function hasAnySettingsPermission(): bool
+    {
+        return self::hasAnyPermissionInGroup('settings');
+    }
+
+    public static function canAccessRouteKey(string $navKey): bool
+    {
+        $role = session()->get('user_role');
+        if ($role === 'admin') {
+            return true;
+        }
+
+        return match ($navKey) {
+            'overview' => true,
+            'whatsapp' => self::hasPermission('whatsapp_groups', 'view'),
+            'products' => self::hasPermission('products', 'view'),
+            'vip' => self::hasPermission('vip_leads', 'view'),
+            'users' => self::hasPermission('users', 'view'),
+            'settings' => self::hasAnySettingsPermission(),
+            default => false,
+        };
     }
 }

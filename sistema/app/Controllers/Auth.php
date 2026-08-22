@@ -67,6 +67,28 @@ class Auth extends BaseController
         return redirect()->to('/')->with('success', 'Login realizado com sucesso.');
     }
 
+    public function refreshPermissions(): RedirectResponse
+    {
+        $userId = session()->get('user_id');
+        if (! $userId) {
+            return redirect()->to('/login');
+        }
+
+        $user = (new UserModel())->find($userId);
+        if (! $user || (int) $user['is_active'] !== 1) {
+            return $this->logout();
+        }
+
+        session()->set([
+            'user_name' => $user['name'],
+            'user_email' => $user['email'],
+            'user_role' => $user['role'] ?? 'user',
+            'user_permissions' => !empty($user['permissions']) ? json_decode($user['permissions'], true) : [],
+        ]);
+
+        return redirect()->back()->with('success', 'Permissões atualizadas com sucesso.');
+    }
+
     public function logout(): RedirectResponse
     {
         $userId = session()->get('user_id');

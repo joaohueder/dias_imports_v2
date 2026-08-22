@@ -16,6 +16,9 @@ $globalSuccess = session()->getFlashdata('success');
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.1/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="<?= base_url('css/admin.css') ?>">
+    <meta name="csrf-token-name" content="<?= csrf_token() ?>">
+    <meta name="csrf-hash" content="<?= csrf_hash() ?>">
+    <meta name="csrf-header" content="<?= config('Security')->headerName ?? 'X-CSRF-TOKEN' ?>">
 </head>
 <body>
 <a class="skip-link" href="#main-content">Ir para o conteúdo</a>
@@ -37,6 +40,7 @@ $globalSuccess = session()->getFlashdata('success');
             <div class="nav-label">Administração</div>
             <ul class="nav-list">
                 <?php foreach ($navigation as $key => $item): ?>
+                    <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
                     <li>
                         <a class="nav-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" data-tooltip="<?= esc($item['label']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
                             <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i>
@@ -54,7 +58,13 @@ $globalSuccess = session()->getFlashdata('success');
                     <span class="user-name"><?= esc($userName) ?></span>
                     <span class="user-email"><?= esc($userEmail) ?></span>
                 </span>
-                <form action="<?= site_url('logout') ?>" method="post" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
+                <form action="<?= site_url('recarregar-permissoes') ?>" method="post" data-processing-title="Atualizando permissões" data-processing-message="Sincronizando seus acessos e permissões.">
+                    <?= csrf_field() ?>
+                    <button class="icon-button" type="submit" aria-label="Recarregar permissões" title="Recarregar Permissões">
+                        <i class="ti ti-refresh" aria-hidden="true"></i>
+                    </button>
+                </form>
+                <form action="<?= site_url('logout') ?>" method="post" data-confirm-action="logout" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
                     <?= csrf_field() ?>
                     <button class="logout-button" type="submit" aria-label="Sair do sistema" title="Sair">
                         <i class="ti ti-logout" aria-hidden="true"></i>
@@ -99,13 +109,20 @@ $globalSuccess = session()->getFlashdata('success');
 
     <nav class="bottom-nav" aria-label="Navegação móvel">
         <?php foreach (['overview', 'whatsapp', 'products', 'vip'] as $key): $item = $navigation[$key]; ?>
+            <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
             <a class="bottom-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
                 <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i><span><?= esc($item['mobileLabel']) ?></span>
             </a>
         <?php endforeach; ?>
-        <button class="bottom-link <?= in_array($activePage, ['users', 'settings'], true) ? 'active' : '' ?>" type="button" data-open-more aria-haspopup="dialog">
-            <i class="ti ti-dots" aria-hidden="true"></i><span>Mais</span>
-        </button>
+        <?php
+        $canAccessUsers = \App\Libraries\UserPermissions::canAccessRouteKey('users');
+        $canAccessSettings = \App\Libraries\UserPermissions::canAccessRouteKey('settings');
+        ?>
+        <?php if ($canAccessUsers || $canAccessSettings): ?>
+            <button class="bottom-link <?= in_array($activePage, ['users', 'settings'], true) ? 'active' : '' ?>" type="button" data-open-more aria-haspopup="dialog">
+                <i class="ti ti-dots" aria-hidden="true"></i><span>Mais</span>
+            </button>
+        <?php endif; ?>
     </nav>
 </div>
 
@@ -116,13 +133,20 @@ $globalSuccess = session()->getFlashdata('success');
         <h2 class="sheet-title" id="more-title">Mais opções</h2>
         <div class="sheet-links">
             <?php foreach (['users', 'settings'] as $key): $item = $navigation[$key]; ?>
+                <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
                 <a class="sheet-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>><i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i><?= esc($item['label']) ?></a>
             <?php endforeach; ?>
         </div>
-        <form class="sheet-logout" action="<?= site_url('logout') ?>" method="post" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
-            <?= csrf_field() ?>
-            <button class="logout-button" type="submit"><i class="ti ti-logout" aria-hidden="true"></i>Sair do sistema</button>
-        </form>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <form class="sheet-logout" style="flex:1;" action="<?= site_url('recarregar-permissoes') ?>" method="post" data-processing-title="Atualizando permissões" data-processing-message="Sincronizando seus acessos e permissões.">
+                <?= csrf_field() ?>
+                <button class="logout-button" type="submit" style="width:100%;"><i class="ti ti-refresh" aria-hidden="true"></i>Recarregar Permissões</button>
+            </form>
+            <form class="sheet-logout" style="flex:1;" action="<?= site_url('logout') ?>" method="post" data-confirm-action="logout" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
+                <?= csrf_field() ?>
+                <button class="logout-button" type="submit" style="width:100%;"><i class="ti ti-logout" aria-hidden="true"></i>Sair</button>
+            </form>
+        </div>
     </section>
 </div>
 
@@ -185,5 +209,8 @@ $globalSuccess = session()->getFlashdata('success');
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="<?= base_url('js/admin.js') ?>" defer></script>
+<?php if (isset($hasLeadsJs) && $hasLeadsJs): ?>
+<script src="<?= base_url('js/leads.js') ?>" defer></script>
+<?php endif; ?>
 </body>
 </html>
