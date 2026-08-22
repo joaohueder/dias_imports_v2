@@ -268,7 +268,11 @@ A aba `Landing Page de Leads` em `/configuracoes?tab=landing-leads` permite conf
 | `POST` | `/configuracoes/landing-leads` | Salvar configurações, modelos, paletas e animações da landing page |
 
 ### Funcionalidades
-- **SEO & Compartilhamento Social**: Configuração de Título (`seo_title`) e Descrição (`seo_description`) para o Google e redes sociais (Open Graph / WhatsApp / Facebook / Instagram), com imagem automática do favicon estilizado "DI" (`favicon.svg`) e prévia em tempo real.
+- **SEO & Compartilhamento Social**: Configuração de Título (`seo_title`), Descrição (`seo_description`) e Imagem personalizada (`seo_image`) para o Google e redes sociais (Open Graph / WhatsApp / Facebook / Instagram).
+  - Inclui ferramenta interativa de **Upload e Recorte (Crop 1:1 quadrado)** com Cropper.js no painel administrativo.
+  - Exibe o tamanho ideal recomendado (**600x600 px**).
+  - Permite restaurar/remover a imagem a qualquer momento, voltando à imagem padrão oficial "DI".
+  - Prévia em tempo real do card no WhatsApp.
 - **Modelos de Layout**: 6 opções de layouts estruturais e responsivos.
 - **Paletas de Cores**: 6 temas cromáticos completos.
 - **Animações de Fundo (Background FX)**: Efeitos visuais dinâmicos em CSS puro.

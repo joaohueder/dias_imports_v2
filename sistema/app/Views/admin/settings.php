@@ -564,12 +564,52 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                 <textarea name="seo_description" rows="3" placeholder="Ex: Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão." data-lp-input="seo-desc"><?= esc($lp['seo_description'] ?? '') ?></textarea>
                             </label>
 
+                            <!-- UPLOAD E RECORTE DE IMAGEM SOCIAL / WHATSAPP -->
+                            <div class="form-field">
+                                <span class="field-label-row">
+                                    <span>Imagem de Compartilhamento (Open Graph / WhatsApp)</span>
+                                    <small class="field-hint">Tamanho ideal: <strong>600x600 px</strong> (quadrada 1:1) ou <strong>1200x630 px</strong> (máx. 2MB)</small>
+                                </span>
+
+                                <div class="og-uploader-wrap">
+                                    <div class="og-thumb-container">
+                                        <?php 
+                                        $currentSeoImg = !empty($lp['seo_image']) ? base_url($lp['seo_image']) : base_url('og-image.png');
+                                        $hasCustomImg = !empty($lp['seo_image']);
+                                        ?>
+                                        <img src="<?= $currentSeoImg ?>" alt="Imagem de Compartilhamento" id="seo_preview_img" class="og-thumb-preview" data-default-src="<?= base_url('og-image.png') ?>">
+                                        <span class="og-thumb-label" id="og_thumb_label"><?= $hasCustomImg ? 'Personalizada' : 'Padrão (DI)' ?></span>
+                                    </div>
+
+                                    <div class="og-uploader-actions">
+                                        <input type="file" id="seo_image_input" accept="image/png, image/jpeg, image/webp" hidden>
+                                        <input type="hidden" name="seo_image_base64" id="seo_image_base64" value="">
+                                        <input type="hidden" name="seo_image_action" id="seo_image_action" value="">
+
+                                        <button type="button" class="button secondary" id="btn_upload_seo_image">
+                                            <i class="ti ti-upload"></i>
+                                            <span>Enviar nova imagem</span>
+                                        </button>
+
+                                        <button type="button" class="button danger-light" id="btn_remove_seo_image" style="<?= $hasCustomImg ? '' : 'display: none;' ?>">
+                                            <i class="ti ti-trash"></i>
+                                            <span>Restaurar padrão "DI"</span>
+                                        </button>
+                                        
+                                        <div class="og-upload-info">
+                                            <i class="ti ti-info-circle"></i>
+                                            <span>Formatos aceitos: JPG, PNG, WEBP. Você poderá recortar e enquadrar a imagem antes de salvar.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Card de Prévia de Compartilhamento no WhatsApp -->
                             <div class="share-preview-box">
-                                <span class="share-preview-badge"><i class="ti ti-brand-whatsapp"></i> Prévia de Compartilhamento no WhatsApp / Redes Sociais</span>
+                                <span class="share-preview-badge"><i class="ti ti-brand-whatsapp"></i> Prévia em tempo real no WhatsApp</span>
                                 <div class="share-preview-card">
                                     <div class="share-preview-thumb">
-                                        <img src="<?= base_url('og-image.png') ?>" alt="Ícone Dias Imports" width="70" height="70">
+                                        <img src="<?= $currentSeoImg ?>" alt="Prévia WhatsApp" id="whatsapp_preview_img">
                                     </div>
                                     <div class="share-preview-content">
                                         <span class="share-preview-domain"><?= parse_url(base_url(), PHP_URL_HOST) ?: 'diasimports.com.br' ?></span>
@@ -950,6 +990,61 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 </div>
             </div>
         </form>
+    </div>
+
+    <!-- Modal de Recorte de Imagem (Cropper) -->
+    <div class="template-dialog" id="cropper_modal" hidden aria-hidden="true">
+        <section class="template-dialog-card cropper-dialog-card" role="dialog" aria-modal="true">
+            <button class="template-dialog-close" type="button" id="btn_close_cropper" aria-label="Fechar modal"><i class="ti ti-x" aria-hidden="true"></i></button>
+            
+            <div class="template-dialog-header">
+                <div class="card-header-icon" style="background: rgba(124, 105, 255, 0.15); color: #8b7cff;"><i class="ti ti-crop"></i></div>
+                <div>
+                    <h2 class="template-dialog-title">Recortar e Enquadrar Imagem</h2>
+                    <p class="template-dialog-desc">Arraste para mover, use o scroll ou botões para zoom e enquadre a imagem no formato quadrado (1:1).</p>
+                </div>
+            </div>
+
+            <!-- Área de Visualização do Cropper -->
+            <div class="cropper-viewport-wrap">
+                <img id="cropper_image" src="" alt="Imagem para recorte">
+            </div>
+
+            <!-- Barra de Ferramentas / Controles de Zoom, Rotação e Reset -->
+            <div class="cropper-toolbar">
+                <div class="cropper-toolbar-group">
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_zoom_in" title="Aumentar Zoom">
+                        <i class="ti ti-zoom-in"></i>
+                    </button>
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_zoom_out" title="Diminuir Zoom">
+                        <i class="ti ti-zoom-out"></i>
+                    </button>
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_rotate_left" title="Girar 90° para a esquerda">
+                        <i class="ti ti-rotate-2"></i>
+                    </button>
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_rotate_right" title="Girar 90° para a direita">
+                        <i class="ti ti-rotate-clockwise-2"></i>
+                    </button>
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_flip_x" title="Espelhar Horizontalmente">
+                        <i class="ti ti-flip-horizontal"></i>
+                    </button>
+                    <button type="button" class="cropper-tool-btn" id="btn_crop_reset" title="Restaurar Posição Original">
+                        <i class="ti ti-refresh"></i>
+                    </button>
+                </div>
+
+                <div class="cropper-info-badge">
+                    <i class="ti ti-aspect-ratio"></i>
+                    <span>Proporção 1:1 (600x600 px)</span>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="cropper-dialog-actions">
+                <button type="button" class="button secondary" id="btn_cancel_cropper">Cancelar</button>
+                <button type="button" class="button primary" id="btn_apply_cropper"><i class="ti ti-check"></i> Concluir Recorte</button>
+            </div>
+        </section>
     </div>
 
     <div class="template-dialog" data-template-dialog hidden aria-hidden="true">

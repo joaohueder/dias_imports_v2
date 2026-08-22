@@ -19,6 +19,7 @@ class LandingLeadSettingModel extends Model
         'btn_animation',
         'seo_title',
         'seo_description',
+        'seo_image',
         'headline',
         'subheadline',
         'badge_text',

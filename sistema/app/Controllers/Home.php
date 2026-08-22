@@ -339,6 +339,43 @@ class Home extends BaseController
 
         $model = new \App\Models\LandingLeadSettingModel();
         $existing = $model->first();
+
+        // Tratamento da Imagem de Compartilhamento / SEO
+        $seoImageAction = (string) $this->request->getPost('seo_image_action');
+        $seoImageBase64 = (string) $this->request->getPost('seo_image_base64');
+
+        if ($seoImageAction === 'remove') {
+            if (!empty($existing['seo_image'])) {
+                $oldFile = FCPATH . ltrim($existing['seo_image'], '/\\');
+                if (is_file($oldFile)) {
+                    @unlink($oldFile);
+                }
+            }
+            $data['seo_image'] = null;
+        } elseif (!empty($seoImageBase64) && preg_match('/^data:image\/(png|jpeg|jpg|webp);base64,/', $seoImageBase64)) {
+            $parts = explode(',', $seoImageBase64, 2);
+            $decoded = base64_decode($parts[1] ?? '', true);
+            if ($decoded !== false) {
+                $uploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'seo' . DIRECTORY_SEPARATOR;
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $filename = 'og_share_' . time() . '_' . bin2hex(random_bytes(4)) . '.png';
+                file_put_contents($uploadDir . $filename, $decoded);
+                
+                // Excluir anterior caso exista
+                if (!empty($existing['seo_image'])) {
+                    $oldFile = FCPATH . ltrim($existing['seo_image'], '/\\');
+                    if (is_file($oldFile)) {
+                        @unlink($oldFile);
+                    }
+                }
+                $data['seo_image'] = 'uploads/seo/' . $filename;
+            }
+        } elseif ($existing !== null && !empty($existing['seo_image'])) {
+            $data['seo_image'] = $existing['seo_image'];
+        }
+
         if ($existing === null) {
             $model->insert($data);
         } else {

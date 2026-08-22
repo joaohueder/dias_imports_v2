@@ -7,7 +7,9 @@
     <?php
     $pageSeoTitle = !empty($landing['seo_title']) ? $landing['seo_title'] : ($landing['headline'] ?? 'Grupo VIP Dias Imports');
     $pageSeoDesc = !empty($landing['seo_description']) ? $landing['seo_description'] : ($landing['subheadline'] ?? 'Receba oportunidades imperdíveis de importados em primeira mão.');
-    $shareImageUrl = base_url('og-image.png');
+    $shareImageUrl = !empty($landing['seo_image']) ? base_url($landing['seo_image']) : base_url('og-image.png');
+    $imgExtension = pathinfo(parse_url($shareImageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+    $imgMime = ($imgExtension === 'jpg' || $imgExtension === 'jpeg') ? 'image/jpeg' : (($imgExtension === 'webp') ? 'image/webp' : 'image/png');
     ?>
     <title><?= esc($pageSeoTitle) ?> | Dias Imports</title>
     <meta name="description" content="<?= esc($pageSeoDesc) ?>"/>
@@ -22,10 +24,10 @@
     <meta property="og:description" content="<?= esc($pageSeoDesc) ?>"/>
     <meta property="og:image" content="<?= esc($shareImageUrl) ?>"/>
     <meta property="og:image:secure_url" content="<?= esc($shareImageUrl) ?>"/>
-    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:image:type" content="<?= esc($imgMime) ?>"/>
     <meta property="og:image:width" content="600"/>
     <meta property="og:image:height" content="600"/>
-    <meta property="og:image:alt" content="Dias Imports - DI"/>
+    <meta property="og:image:alt" content="<?= esc($pageSeoTitle) ?>"/>
     <meta property="og:site_name" content="Dias Imports"/>
 
     <!-- Twitter Card -->

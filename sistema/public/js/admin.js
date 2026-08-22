@@ -906,6 +906,177 @@
             const submitBtn = landingSaveBar.querySelector('button[type="submit"]');
             if (submitBtn) submitBtn.disabled = true;
         });
+
+        // Uploader e Cropper de Imagem SEO / WhatsApp
+        const btnUploadSeo = settings.querySelector('#btn_upload_seo_image');
+        const fileInputSeo = settings.querySelector('#seo_image_input');
+        const btnRemoveSeo = settings.querySelector('#btn_remove_seo_image');
+        const seoBase64Input = settings.querySelector('#seo_image_base64');
+        const seoActionInput = settings.querySelector('#seo_image_action');
+        const seoPreviewImg = settings.querySelector('#seo_preview_img');
+        const ogThumbLabel = settings.querySelector('#og_thumb_label');
+        const whatsappPreviewImg = settings.querySelector('#whatsapp_preview_img');
+
+        const cropperModal = document.getElementById('cropper_modal');
+        const cropperImage = document.getElementById('cropper_image');
+        const btnCloseCropper = document.getElementById('btn_close_cropper');
+        const btnCancelCropper = document.getElementById('btn_cancel_cropper');
+        const btnApplyCropper = document.getElementById('btn_apply_cropper');
+
+        let cropperInstance = null;
+        let flipX = 1;
+
+        if (btnUploadSeo && fileInputSeo) {
+            btnUploadSeo.addEventListener('click', () => fileInputSeo.click());
+
+            fileInputSeo.addEventListener('change', (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                if (!file.type.match(/^image\/(png|jpeg|jpg|webp)$/i)) {
+                    alert('Por favor, selecione uma imagem válida (PNG, JPG ou WEBP).');
+                    fileInputSeo.value = '';
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('A imagem selecionada é muito pesada (máximo 5MB).');
+                    fileInputSeo.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    cropperImage.src = ev.target.result;
+                    cropperModal.hidden = false;
+                    cropperModal.setAttribute('aria-hidden', 'false');
+                    window.requestAnimationFrame(() => cropperModal.classList.add('open'));
+                    document.body.style.overflow = 'hidden';
+
+                    if (cropperInstance) {
+                        cropperInstance.destroy();
+                        cropperInstance = null;
+                    }
+
+                    if (typeof Cropper !== 'undefined') {
+                        cropperInstance = new Cropper(cropperImage, {
+                            aspectRatio: 1, // Quadrado 1:1 perfeito para WhatsApp e Redes Sociais
+                            viewMode: 1,
+                            autoCropArea: 1, // Ocupa 100% da dimensão máxima mantendo a proporção 1:1
+                            responsive: true,
+                            background: false,
+                            movable: true,
+                            zoomable: true,
+                            rotatable: true,
+                            scalable: true,
+                            zoomOnTouch: true,
+                            zoomOnWheel: true,
+                        });
+                        flipX = 1;
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            const closeCropperModal = () => {
+                cropperModal.classList.remove('open');
+                cropperModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                window.setTimeout(() => {
+                    cropperModal.hidden = true;
+                    if (cropperInstance) {
+                        cropperInstance.destroy();
+                        cropperInstance = null;
+                    }
+                    fileInputSeo.value = '';
+                }, 200);
+            };
+
+            btnCloseCropper?.addEventListener('click', closeCropperModal);
+            btnCancelCropper?.addEventListener('click', closeCropperModal);
+
+            btnApplyCropper?.addEventListener('click', () => {
+                if (!cropperInstance) return;
+
+                const canvas = cropperInstance.getCroppedCanvas({
+                    width: 600,
+                    height: 600,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+
+                const croppedBase64 = canvas.toDataURL('image/png', 0.92);
+                seoBase64Input.value = croppedBase64;
+                seoActionInput.value = 'upload';
+
+                seoPreviewImg.src = croppedBase64;
+                if (whatsappPreviewImg) whatsappPreviewImg.src = croppedBase64;
+                if (ogThumbLabel) ogThumbLabel.textContent = 'Personalizada';
+                if (btnRemoveSeo) btnRemoveSeo.style.display = 'inline-flex';
+
+                landingSaveBar.hidden = false;
+                closeCropperModal();
+            });
+
+            // Controles da Toolbar do Cropper
+            const btnCropZoomIn = document.getElementById('btn_crop_zoom_in');
+            const btnCropZoomOut = document.getElementById('btn_crop_zoom_out');
+            const btnCropRotateLeft = document.getElementById('btn_crop_rotate_left');
+            const btnCropRotateRight = document.getElementById('btn_crop_rotate_right');
+            const btnCropFlipX = document.getElementById('btn_crop_flip_x');
+            const btnCropReset = document.getElementById('btn_crop_reset');
+
+            btnCropZoomIn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                cropperInstance?.zoom(0.1);
+            });
+
+            btnCropZoomOut?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                cropperInstance?.zoom(-0.1);
+            });
+
+            btnCropRotateLeft?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                cropperInstance?.rotate(-90);
+            });
+
+            btnCropRotateRight?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                cropperInstance?.rotate(90);
+            });
+
+            btnCropFlipX?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!cropperInstance) return;
+                flipX = flipX === 1 ? -1 : 1;
+                cropperInstance.scaleX(flipX);
+            });
+
+            btnCropReset?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!cropperInstance) return;
+                cropperInstance.reset();
+                flipX = 1;
+            });
+
+            btnRemoveSeo?.addEventListener('click', () => {
+                const defaultSrc = seoPreviewImg.dataset.defaultSrc;
+                seoBase64Input.value = '';
+                seoActionInput.value = 'remove';
+                seoPreviewImg.src = defaultSrc;
+                if (whatsappPreviewImg) whatsappPreviewImg.src = defaultSrc;
+                if (ogThumbLabel) ogThumbLabel.textContent = 'Padrão (DI)';
+                btnRemoveSeo.style.display = 'none';
+                landingSaveBar.hidden = false;
+            });
+        }
     }
 
     // Modal Picker de Ícones para Benefícios da Landing Page

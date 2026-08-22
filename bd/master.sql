@@ -96,6 +96,7 @@ CREATE TABLE `landing_lead_settings` (
   `btn_animation` VARCHAR(50) NOT NULL DEFAULT 'btn-pulse',
   `seo_title` VARCHAR(255) NULL DEFAULT 'Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos',
   `seo_description` TEXT NULL,
+  `seo_image` VARCHAR(255) NULL,
   `headline` VARCHAR(255) NOT NULL DEFAULT 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
   `subheadline` TEXT NULL,
   `badge_text` VARCHAR(100) NOT NULL DEFAULT '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
