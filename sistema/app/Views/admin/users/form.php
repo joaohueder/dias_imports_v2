@@ -179,7 +179,7 @@ $isActive = (bool) old('is_active', $user['is_active'] ?? 1);
         </section>
 
         <!-- Barra flutuante Salvar / Cancelar -->
-        <div class="user-save-bar save-bar" data-user-save-bar hidden>
+        <div class="user-save-bar save-bar" data-form-save-bar hidden>
             <p>
                 <strong>Alterações não salvas</strong>
                 <span>Revise as permissões e dados antes de salvar.</span>
