@@ -20,12 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let instanceGroupsData = [];
     let selectedGroupItem = null;
 
-    // Modal Testar Envio
-    const dialogTestSend = document.getElementById('dialog-test-send');
-    const formTestSend = document.getElementById('form-test-send');
-    const btnSubmitTestSend = document.getElementById('btn-submit-test-send');
-    const testSendGroupName = document.getElementById('test-send-group-name');
-
     let currentStatus = 'all';
     let searchTimeout = null;
 
@@ -298,45 +292,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Testar Envio Form Submit
-    if (formTestSend) {
-        formTestSend.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (btnSubmitTestSend.disabled) return;
-
-            const formData = new FormData(formTestSend);
-            btnSubmitTestSend.disabled = true;
-            btnSubmitTestSend.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Enviando...</span>';
-
-            try {
-                const response = await fetch(formTestSend.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    showToast('Sucesso', data.message, 'success');
-                    closeModal(dialogTestSend);
-                } else {
-                    showToast('Erro', data.message || 'Erro ao enviar mensagem.', 'error');
-                }
-            } catch (error) {
-                showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
-            } finally {
-                btnSubmitTestSend.disabled = false;
-                btnSubmitTestSend.innerHTML = '<i class="ti ti-send"></i> <span>Enviar Agora</span>';
-            }
-        });
-    }
-
     // Ações nos cards (delegadas)
     if (groupsContainer) {
         groupsContainer.addEventListener('click', async (e) => {
+            const btnRefresh = e.target.closest('.btn-refresh-group');
             const btnToggle = e.target.closest('.btn-toggle-status');
-            const btnTest = e.target.closest('.btn-test-send');
             const btnDelete = e.target.closest('.btn-delete-group');
+
+            if (btnRefresh) {
+                const id = btnRefresh.dataset.id;
+                const card = btnRefresh.closest('.group-item-card');
+                const name = card?.querySelector('.user-full-name')?.textContent || btnRefresh.dataset.name || 'este grupo';
+                refreshGroupData(id, name);
+            }
 
             if (btnToggle) {
                 const id = btnToggle.dataset.id;
@@ -352,12 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     toggleStatus(id);
                 }
-            }
-
-            if (btnTest) {
-                const id = btnTest.dataset.id;
-                const name = btnTest.dataset.name;
-                openTestSendModal(id, name);
             }
 
             if (btnDelete) {
@@ -473,13 +435,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function openTestSendModal(id, name) {
-        if (!dialogTestSend || !formTestSend) return;
-        formTestSend.action = `${window.location.origin}/grupos-whatsapp/${id}/testar-envio`;
-        if (testSendGroupName) {
-            testSendGroupName.textContent = `Envio de validação para o grupo: ${name}`;
+    async function refreshGroupData(id, name) {
+        const processingScreen = document.querySelector('[data-processing-screen]');
+        const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+        const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+        const appShell = document.querySelector('.app-shell');
+
+        if (processingScreen && processingHeading && processingMessage) {
+            processingHeading.textContent = 'Atualizando grupo';
+            processingMessage.textContent = `Buscando informações atualizadas de "${name}" na Evolution API...`;
+            processingScreen.hidden = false;
+            processingScreen.setAttribute('aria-hidden', 'false');
+            appShell?.setAttribute('inert', '');
+            document.body.classList.add('processing-locked');
+            document.body.style.overflow = 'hidden';
         }
-        openModal(dialogTestSend);
+
+        try {
+            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/atualizar-dados`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `csrf_test_name=${getCsrfToken()}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Sucesso', data.message, 'success');
+                loadGroups();
+            } else {
+                showToast('Erro', data.message || 'Erro ao atualizar dados do grupo.', 'error');
+            }
+        } catch (error) {
+            showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        } finally {
+            if (processingScreen) {
+                processingScreen.hidden = true;
+                processingScreen.setAttribute('aria-hidden', 'true');
+                appShell?.removeAttribute('inert');
+                document.body.classList.remove('processing-locked');
+                document.body.style.overflow = '';
+            }
+        }
     }
 
     function deleteGroup(id, name) {

@@ -400,6 +400,68 @@ class WhatsappGroups extends BaseController
         ]);
     }
 
+    public function updateData(int $id): ResponseInterface
+    {
+        if (! UserPermissions::hasPermission('whatsapp_groups', 'edit')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Sem permissão para atualizar dados.'])->setStatusCode(403);
+        }
+
+        $group = $this->groupModel->find($id);
+        if (! $group) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Grupo não encontrado.'])->setStatusCode(404);
+        }
+
+        try {
+            $instanceName = $group['instance_name'];
+            if ($instanceName === '') {
+                $settings = $this->evolutionService->getSettings();
+                $instanceName = (string) ($settings['default_instance_name'] ?? '');
+            }
+
+            if ($instanceName === '') {
+                return $this->response->setJSON(['success' => false, 'message' => 'Nenhuma instância configurada para a atualização.'])->setStatusCode(400);
+            }
+
+            $remoteGroups = $this->evolutionService->fetchAllGroups($instanceName);
+            $remoteGroup = null;
+            foreach ($remoteGroups as $item) {
+                $groupJid = (string) ($item['id'] ?? $item['jid'] ?? '');
+                if ($groupJid === $group['group_jid']) {
+                    $remoteGroup = $item;
+                    break;
+                }
+            }
+
+            if (! $remoteGroup) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Grupo não encontrado na Evolution API.'])->setStatusCode(404);
+            }
+
+            $subject = trim((string) ($remoteGroup['subject'] ?? $remoteGroup['name'] ?? 'Grupo WhatsApp'));
+            $description = (string) ($remoteGroup['desc'] ?? $remoteGroup['description'] ?? '');
+            $participants = $remoteGroup['participants'] ?? [];
+            $participantsCount = is_array($participants) ? count($participants) : (int) ($remoteGroup['size'] ?? 0);
+            $avatarUrl = (string) ($remoteGroup['pictureUrl'] ?? $remoteGroup['profilePicUrl'] ?? '');
+
+            $this->groupModel->update($id, [
+                'name' => $subject,
+                'description' => $description,
+                'participants_count' => $participantsCount,
+                'avatar_url' => $avatarUrl,
+                'last_synced_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Dados do grupo atualizados com sucesso!',
+            ]);
+        } catch (Throwable $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erro ao atualizar dados: ' . $e->getMessage(),
+            ])->setStatusCode(500);
+        }
+    }
+
     public function sendTestMessage(int $id): ResponseInterface
     {
         if (! UserPermissions::hasPermission('whatsapp_groups', 'edit')) {

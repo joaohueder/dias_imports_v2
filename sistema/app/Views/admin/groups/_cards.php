@@ -76,9 +76,9 @@
 
             <div class="user-card-actions">
                 <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'edit')): ?>
-                    <button type="button" class="btn-card-action btn-test-send" data-id="<?= esc($group['id']) ?>" data-name="<?= esc($group['name']) ?>">
-                        <i class="ti ti-send"></i>
-                        <span>Testar</span>
+                    <button type="button" class="btn-card-action btn-refresh-group" data-id="<?= esc($group['id']) ?>" data-name="<?= esc($group['name']) ?>" title="Atualizar dados, nome e quantidade de participantes">
+                        <i class="ti ti-refresh"></i>
+                        <span>Atualizar</span>
                     </button>
                     <button type="button" class="btn-card-action btn-toggle-status" data-id="<?= esc($group['id']) ?>" data-status="<?= esc($group['status']) ?>">
                         <i class="ti ti-power"></i>

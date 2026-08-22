@@ -225,6 +225,25 @@ class EvolutionApiService
         return $this->request('POST', '/group/createGroup/' . rawurlencode($name), $data);
     }
 
+    public function updateGroup(string $name, string $groupJid, string $subject, string $description = ''): void
+    {
+        $name = $this->validateInstanceName($name);
+        $subject = trim($subject);
+        if ($subject === '') {
+            throw new RuntimeException('Informe o nome do grupo.');
+        }
+
+        $this->request('POST', '/group/updateGroupSubject/' . rawurlencode($name) . '?groupJid=' . rawurlencode($groupJid), [
+            'subject' => $subject,
+        ]);
+
+        if ($description !== '') {
+            $this->request('POST', '/group/updateGroupDescription/' . rawurlencode($name) . '?groupJid=' . rawurlencode($groupJid), [
+                'description' => $description,
+            ]);
+        }
+    }
+
     public function logoutInstance(string $name): void
     {
         $this->request('DELETE', '/instance/logout/' . rawurlencode($this->validateInstanceName($name)));

@@ -24,7 +24,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('grupos-whatsapp/sincronizar', 'WhatsappGroups::sync', ['filter' => ['permission:whatsapp_groups,create', 'csrf']]);
     $routes->post('grupos-whatsapp/novo', 'WhatsappGroups::create', ['filter' => ['permission:whatsapp_groups,create', 'csrf']]);
     $routes->post('grupos-whatsapp/(:num)/status', 'WhatsappGroups::toggleStatus/$1', ['filter' => ['permission:whatsapp_groups,edit', 'csrf']]);
-    $routes->post('grupos-whatsapp/(:num)/testar-envio', 'WhatsappGroups::sendTestMessage/$1', ['filter' => ['permission:whatsapp_groups,edit', 'csrf']]);
+    $routes->post('grupos-whatsapp/(:num)/atualizar-dados', 'WhatsappGroups::updateData/$1', ['filter' => ['permission:whatsapp_groups,edit', 'csrf']]);
     $routes->post('grupos-whatsapp/(:num)/excluir', 'WhatsappGroups::delete/$1', ['filter' => ['permission:whatsapp_groups,delete', 'csrf']]);
 
     // Produtos

@@ -109,43 +109,6 @@
         </form>
     </section>
 </div>
-
-<!-- Modal Testar Envio -->
-<div class="template-dialog" id="dialog-test-send" hidden aria-hidden="true">
-    <section class="template-dialog-card" role="dialog" aria-modal="true" aria-labelledby="test-send-title">
-        <button class="template-dialog-close" type="button" data-close-dialog aria-label="Fechar modal"><i class="ti ti-x" aria-hidden="true"></i></button>
-        
-        <div class="template-dialog-header">
-            <div class="template-dialog-icon" aria-hidden="true"><i class="ti ti-send"></i></div>
-            <div class="template-dialog-title-group">
-                <p class="template-dialog-kicker">Validação</p>
-                <h2 class="template-dialog-title" id="test-send-title">Testar Envio de Mensagem</h2>
-                <p class="template-dialog-desc" id="test-send-group-name">Envio de validação para o grupo</p>
-            </div>
-        </div>
-
-        <form id="form-test-send" action="" method="post">
-            <?= csrf_field() ?>
-            <div class="field-group">
-                <label for="test_send_phone">Número do WhatsApp *</label>
-                <input type="text" id="test_send_phone" name="phone" required placeholder="Ex: 5511999999999" data-mask="phone">
-                <small class="field-hint">Digite o número com DDI e DDD (somente números).</small>
-            </div>
-            <div class="field-group">
-                <label for="test_send_message">Mensagem *</label>
-                <textarea id="test_send_message" name="message" rows="4" required placeholder="Digite a mensagem de teste...">🚀 *Mensagem de Teste*&#10;Esta é uma mensagem de validação de envio do painel Dias Imports.</textarea>
-            </div>
-
-            <div class="template-dialog-actions">
-                <button type="button" class="button button-outline" data-close-dialog>Cancelar</button>
-                <button type="submit" class="button button-primary" id="btn-submit-test-send">
-                    <i class="ti ti-send"></i>
-                    <span>Enviar Agora</span>
-                </button>
-            </div>
-        </form>
-    </section>
-</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
