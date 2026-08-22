@@ -118,23 +118,27 @@ $helperInitials = static function(string $name): string {
                 <div class="user-card-actions">
                     <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'edit')): ?>
                         <a href="<?= site_url('usuarios/' . $u['id'] . '/editar') ?>" class="btn-card-action">
-                            Editar
+                            <i class="ti ti-pencil"></i>
+                            <span>Editar</span>
                         </a>
 
                         <button type="button" class="btn-card-action" data-open-reset-pwd data-user-id="<?= esc($u['id']) ?>" data-user-name="<?= esc($u['name']) ?>">
-                            Redefinir Senha
+                            <i class="ti ti-key"></i>
+                            <span>Redefinir Senha</span>
                         </button>
 
                         <?php if (! $isSelf): ?>
                             <form action="<?= site_url('usuarios/' . $u['id'] . '/status') ?>" method="post" data-confirm-action="user-status-<?= $isActive ? 'inativar' : 'ativar' ?>" data-action-name="<?= esc($u['name']) ?>">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn-card-action">
-                                    <?= $isActive ? 'Inativar' : 'Ativar' ?>
+                                    <i class="ti ti-power"></i>
+                                    <span><?= $isActive ? 'Inativar' : 'Ativar' ?></span>
                                 </button>
                             </form>
                         <?php else: ?>
                             <button type="button" class="btn-card-action disabled" disabled title="Não é possível alterar seu próprio status">
-                                Inativar
+                                <i class="ti ti-power"></i>
+                                <span>Inativar</span>
                             </button>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -144,12 +148,14 @@ $helperInitials = static function(string $name): string {
                             <form action="<?= site_url('usuarios/' . $u['id'] . '/excluir') ?>" method="post" data-confirm-action="user-delete" data-action-name="<?= esc($u['name']) ?>">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn-card-action text-danger">
-                                    Excluir
+                                    <i class="ti ti-trash"></i>
+                                    <span>Excluir</span>
                                 </button>
                             </form>
                         <?php else: ?>
                             <button type="button" class="btn-card-action disabled" disabled title="Não é possível excluir seu próprio usuário">
-                                Excluir
+                                <i class="ti ti-trash"></i>
+                                <span>Excluir</span>
                             </button>
                         <?php endif; ?>
                     <?php endif; ?>
