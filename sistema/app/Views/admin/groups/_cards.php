@@ -1,16 +1,10 @@
 <?php if (empty($groups)): ?>
-    <div class="users-empty-search col-span-full">
-        <div class="empty-icon">
-            <i class="ti ti-brand-whatsapp"></i>
+    <div class="users-empty-search col-span-full" style="padding: 48px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgb(var(--muted));">
+        <div class="empty-icon" style="margin-bottom: 4px;">
+            <i class="ti ti-inbox" style="font-size: 36px;"></i>
         </div>
-        <h3>Nenhum grupo encontrado</h3>
-        <p>Não encontramos grupos de WhatsApp cadastrados ou sincronizados para os filtros selecionados.</p>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'create') || \App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'edit')): ?>
-            <button type="button" class="button secondary" id="btn-sync-empty" style="margin-top: 12px;">
-                <i class="ti ti-refresh"></i>
-                <span>Sincronizar Grupos do WhatsApp</span>
-            </button>
-        <?php endif; ?>
+        <p style="margin: 0; font-size: 14px; font-weight: 600;">Nenhum grupo encontrado para os filtros selecionados.</p>
+        <span style="font-size: 14px;">Novos grupos sincronizados do WhatsApp aparecerão aqui automaticamente.</span>
     </div>
 <?php else: ?>
     <?php foreach ($groups as $group): ?>
