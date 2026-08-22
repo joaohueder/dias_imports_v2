@@ -39,7 +39,10 @@
                 $originIcon = 'ti-device-mobile';
             }
         ?>
-        <tr class="lead-row" data-lead-row data-id="<?= esc($lead['id']) ?>">
+        <tr class="lead-row" data-lead-row data-id="<?= esc($lead['id']) ?>"
+            data-name="<?= esc(mb_strtolower($lead['name'])) ?>"
+            data-phone="<?= esc(preg_replace('/\D+/', '', $lead['phone'])) ?>"
+            data-date="<?= esc($createdAt ? date('Y-m-d', $createdAt) : '') ?>">
             <!-- DATA / HORA -->
             <td>
                 <div class="lead-date-cell">

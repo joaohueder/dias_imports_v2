@@ -294,6 +294,21 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (btnSaveGroup.disabled) return;
 
+            const processingScreen = document.querySelector('[data-processing-screen]');
+            const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+            const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+            const appShell = document.querySelector('.app-shell');
+
+            if (processingScreen && processingHeading && processingMessage) {
+                processingHeading.textContent = 'Salvando grupo';
+                processingMessage.textContent = 'Gravando as informações do grupo no sistema...';
+                processingScreen.hidden = false;
+                processingScreen.setAttribute('aria-hidden', 'false');
+                appShell?.setAttribute('inert', '');
+                document.body.classList.add('processing-locked');
+                document.body.style.overflow = 'hidden';
+            }
+
             const formData = new FormData(formSaveSelectedGroup);
             btnSaveGroup.disabled = true;
             btnSaveGroup.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Salvando...</span>';
@@ -318,6 +333,13 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 btnSaveGroup.disabled = false;
                 btnSaveGroup.innerHTML = '<i class="ti ti-device-floppy"></i> <span>Salvar Grupo</span>';
+                if (processingScreen) {
+                    processingScreen.hidden = true;
+                    processingScreen.setAttribute('aria-hidden', 'true');
+                    appShell?.removeAttribute('inert');
+                    document.body.classList.remove('processing-locked');
+                    document.body.style.overflow = '';
+                }
             }
         });
     }
@@ -444,6 +466,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function toggleStatus(id) {
+        const processingScreen = document.querySelector('[data-processing-screen]');
+        const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+        const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+        const appShell = document.querySelector('.app-shell');
+
+        if (processingScreen && processingHeading && processingMessage) {
+            processingHeading.textContent = 'Atualizando status';
+            processingMessage.textContent = 'Alterando a disponibilidade do grupo...';
+            processingScreen.hidden = false;
+            processingScreen.setAttribute('aria-hidden', 'false');
+            appShell?.setAttribute('inert', '');
+            document.body.classList.add('processing-locked');
+            document.body.style.overflow = 'hidden';
+        }
+
         try {
             const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/status`, {
                 method: 'POST',
@@ -463,6 +500,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        } finally {
+            if (processingScreen) {
+                processingScreen.hidden = true;
+                processingScreen.setAttribute('aria-hidden', 'true');
+                appShell?.removeAttribute('inert');
+                document.body.classList.remove('processing-locked');
+                document.body.style.overflow = '';
+            }
         }
     }
 
@@ -523,6 +568,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function executeDelete(id) {
+        const processingScreen = document.querySelector('[data-processing-screen]');
+        const processingHeading = processingScreen?.querySelector('[data-processing-heading]');
+        const processingMessage = processingScreen?.querySelector('[data-processing-message]');
+        const appShell = document.querySelector('.app-shell');
+
+        if (processingScreen && processingHeading && processingMessage) {
+            processingHeading.textContent = 'Excluindo grupo';
+            processingMessage.textContent = 'Removendo o grupo cadastrado do sistema...';
+            processingScreen.hidden = false;
+            processingScreen.setAttribute('aria-hidden', 'false');
+            appShell?.setAttribute('inert', '');
+            document.body.classList.add('processing-locked');
+            document.body.style.overflow = 'hidden';
+        }
+
         try {
             const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/excluir`, {
                 method: 'POST',
@@ -542,6 +602,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        } finally {
+            if (processingScreen) {
+                processingScreen.hidden = true;
+                processingScreen.setAttribute('aria-hidden', 'true');
+                appShell?.removeAttribute('inert');
+                document.body.classList.remove('processing-locked');
+                document.body.style.overflow = '';
+            }
         }
     }
 

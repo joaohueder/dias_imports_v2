@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (leadsTbody && data.htmlTable) {
                     leadsTbody.innerHTML = data.htmlTable;
+                    applyClientSideFilters();
                 }
                 if (leadsCounter) {
                     leadsCounter.textContent = String(data.totalResults ?? 0);
@@ -150,21 +151,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    let searchDebounce = null;
+    const applyClientSideFilters = () => {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const dateVal = dateInput ? dateInput.value.trim() : '';
+        const rows = document.querySelectorAll('[data-lead-row]');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const name = row.dataset.name || '';
+            const phone = row.dataset.phone || '';
+            const date = row.dataset.date || '';
+
+            const matchesSearch = !query || name.includes(query) || phone.includes(query.replace(/\D/g, ''));
+            const matchesDate = !dateVal || date === dateVal;
+
+            const visible = matchesSearch && matchesDate;
+            row.style.display = visible ? '' : 'none';
+            if (visible) visibleCount++;
+        });
+
+        if (leadsCounter) {
+            leadsCounter.textContent = String(visibleCount);
+        }
+    };
+
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            clearTimeout(searchDebounce);
-            searchDebounce = setTimeout(() => {
-                remainingMs = REFRESH_INTERVAL_MS;
-                fetchLeads();
-            }, 300);
+            applyClientSideFilters();
         });
     }
 
     if (dateInput) {
         dateInput.addEventListener('change', () => {
-            remainingMs = REFRESH_INTERVAL_MS;
-            fetchLeads();
+            applyClientSideFilters();
         });
     }
 
@@ -172,8 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSearchBtn.addEventListener('click', () => {
             if (searchInput) searchInput.value = '';
             clearSearchBtn.remove();
-            remainingMs = REFRESH_INTERVAL_MS;
-            fetchLeads();
+            applyClientSideFilters();
         });
     }
 
@@ -181,8 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearDateBtn.addEventListener('click', () => {
             if (dateInput) dateInput.value = '';
             clearDateBtn.remove();
-            remainingMs = REFRESH_INTERVAL_MS;
-            fetchLeads();
+            applyClientSideFilters();
         });
     }
 
