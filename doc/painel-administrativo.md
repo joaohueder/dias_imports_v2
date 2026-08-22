@@ -267,13 +267,29 @@ A aba `Landing Page de Leads` em `/configuracoes?tab=landing-leads` permite conf
 | `POST` | `/leads/capture` | Captura AJAX do nome/WhatsApp do lead e retorno dos dados do modal VIP |
 | `POST` | `/configuracoes/landing-leads` | Salvar configurações, modelos, paletas e animações da landing page |
 
+### Funcionalidades
+- **SEO & Compartilhamento Social**: Configuração de Título (`seo_title`) e Descrição (`seo_description`) para o Google e redes sociais (Open Graph / WhatsApp / Facebook / Instagram), com imagem automática do favicon estilizado "DI" (`favicon.svg`) e prévia em tempo real.
+- **Modelos de Layout**: 6 opções de layouts estruturais e responsivos.
+- **Paletas de Cores**: 6 temas cromáticos completos.
+- **Animações de Fundo (Background FX)**: Efeitos visuais dinâmicos em CSS puro.
+- **Animações do Botão Principal**: Efeitos de pulso, brilho (shimmer), tremor (shake), bounce e expansão de glow.
+- **Textos e Conteúdo**: Headline, subheadline, badge, botões, 3 benefícios com ícones interativos e modal pós-cadastro.
+- **Link do Grupo VIP**: URL direta de convite do WhatsApp.
+- **Live Mobile Mockup**: Simulador de smartphone em tempo real no painel administrativo.
+
+### Rotas internas
+
+| Método | Rota | Operação |
+| --- | --- | --- |
+| `POST` | `/configuracoes/landing-page` | Salvar configurações completas da Landing Page (modelos, paletas, animações, SEO, textos e links) |
+
 ### Código e Banco
 - Controllers: `sistema/app/Controllers/Landing.php`, `sistema/app/Controllers/Home.php`
 - Models: `sistema/app/Models/LandingLeadSettingModel.php`, `sistema/app/Models/LeadModel.php`
 - Views: `sistema/app/Views/landing/leads.php`, `sistema/app/Views/admin/settings.php`
 - Tabelas: `landing_lead_settings`, `leads`
 - Migrations: `2026-08-22-020000_AddTemplateAndPaletteToLandingLeadSettings.php`, `2026-08-22-030000_AddBgAnimationAndBtnAnimationToLandingLeadSettings.php`
-- SQL incremental: `bd/006-landing-page-leads.sql`, `bd/008-landing-modelos-paletas.sql`, `bd/009-landing-animacoes-bg-btn.sql`
+- SQL incremental: `bd/006-landing-page-leads.sql`, `bd/008-landing-modelos-paletas.sql`, `bd/009-landing-animacoes-bg-btn.sql`, `bd/010-landing-seo.sql`
 - SQL completo: `bd/master.sql`
 
 ## Meta Ads (Pixel & Conversions API)

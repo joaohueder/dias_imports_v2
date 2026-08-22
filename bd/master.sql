@@ -94,6 +94,8 @@ CREATE TABLE `landing_lead_settings` (
   `color_palette` VARCHAR(50) NOT NULL DEFAULT 'palette-aurora',
   `bg_animation` VARCHAR(50) NOT NULL DEFAULT 'bg-particles',
   `btn_animation` VARCHAR(50) NOT NULL DEFAULT 'btn-pulse',
+  `seo_title` VARCHAR(255) NULL DEFAULT 'Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos',
+  `seo_description` TEXT NULL,
   `headline` VARCHAR(255) NOT NULL DEFAULT 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
   `subheadline` TEXT NULL,
   `badge_text` VARCHAR(100) NOT NULL DEFAULT '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
@@ -142,7 +144,7 @@ CREATE TABLE `meta_ads_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `landing_lead_settings` (
-  `id`, `template_model`, `color_palette`, `bg_animation`, `btn_animation`, `headline`, `subheadline`, `badge_text`, `button_text`, `button_subtext`,
+  `id`, `template_model`, `color_palette`, `bg_animation`, `btn_animation`, `seo_title`, `seo_description`, `headline`, `subheadline`, `badge_text`, `button_text`, `button_subtext`,
   `whatsapp_group_link`, `card1_icon`, `card1_title`, `card1_desc`,
   `card2_icon`, `card2_title`, `card2_desc`, `card3_icon`, `card3_title`, `card3_desc`,
   `modal_title`, `modal_desc`, `modal_button_text`, `created_at`, `updated_at`
@@ -152,6 +154,8 @@ INSERT INTO `landing_lead_settings` (
   'palette-aurora',
   'bg-particles',
   'btn-pulse',
+  'Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos',
+  'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
   'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
   'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
   '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',

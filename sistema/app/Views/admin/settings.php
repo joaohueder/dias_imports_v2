@@ -395,6 +395,8 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             'color_palette' => 'palette-aurora',
             'bg_animation' => 'bg-particles',
             'btn_animation' => 'btn-pulse',
+            'seo_title' => 'Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos',
+            'seo_description' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
             'headline' => 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
             'subheadline' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
             'badge_text' => '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
@@ -532,6 +534,50 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                     </div>
                                 </label>
                             <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- SEO & METADADOS DE COMPARTILHAMENTO (OPEN GRAPH / WHATSAPP / REDES SOCIAIS) -->
+                    <div class="settings-card-block">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(52, 211, 153, 0.15); color: #34d399;"><i class="ti ti-share"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">SEO & Compartilhamento Social</h3>
+                                <p class="settings-section-subtitle">Título, descrição e prévia exibidos no Google, WhatsApp, Facebook e Instagram ao enviar o link.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid single">
+                            <label class="form-field">
+                                <span class="field-label-row">
+                                    <span>Título da Página e de Compartilhamento (SEO Title / OG Title)</span>
+                                    <small class="field-hint">Aparece na aba do navegador e no título do card no WhatsApp</small>
+                                </span>
+                                <input type="text" name="seo_title" value="<?= esc($lp['seo_title'] ?? '') ?>" placeholder="Ex: Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos" maxlength="255" data-lp-input="seo-title">
+                            </label>
+
+                            <label class="form-field">
+                                <span class="field-label-row">
+                                    <span>Descrição da Página e Compartilhamento (Meta Description / OG Description)</span>
+                                    <small class="field-hint">Resumo chamativo que aparece abaixo do título no compartilhamento</small>
+                                </span>
+                                <textarea name="seo_description" rows="3" placeholder="Ex: Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão." data-lp-input="seo-desc"><?= esc($lp['seo_description'] ?? '') ?></textarea>
+                            </label>
+
+                            <!-- Card de Prévia de Compartilhamento no WhatsApp -->
+                            <div class="share-preview-box">
+                                <span class="share-preview-badge"><i class="ti ti-brand-whatsapp"></i> Prévia de Compartilhamento no WhatsApp / Redes Sociais</span>
+                                <div class="share-preview-card">
+                                    <div class="share-preview-thumb">
+                                        <img src="<?= base_url('favicon.svg') ?>" alt="Ícone Dias Imports" width="70" height="70">
+                                    </div>
+                                    <div class="share-preview-content">
+                                        <span class="share-preview-domain"><?= parse_url(base_url(), PHP_URL_HOST) ?: 'diasimports.com.br' ?></span>
+                                        <strong class="share-preview-title" data-share-preview-title><?= esc(!empty($lp['seo_title']) ? $lp['seo_title'] : ($lp['headline'] ?? 'Grupo VIP Dias Imports')) ?></strong>
+                                        <p class="share-preview-desc" data-share-preview-desc><?= esc(!empty($lp['seo_description']) ? $lp['seo_description'] : ($lp['subheadline'] ?? 'Receba oportunidades imperdíveis de importados em primeira mão.')) ?></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

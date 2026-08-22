@@ -20,8 +20,8 @@
 
 ## BANCO DE DADOS
 - Crie e atualize sempre o arquivo "bd/master.sql" arquivo esse que será capaz de reconstruir ou instalar o banco de dados por completo.
-- Sempre crie o arquivo sequencial "bd/[sequencia]-titulo" para executar após uma alteração/construção/melhoria no sistema.
-- Sempre execute o sql no banco mas nunca perca dados já registrado no banco, faça um migração sem perder dados.
+- Sempre crie o arquivo sequencial "bd/[sequencia]-titulo.sql" e a respectiva Migration no CodeIgniter (`sistema/app/Database/Migrations/`) para qualquer alteração/construção/melhoria no sistema.
+- **SEMPRE execute a migração imediatamente no banco de dados** (via `php sistema/spark migrate` ou execução direta do SQL) em toda alteração, garantindo que o banco esteja sempre atualizado e compatível, sem perda de dados existentes.
 
 ## LAYOUT
 - O botão Salvar e cancelar no desktop deve ser flutuante e só aparecer quando tiver algo para ser salvo.

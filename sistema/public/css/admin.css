@@ -2780,6 +2780,90 @@ body.processing-locked { overflow: hidden; }
     animation: none !important;
 }
 
+/* Card de Prévia de Compartilhamento no WhatsApp */
+.share-preview-box {
+    margin-top: 6px;
+    background: rgba(var(--surface-secondary), 0.7);
+    border: 1px solid rgb(var(--border));
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.share-preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #25d366;
+    margin-bottom: 10px;
+}
+
+.share-preview-card {
+    background: #0b141a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.share-preview-thumb {
+    width: 80px;
+    min-width: 80px;
+    background: #111b21;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.share-preview-thumb img {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.share-preview-content {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.share-preview-domain {
+    font-size: 10px;
+    color: #8696a0;
+    text-transform: lowercase;
+    margin-bottom: 2px;
+}
+
+.share-preview-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #e9edef;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-preview-desc {
+    font-size: 11px;
+    color: #8696a0;
+    line-height: 1.35;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 @media (max-width: 1024px) {
     .landing-split-layout {
         grid-template-columns: 1fr;

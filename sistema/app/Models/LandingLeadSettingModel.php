@@ -17,6 +17,8 @@ class LandingLeadSettingModel extends Model
         'color_palette',
         'bg_animation',
         'btn_animation',
+        'seo_title',
+        'seo_description',
         'headline',
         'subheadline',
         'badge_text',

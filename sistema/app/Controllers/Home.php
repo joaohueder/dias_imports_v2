@@ -311,6 +311,8 @@ class Home extends BaseController
             'color_palette' => in_array($colorPalette, $validPalettes, true) ? $colorPalette : 'palette-aurora',
             'bg_animation' => in_array($bgAnimation, $validBgAnimations, true) ? $bgAnimation : 'bg-particles',
             'btn_animation' => in_array($btnAnimation, $validBtnAnimations, true) ? $btnAnimation : 'btn-pulse',
+            'seo_title' => trim((string) $this->request->getPost('seo_title')),
+            'seo_description' => trim((string) $this->request->getPost('seo_description')),
             'headline' => trim((string) $this->request->getPost('headline')),
             'subheadline' => trim((string) $this->request->getPost('subheadline')),
             'badge_text' => trim((string) $this->request->getPost('badge_text')),

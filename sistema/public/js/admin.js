@@ -783,6 +783,12 @@
                 } else if (target === 'button-subtext') {
                     const btnSub = settings.querySelector('[data-preview="button-subtext"]');
                     if (btnSub) btnSub.textContent = value || '';
+                } else if (target === 'seo-title') {
+                    const shareTitle = settings.querySelector('[data-share-preview-title]');
+                    if (shareTitle) shareTitle.textContent = value || settings.querySelector('[data-lp-input="headline"]')?.value || 'Grupo VIP Dias Imports';
+                } else if (target === 'seo-desc') {
+                    const shareDesc = settings.querySelector('[data-share-preview-desc]');
+                    if (shareDesc) shareDesc.textContent = value || settings.querySelector('[data-lp-input="subheadline"]')?.value || 'Receba oportunidades imperdíveis de importados em primeira mão.';
                 } else if (target === 'modal-title') {
                     const modalTitle = settings.querySelector('[data-preview="modal-title"]');
                     if (modalTitle) modalTitle.textContent = value || 'Acesso Liberado';

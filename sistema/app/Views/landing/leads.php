@@ -4,7 +4,33 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title><?= esc($landing['headline'] ?? 'Grupo VIP Dias Imports') ?> | Dias Imports</title>
+    <?php
+    $pageSeoTitle = !empty($landing['seo_title']) ? $landing['seo_title'] : ($landing['headline'] ?? 'Grupo VIP Dias Imports');
+    $pageSeoDesc = !empty($landing['seo_description']) ? $landing['seo_description'] : ($landing['subheadline'] ?? 'Receba oportunidades imperdíveis de importados em primeira mão.');
+    $shareImageUrl = base_url('favicon.svg');
+    ?>
+    <title><?= esc($pageSeoTitle) ?> | Dias Imports</title>
+    <meta name="description" content="<?= esc($pageSeoDesc) ?>"/>
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="<?= current_url() ?>"/>
+    <meta property="og:title" content="<?= esc($pageSeoTitle) ?>"/>
+    <meta property="og:description" content="<?= esc($pageSeoDesc) ?>"/>
+    <meta property="og:image" content="<?= esc($shareImageUrl) ?>"/>
+    <meta property="og:image:secure_url" content="<?= esc($shareImageUrl) ?>"/>
+    <meta property="og:image:type" content="image/svg+xml"/>
+    <meta property="og:image:width" content="512"/>
+    <meta property="og:image:height" content="512"/>
+    <meta property="og:site_name" content="Dias Imports"/>
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="<?= current_url() ?>"/>
+    <meta name="twitter:title" content="<?= esc($pageSeoTitle) ?>"/>
+    <meta name="twitter:description" content="<?= esc($pageSeoDesc) ?>"/>
+    <meta name="twitter:image" content="<?= esc($shareImageUrl) ?>"/>
+
     <link rel="icon" type="image/svg+xml" href="<?= base_url('favicon.svg') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
