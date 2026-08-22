@@ -88,6 +88,8 @@ class Auth extends BaseController
             'user_id' => (int) $user['id'],
             'user_name' => $user['name'],
             'user_email' => $user['email'],
+            'user_role' => $user['role'] ?? 'user',
+            'user_permissions' => !empty($user['permissions']) ? json_decode($user['permissions'], true) : [],
         ]);
     }
 

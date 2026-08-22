@@ -77,6 +77,11 @@
         { match: '/configuracoes/modelos-mensagens/status', title: 'Atualizando o modelo', message: 'Alterando o status de disponibilidade do modelo.' },
         { match: '/configuracoes/modelos-mensagens', title: 'Salvando modelo de mensagem', message: 'Gravando os dados e tags do modelo com segurança.' },
         { match: '/configuracoes/landing-leads', title: 'Salvando Landing Page', message: 'Publicando as novas configurações da página de leads.' },
+        { match: '/usuarios/status', title: 'Atualizando o usuário', message: 'Aplicando o novo status de acesso do usuário.' },
+        { match: '/usuarios/excluir', title: 'Excluindo o usuário', message: 'Removendo permanentemente a conta de acesso.' },
+        { match: '/usuarios/redefinir-senha', title: 'Redefinindo a senha', message: 'Criptografando e atualizando as novas credenciais.' },
+        { match: '/usuarios/novo', title: 'Criando usuário', message: 'Cadastrando o novo usuário e configurando suas permissões.' },
+        { match: '/usuarios/editar', title: 'Salvando alterações', message: 'Atualizando os dados cadastrais e permissões do usuário.' },
     ];
     const showProcessingOverlay = (title, message) => {
         if (!processingScreen || !processingHeading || !processingMessage || !processingJoke) return;
@@ -170,6 +175,67 @@
         closeSuccessButton.addEventListener('click', closeSuccess);
         successDialog.addEventListener('click', (event) => event.target === successDialog && closeSuccess());
         document.addEventListener('keydown', (event) => event.key === 'Escape' && successDialog.classList.contains('open') && closeSuccess());
+    }
+
+    const actionDialog = document.querySelector('[data-action-dialog]');
+    const cancelAction = document.querySelector('[data-cancel-action]');
+    const confirmAction = document.querySelector('[data-confirm-action-button]');
+    const actionTitle = document.querySelector('[data-action-title]');
+    const actionMessage = document.querySelector('[data-action-message]');
+    const actionIcon = document.querySelector('[data-action-icon] i');
+    const actionButtonIcon = document.querySelector('[data-action-button-icon]');
+    const actionButtonLabel = document.querySelector('[data-action-button-label]');
+    let pendingActionForm = null;
+    let actionTrigger = null;
+    if (actionDialog && cancelAction && confirmAction && actionTitle && actionMessage && actionIcon && actionButtonIcon && actionButtonLabel) {
+        const actions = {
+            default: { title: 'Tornar WhatsApp padrão?', message: (name) => `O WhatsApp “${name}” será usado como padrão nos atendimentos.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
+            activate: { title: 'Ativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” voltará a ficar disponível para os atendimentos.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
+            deactivate: { title: 'Inativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” ficará indisponível até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
+            delete: { title: 'Excluir este WhatsApp?', message: (name) => `O WhatsApp “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'evolution-default': { title: 'Tornar instância padrão?', message: (name) => `A instância “${name}” será usada como padrão nos novos envios.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
+            'evolution-logout': { title: 'Desconectar esta instância?', message: (name) => `A sessão de WhatsApp da instância “${name}” será encerrada. Será necessário ler outro QR Code para reconectar.`, label: 'Sim, desconectar', icon: 'ti-plug-off', buttonIcon: 'ti-plug-off', variant: 'warning' },
+            'evolution-delete': { title: 'Excluir esta instância?', message: (name) => `A instância “${name}” e sua sessão serão removidas da Evolution API. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'user-status-ativar': { title: 'Ativar este usuário?', message: (name) => `O usuário “${name}” voltará a ter acesso ao sistema.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
+            'user-status-inativar': { title: 'Inativar este usuário?', message: (name) => `O usuário “${name}” perderá o acesso ao sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
+            'user-delete': { title: 'Excluir este usuário?', message: (name) => `O usuário “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+        };
+        const closeActionDialog = () => {
+            actionDialog.classList.remove('open');
+            actionDialog.hidden = true;
+            document.body.style.overflow = '';
+            pendingActionForm = null;
+            actionTrigger?.focus();
+        };
+        document.querySelectorAll('[data-confirm-action]').forEach((form) => form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const config = actions[form.dataset.confirmAction];
+            if (!config) return;
+            pendingActionForm = form;
+            actionTrigger = event.submitter;
+            const name = form.dataset.whatsappName || form.dataset.actionName || 'selecionado';
+            actionTitle.textContent = config.title;
+            actionMessage.textContent = config.message(name);
+            actionButtonLabel.textContent = config.label;
+            actionIcon.className = `ti ${config.icon}`;
+            actionButtonIcon.className = `ti ${config.buttonIcon}`;
+            actionDialog.dataset.variant = config.variant;
+            confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
+            confirmAction.disabled = false;
+            actionDialog.hidden = false;
+            window.requestAnimationFrame(() => actionDialog.classList.add('open'));
+            document.body.style.overflow = 'hidden';
+            cancelAction.focus();
+        }));
+        cancelAction.addEventListener('click', closeActionDialog);
+        actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
+        document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
+        confirmAction.addEventListener('click', () => {
+            if (!pendingActionForm) return;
+            confirmAction.disabled = true;
+            showProcessing(pendingActionForm, actionTrigger);
+            pendingActionForm.submit();
+        });
     }
 
     const settings = document.querySelector('[data-settings-root]');
@@ -1226,59 +1292,6 @@
             // 4. Fechar o modal
             closeIconPickerModal();
         });
-
-        const actionIcon = settings.querySelector('[data-action-icon] i');
-        const actionButtonIcon = settings.querySelector('[data-action-button-icon]');
-        const actionButtonLabel = settings.querySelector('[data-action-button-label]');
-        let pendingActionForm = null;
-        let actionTrigger = null;
-        if (actionDialog && cancelAction && confirmAction && actionTitle && actionMessage && actionIcon && actionButtonIcon && actionButtonLabel) {
-            const actions = {
-                default: { title: 'Tornar WhatsApp padrão?', message: (name) => `O WhatsApp “${name}” será usado como padrão nos atendimentos.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
-                activate: { title: 'Ativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” voltará a ficar disponível para os atendimentos.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
-                deactivate: { title: 'Inativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” ficará indisponível até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
-                delete: { title: 'Excluir este WhatsApp?', message: (name) => `O WhatsApp “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
-                'evolution-default': { title: 'Tornar instância padrão?', message: (name) => `A instância “${name}” será usada como padrão nos novos envios.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
-                'evolution-logout': { title: 'Desconectar esta instância?', message: (name) => `A sessão de WhatsApp da instância “${name}” será encerrada. Será necessário ler outro QR Code para reconectar.`, label: 'Sim, desconectar', icon: 'ti-plug-off', buttonIcon: 'ti-plug-off', variant: 'warning' },
-                'evolution-delete': { title: 'Excluir esta instância?', message: (name) => `A instância “${name}” e sua sessão serão removidas da Evolution API. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
-            };
-            const closeActionDialog = () => {
-                actionDialog.classList.remove('open');
-                actionDialog.hidden = true;
-                document.body.style.overflow = '';
-                pendingActionForm = null;
-                actionTrigger?.focus();
-            };
-            settings.querySelectorAll('[data-confirm-action]').forEach((form) => form.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const config = actions[form.dataset.confirmAction];
-                if (!config) return;
-                pendingActionForm = form;
-                actionTrigger = event.submitter;
-                const name = form.dataset.whatsappName || form.dataset.actionName || 'selecionado';
-                actionTitle.textContent = config.title;
-                actionMessage.textContent = config.message(name);
-                actionButtonLabel.textContent = config.label;
-                actionIcon.className = `ti ${config.icon}`;
-                actionButtonIcon.className = `ti ${config.buttonIcon}`;
-                actionDialog.dataset.variant = config.variant;
-                confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
-                confirmAction.disabled = false;
-                actionDialog.hidden = false;
-                window.requestAnimationFrame(() => actionDialog.classList.add('open'));
-                document.body.style.overflow = 'hidden';
-                cancelAction.focus();
-            }));
-            cancelAction.addEventListener('click', closeActionDialog);
-            actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
-            document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
-            confirmAction.addEventListener('click', () => {
-                if (!pendingActionForm) return;
-                confirmAction.disabled = true;
-                showProcessing(pendingActionForm, actionTrigger);
-                pendingActionForm.submit();
-            });
-        }
     }
 }
 
@@ -1343,6 +1356,44 @@
                 currentStatusFilter = pill.dataset.filter;
                 applyFilters();
             });
+        });
+
+        // Modal de Redefinição de Senha
+        const resetPwdDialog = document.querySelector('[data-reset-pwd-dialog]');
+        const closePwdBtn = resetPwdDialog?.querySelector('[data-close-reset-pwd]');
+        const pwdUserName = resetPwdDialog?.querySelector('[data-pwd-user-name]');
+        const pwdForm = resetPwdDialog?.querySelector('[data-pwd-form]');
+
+        const closePwdDialog = () => {
+            if (!resetPwdDialog) return;
+            resetPwdDialog.close();
+            resetPwdDialog.hidden = true;
+            document.body.style.overflow = '';
+        };
+
+        usersModule.querySelectorAll('[data-open-reset-pwd]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!resetPwdDialog || !pwdForm) return;
+                const userId = btn.dataset.userId;
+                const userName = btn.dataset.userName;
+                pwdForm.action = `${window.location.origin}/usuarios/${userId}/redefinir-senha`;
+                if (pwdUserName) pwdUserName.textContent = userName;
+                const input = pwdForm.querySelector('input[name="new_password"]');
+                if (input) input.value = '';
+                resetPwdDialog.hidden = false;
+                resetPwdDialog.showModal();
+                document.body.style.overflow = 'hidden';
+                input?.focus();
+            });
+        });
+
+        closePwdBtn?.addEventListener('click', closePwdDialog);
+        resetPwdDialog?.addEventListener('click', (e) => {
+            if (e.target === resetPwdDialog) closePwdDialog();
+        });
+        resetPwdDialog?.addEventListener('cancel', () => {
+            document.body.style.overflow = '';
+            resetPwdDialog.hidden = true;
         });
     }
 

@@ -20,7 +20,7 @@ class Home extends BaseController
 
     protected $helpers = ['form', 'url'];
 
-    private const NAVIGATION = [
+    public const NAVIGATION = [
         'overview' => [
             'label' => 'Visão Geral',
             'mobileLabel' => 'Início',
@@ -64,6 +64,11 @@ class Home extends BaseController
             'description' => 'Preferências e parâmetros da plataforma.',
         ],
     ];
+
+    public static function getNavigationList(): array
+    {
+        return self::NAVIGATION;
+    }
 
     public function index(): string
     {

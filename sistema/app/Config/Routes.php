@@ -16,7 +16,14 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->get('grupos-whatsapp', 'Home::whatsappGroups');
     $routes->get('produtos', 'Home::products');
     $routes->get('leads-vip', 'Home::vipLeads');
-    $routes->get('usuarios', 'Home::users');
+    $routes->get('usuarios', 'Users::index');
+    $routes->get('usuarios/novo', 'Users::create');
+    $routes->post('usuarios/novo', 'Users::store', ['filter' => 'csrf']);
+    $routes->get('usuarios/(:num)/editar', 'Users::edit/$1');
+    $routes->post('usuarios/(:num)/editar', 'Users::update/$1', ['filter' => 'csrf']);
+    $routes->post('usuarios/(:num)/redefinir-senha', 'Users::resetPassword/$1', ['filter' => 'csrf']);
+    $routes->post('usuarios/(:num)/status', 'Users::toggleStatus/$1', ['filter' => 'csrf']);
+    $routes->post('usuarios/(:num)/excluir', 'Users::delete/$1', ['filter' => 'csrf']);
     $routes->get('configuracoes', 'Home::settings');
     $routes->post('configuracoes/layout', 'Home::saveLayoutSettings', ['filter' => 'csrf']);
     $routes->post('configuracoes/empresa', 'Home::saveCompanySettings', ['filter' => 'csrf']);

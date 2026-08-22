@@ -3,6 +3,8 @@ CREATE TABLE `users` (
   `name` VARCHAR(120) NOT NULL,
   `email` VARCHAR(190) NOT NULL,
   `password_hash` VARCHAR(255) NOT NULL,
+  `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
+  `permissions` LONGTEXT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `last_login_at` DATETIME NULL,
   `created_at` DATETIME NULL,

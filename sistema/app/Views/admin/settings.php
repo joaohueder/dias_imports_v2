@@ -1186,17 +1186,5 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
         </section>
     </div>
-
-    <div class="confirm-dialog" data-action-dialog hidden>
-        <section class="confirm-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="action-dialog-title" aria-describedby="action-dialog-message">
-            <div class="confirm-dialog-icon" data-action-icon aria-hidden="true"><i class="ti ti-help"></i></div>
-            <h2 id="action-dialog-title" data-action-title>Confirmar ação?</h2>
-            <p id="action-dialog-message" data-action-message>Revise a ação antes de continuar.</p>
-            <div class="confirm-dialog-actions">
-                <button class="button secondary" type="button" data-cancel-action>Cancelar</button>
-                <button class="button primary" type="button" data-confirm-action-button><i class="ti ti-check" data-action-button-icon aria-hidden="true"></i><span data-action-button-label>Confirmar</span></button>
-            </div>
-        </section>
-    </div>
 </section>
 <?= $this->endSection() ?>

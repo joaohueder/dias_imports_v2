@@ -1,1 +1,5 @@
-Aqui vai algumas instruções depois
+### SISTEMA DE MARKETING - DIAS IMPORTS
+
+## DADOS DO SISTEMA
+
+Versão: 2026.08.0002
