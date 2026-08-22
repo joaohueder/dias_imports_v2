@@ -86,7 +86,10 @@ $globalSuccess = session()->getFlashdata('success');
         <header class="topbar">
             <div class="breadcrumb">Painel <span aria-hidden="true">/</span> <strong><?= esc($pageTitle) ?></strong></div>
             <div class="topbar-actions">
-                <span class="status-pill"><span class="status-dot" aria-hidden="true"></span>Sistema online</span>
+                <span class="status-pill" id="system-status-pill" data-health-url="<?= site_url('health/status') ?>">
+                    <span class="status-dot" id="system-status-dot" aria-hidden="true"></span>
+                    <span id="system-status-text">Sistema online</span>
+                </span>
             </div>
         </header>
 

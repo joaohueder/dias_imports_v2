@@ -1499,4 +1499,85 @@
             btn.querySelector('i').className = `ti ${isPassword ? 'ti-eye-off' : 'ti-eye'}`;
         });
     });
+
+    // =========================================================================
+    // MONITORAMENTO DE STATUS DO SISTEMA (BANCO DE DADOS & EVOLUTION API - 5s)
+    // =========================================================================
+    const statusPill = document.getElementById('system-status-pill');
+    const statusDot = document.getElementById('system-status-dot');
+    const statusText = document.getElementById('system-status-text');
+
+    if (statusPill && statusDot && statusText) {
+        const healthUrl = statusPill.dataset.healthUrl || `${window.location.origin}/health/status`;
+        let isChecking = false;
+
+        const checkSystemHealth = async () => {
+            if (isChecking) return;
+            isChecking = true;
+
+            try {
+                const response = await fetch(healthUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    cache: 'no-store'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Falha HTTP ao consultar status');
+                }
+
+                const data = await response.json();
+                const dbOnline = data.database?.online === true;
+                const evoConfigured = data.evolution?.configured === true;
+                const evoOnline = data.evolution?.online === true;
+
+                // Remover classes de alerta anteriores
+                statusDot.classList.remove('status-warning', 'status-danger');
+                statusPill.classList.remove('status-warning', 'status-danger');
+
+                if (dbOnline && (!evoConfigured || evoOnline)) {
+                    // Ambos online (ou Evolution ainda não configurada, banco ok)
+                    statusText.textContent = 'Sistema online';
+                    statusPill.title = `Banco de Dados: Online${evoConfigured ? ' | Evolution API: Online' : ' | Evolution API: Não configurada'}`;
+                } else if (!dbOnline && (!evoConfigured || !evoOnline)) {
+                    // Banco e Evolution offline
+                    statusDot.classList.add('status-danger');
+                    statusPill.classList.add('status-danger');
+                    statusText.textContent = 'Sistema instável';
+                    statusPill.title = `Banco de Dados: Offline | Evolution API: ${evoConfigured ? 'Offline' : 'Não configurada'}`;
+                } else if (!dbOnline) {
+                    // Somente banco offline
+                    statusDot.classList.add('status-danger');
+                    statusPill.classList.add('status-danger');
+                    statusText.textContent = 'BD Offline';
+                    statusPill.title = `Banco de Dados: Offline | Evolution API: ${evoConfigured ? (evoOnline ? 'Online' : 'Offline') : 'Não configurada'}`;
+                } else {
+                    // Banco ok, mas Evolution configurada está offline
+                    statusDot.classList.add('status-warning');
+                    statusPill.classList.add('status-warning');
+                    statusText.textContent = 'Evolution offline';
+                    statusPill.title = 'Banco de Dados: Online | Evolution API: Offline (verifique a conexão nas configurações)';
+                }
+            } catch (err) {
+                // Erro de rede ou indisponibilidade total da aplicação
+                statusDot.classList.remove('status-warning');
+                statusDot.classList.add('status-danger');
+                statusPill.classList.remove('status-warning');
+                statusPill.classList.add('status-danger');
+                statusText.textContent = 'Sistema offline';
+                statusPill.title = 'Falha na conexão com o servidor local.';
+            } finally {
+                isChecking = false;
+            }
+        };
+
+        // Primeira checagem logo ao carregar
+        checkSystemHealth();
+
+        // Checagem a cada 5 segundos
+        window.setInterval(checkSystemHealth, 5000);
+    }
 })();
