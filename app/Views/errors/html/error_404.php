@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?= lang('Errors.pageNotFound') ?> | JH7 Marketing</title>
-    <link rel="icon" type="image/svg+xml" href="<?= base_url('favicon.svg') ?>">
+    <title><?= function_exists('lang') ? lang('Errors.pageNotFound') : 'Page Not Found' ?> | JH7 Marketing</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚠️</text></svg>">
 
     <style>
         div.logo {

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex">
 
-    <title><?= lang('Errors.whoops') ?> | JH7 Marketing</title>
-    <link rel="icon" type="image/svg+xml" href="<?= base_url('favicon.svg') ?>">
+    <title><?= function_exists('lang') ? lang('Errors.whoops') : 'Whoops!' ?> | JH7 Marketing</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚠️</text></svg>">
 
     <style>
         <?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'debug.css')) ?>

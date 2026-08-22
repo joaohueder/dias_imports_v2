@@ -26,13 +26,13 @@
     'Config\\Logger' => 'Config\\Logger',
     'Routing' => 'Config\\Routing',
     'Config\\Database' => 'Config\\Database',
-    'Config\\View' => 'Config\\View',
-    'Config\\Security' => 'Config\\Security',
-    'Security' => 'Config\\Security',
-    'Config\\Format' => 'Config\\Format',
     'Encryption' => 'Config\\Encryption',
     'Config\\Encryption' => 'Config\\Encryption',
     'Config\\CURLRequest' => 'Config\\CURLRequest',
+    'Config\\Format' => 'Config\\Format',
+    'Config\\View' => 'Config\\View',
+    'Config\\Security' => 'Config\\Security',
+    'Security' => 'Config\\Security',
   ),
   'instances' => 
   array (
@@ -43,7 +43,7 @@
       array (
         0 => 404,
       ),
-       'errorViewPath' => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\app\\Views/errors',
+       'errorViewPath' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Views/errors',
        'sensitiveDataInTrace' => 
       array (
       ),
@@ -115,7 +115,7 @@
        'reservedCharacters' => '{}()/\\@:',
        'file' => 
       array (
-        'storePath' => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\writable\\cache/',
+        'storePath' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\writable\\cache/',
         'mode' => 416,
       ),
        'memcached' => 
@@ -366,7 +366,7 @@
       ),
        'collectVarData' => true,
        'maxHistory' => 20,
-       'viewsPath' => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\system\\Debug/Toolbar/Views/',
+       'viewsPath' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Debug/Toolbar/Views/',
        'maxQueries' => 100,
        'watchedDirectories' => 
       array (
@@ -393,7 +393,7 @@
     \Config\Routing::__set_state(array(
        'routeFiles' => 
       array (
-        0 => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\app\\Config/Routes.php',
+        0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config/Routes.php',
       ),
        'defaultNamespace' => 'App\\Controllers',
        'defaultController' => 'Home',
@@ -459,7 +459,7 @@
     \Config\Routing::__set_state(array(
        'routeFiles' => 
       array (
-        0 => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\app\\Config/Routes.php',
+        0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config/Routes.php',
       ),
        'defaultNamespace' => 'App\\Controllers',
        'defaultController' => 'Home',
@@ -487,7 +487,7 @@
        'driver' => 'CodeIgniter\\Session\\Handlers\\FileHandler',
        'cookieName' => 'ci_session',
        'expiration' => 7200,
-       'savePath' => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\writable\\session',
+       'savePath' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\writable\\session',
        'matchIP' => false,
        'timeToUpdate' => 300,
        'regenerateDestroy' => false,
@@ -522,7 +522,7 @@
     )),
     'Config\\Database' => 
     \Config\Database::__set_state(array(
-       'filesPath' => 'C:\\Sistemas\\Dias Imports\\dias_imports_v2\\sistema\\app\\Database\\',
+       'filesPath' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\',
        'defaultGroup' => 'default',
        'default' => 
       array (
@@ -585,6 +585,52 @@
           'time' => 'H:i:s',
         ),
       ),
+    )),
+    'Config\\Encryption' => 
+    \Config\Encryption::__set_state(array(
+       'key' => 'BZuWh9nqaRbWcsgKGeh1M524yRYMujc9',
+       'previousKeys' => 
+      array (
+        0 => '',
+      ),
+       'driver' => 'OpenSSL',
+       'blockSize' => 16,
+       'digest' => 'SHA512',
+       'rawData' => true,
+       'encryptKeyInfo' => '',
+       'authKeyInfo' => '',
+       'cipher' => 'AES-256-CTR',
+    )),
+    'Config\\CURLRequest' => 
+    \Config\CURLRequest::__set_state(array(
+       'shareConnectionOptions' => 
+      array (
+        0 => 5,
+        1 => 3,
+      ),
+       'shareOptions' => false,
+    )),
+    'Config\\Format' => 
+    \Config\Format::__set_state(array(
+       'supportedResponseFormats' => 
+      array (
+        0 => 'application/json',
+        1 => 'application/xml',
+        2 => 'text/xml',
+      ),
+       'formatters' => 
+      array (
+        'application/json' => 'CodeIgniter\\Format\\JSONFormatter',
+        'application/xml' => 'CodeIgniter\\Format\\XMLFormatter',
+        'text/xml' => 'CodeIgniter\\Format\\XMLFormatter',
+      ),
+       'formatterOptions' => 
+      array (
+        'application/json' => 320,
+        'application/xml' => 0,
+        'text/xml' => 0,
+      ),
+       'jsonEncodeDepth' => 512,
     )),
     'Config\\View' => 
     \Config\View::__set_state(array(
@@ -678,52 +724,6 @@
        'expires' => 7200,
        'regenerate' => false,
        'redirect' => false,
-    )),
-    'Config\\Format' => 
-    \Config\Format::__set_state(array(
-       'supportedResponseFormats' => 
-      array (
-        0 => 'application/json',
-        1 => 'application/xml',
-        2 => 'text/xml',
-      ),
-       'formatters' => 
-      array (
-        'application/json' => 'CodeIgniter\\Format\\JSONFormatter',
-        'application/xml' => 'CodeIgniter\\Format\\XMLFormatter',
-        'text/xml' => 'CodeIgniter\\Format\\XMLFormatter',
-      ),
-       'formatterOptions' => 
-      array (
-        'application/json' => 320,
-        'application/xml' => 0,
-        'text/xml' => 0,
-      ),
-       'jsonEncodeDepth' => 512,
-    )),
-    'Config\\Encryption' => 
-    \Config\Encryption::__set_state(array(
-       'key' => 'BZuWh9nqaRbWcsgKGeh1M524yRYMujc9',
-       'previousKeys' => 
-      array (
-        0 => '',
-      ),
-       'driver' => 'OpenSSL',
-       'blockSize' => 16,
-       'digest' => 'SHA512',
-       'rawData' => true,
-       'encryptKeyInfo' => '',
-       'authKeyInfo' => '',
-       'cipher' => 'AES-256-CTR',
-    )),
-    'Config\\CURLRequest' => 
-    \Config\CURLRequest::__set_state(array(
-       'shareConnectionOptions' => 
-      array (
-        0 => 5,
-        1 => 3,
-      ),
-       'shareOptions' => false,
     )),
   ),
 );
