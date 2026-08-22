@@ -45,7 +45,7 @@ class UserPermissions
                 ],
                 'company' => [
                     'label' => 'Empresa',
-                    'actions' => ['view', 'edit'],
+                    'actions' => ['view', 'create', 'edit', 'delete'],
                 ],
                 'evolution' => [
                     'label' => 'Evolution API',
