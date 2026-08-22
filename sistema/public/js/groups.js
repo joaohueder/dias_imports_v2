@@ -5,11 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterBtns = document.querySelectorAll('.users-filter-pills .filter-pill');
     const btnSyncGroups = document.getElementById('btn-sync-groups');
     
-    // Modal Novo Grupo
+    // Modal Novo Grupo / Selecionar da Instância
     const btnOpenNewGroupModal = document.getElementById('btn-open-new-group-modal');
     const dialogNewGroup = document.getElementById('dialog-new-group');
-    const formNewGroup = document.getElementById('form-new-group');
+    const formSaveSelectedGroup = document.getElementById('form-save-selected-group');
     const btnSaveGroup = document.getElementById('btn-save-group');
+    const instanceGroupsSearch = document.getElementById('instance-groups-search');
+    const instanceGroupsLoading = document.getElementById('instance-groups-loading');
+    const instanceGroupsEmpty = document.getElementById('instance-groups-empty');
+    const instanceGroupsItems = document.getElementById('instance-groups-items');
+    const selectedGroupFeedback = document.getElementById('selected-group-feedback');
+    const selectedGroupNameText = document.getElementById('selected-group-name-text');
+
+    let instanceGroupsData = [];
+    let selectedGroupItem = null;
 
     // Modal Testar Envio
     const dialogTestSend = document.getElementById('dialog-test-send');
@@ -72,52 +81,168 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnOpenNewGroupModal && dialogNewGroup) {
         btnOpenNewGroupModal.addEventListener('click', () => {
             openModal(dialogNewGroup);
+            fetchInstanceGroups();
         });
     }
 
-    document.querySelectorAll('[data-close-dialog]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            closeModal(dialogNewGroup);
-            closeModal(dialogTestSend);
-        });
-    });
-
-    [dialogNewGroup, dialogTestSend].forEach(dialog => {
-        if (!dialog) return;
-        dialog.addEventListener('click', (e) => {
-            if (e.target === dialog) closeModal(dialog);
-        });
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeModal(dialogNewGroup);
-            closeModal(dialogTestSend);
+    // Expor função global para chamada pelo empty-state
+    window.openGroupModal = function() {
+        if (btnOpenNewGroupModal) {
+            btnOpenNewGroupModal.click();
+        } else if (dialogNewGroup) {
+            openModal(dialogNewGroup);
+            fetchInstanceGroups();
         }
-    });
+    };
 
-    // Sincronizar Grupos
-    if (btnSyncGroups) {
-        btnSyncGroups.addEventListener('click', syncGroups);
+    // Busca rápida no modal de seleção de grupos
+    if (instanceGroupsSearch) {
+        instanceGroupsSearch.addEventListener('input', () => {
+            renderInstanceGroupsList(instanceGroupsSearch.value.trim().toLowerCase());
+        });
     }
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('#btn-sync-empty')) {
-            syncGroups();
-        }
-    });
 
-    // Criar Grupo
-    if (formNewGroup) {
-        formNewGroup.addEventListener('submit', async (e) => {
+    async function fetchInstanceGroups() {
+        if (!instanceGroupsLoading || !instanceGroupsItems) return;
+        
+        instanceGroupsLoading.style.display = 'flex';
+        instanceGroupsEmpty.style.display = 'none';
+        instanceGroupsItems.innerHTML = '';
+        if (selectedGroupFeedback) selectedGroupFeedback.style.display = 'none';
+        if (btnSaveGroup) btnSaveGroup.disabled = true;
+        selectedGroupItem = null;
+        if (instanceGroupsSearch) instanceGroupsSearch.value = '';
+
+        try {
+            const response = await fetch(`${window.location.origin}/grupos-whatsapp/evolution-list`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+
+            instanceGroupsLoading.style.display = 'none';
+
+            if (data.success && Array.isArray(data.groups) && data.groups.length > 0) {
+                instanceGroupsData = data.groups;
+                renderInstanceGroupsList();
+            } else {
+                instanceGroupsData = [];
+                instanceGroupsEmpty.style.display = 'flex';
+                if (data.message) {
+                    const hint = instanceGroupsEmpty.querySelector('span');
+                    if (hint) hint.textContent = data.message;
+                }
+            }
+        } catch (error) {
+            instanceGroupsLoading.style.display = 'none';
+            instanceGroupsEmpty.style.display = 'flex';
+            const hint = instanceGroupsEmpty.querySelector('span');
+            if (hint) hint.textContent = 'Erro ao consultar a Evolution API.';
+        }
+    }
+
+    function renderInstanceGroupsList(filterQuery = '') {
+        if (!instanceGroupsItems) return;
+
+        instanceGroupsItems.innerHTML = '';
+        const filtered = instanceGroupsData.filter(g => {
+            if (!filterQuery) return true;
+            return g.name.toLowerCase().includes(filterQuery) || g.group_jid.toLowerCase().includes(filterQuery);
+        });
+
+        if (filtered.length === 0) {
+            instanceGroupsEmpty.style.display = 'flex';
+            return;
+        }
+
+        instanceGroupsEmpty.style.display = 'none';
+
+        filtered.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'instance-group-select-item';
+            row.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgb(var(--surface)); border: 1px solid rgb(var(--border)); cursor: pointer; transition: all 0.15s ease;';
+            
+            const isSelected = selectedGroupItem && selectedGroupItem.group_jid === item.group_jid;
+            if (isSelected) {
+                row.style.borderColor = 'rgb(var(--primary))';
+                row.style.background = 'rgb(var(--primary) / .08)';
+            }
+
+            const avatarContent = item.avatar_url 
+                ? `<img src="${escapeHtml(item.avatar_url)}" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">`
+                : `<div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(37, 211, 102, 0.15); color: #25d366; display: flex; align-items: center; justify-content: center;"><i class="ti ti-brand-whatsapp" style="font-size: 20px;"></i></div>`;
+
+            const alreadyBadge = item.is_already_added 
+                ? `<span style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgb(var(--surface-secondary)); color: rgb(var(--muted)); font-weight: 500;">Já cadastrado</span>`
+                : '';
+
+            row.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+                    ${avatarContent}
+                    <div style="min-width: 0; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: rgb(var(--foreground)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(item.name)}</h4>
+                            ${alreadyBadge}
+                        </div>
+                        <p style="margin: 2px 0 0 0; font-size: 12px; color: rgb(var(--muted)); display: flex; align-items: center; gap: 8px;">
+                            <span><i class="ti ti-users"></i> ${item.participants_count} membros</span>
+                            <span>•</span>
+                            <span style="font-family: monospace; font-size: 11px;">${escapeHtml(item.group_jid)}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="radio-indicator" style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid ${isSelected ? 'rgb(var(--primary))' : 'rgb(var(--border))'}; display: flex; align-items: center; justify-content: center; margin-left: 12px;">
+                    ${isSelected ? '<div style="width: 10px; height: 10px; border-radius: 50%; background: rgb(var(--primary));"></div>' : ''}
+                </div>
+            `;
+
+            row.addEventListener('click', () => {
+                selectGroup(item);
+            });
+
+            instanceGroupsItems.appendChild(row);
+        });
+    }
+
+    function selectGroup(item) {
+        selectedGroupItem = item;
+        
+        document.getElementById('selected_group_jid').value = item.group_jid;
+        document.getElementById('selected_group_name').value = item.name;
+        document.getElementById('selected_group_description').value = item.description || '';
+        document.getElementById('selected_group_participants').value = item.participants_count || 0;
+        document.getElementById('selected_group_avatar').value = item.avatar_url || '';
+        document.getElementById('selected_group_instance').value = item.instance_name || '';
+
+        if (selectedGroupFeedback && selectedGroupNameText) {
+            selectedGroupFeedback.style.display = 'flex';
+            selectedGroupNameText.textContent = `Selecionado: ${item.name} (${item.participants_count} participantes)`;
+        }
+
+        if (btnSaveGroup) {
+            btnSaveGroup.disabled = false;
+        }
+
+        renderInstanceGroupsList(instanceGroupsSearch ? instanceGroupsSearch.value.trim().toLowerCase() : '');
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Salvar Grupo Selecionado
+    if (formSaveSelectedGroup) {
+        formSaveSelectedGroup.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (btnSaveGroup.disabled) return;
 
-            const formData = new FormData(formNewGroup);
+            const formData = new FormData(formSaveSelectedGroup);
             btnSaveGroup.disabled = true;
-            btnSaveGroup.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Criando...</span>';
+            btnSaveGroup.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Salvando...</span>';
 
             try {
-                const response = await fetch(formNewGroup.action, {
+                const response = await fetch(formSaveSelectedGroup.action, {
                     method: 'POST',
                     body: formData,
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -127,16 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     showToast('Sucesso', data.message, 'success');
                     closeModal(dialogNewGroup);
-                    formNewGroup.reset();
                     loadGroups();
                 } else {
-                    showToast('Erro', data.message || 'Erro ao criar grupo.', 'error');
+                    showToast('Erro', data.message || 'Erro ao salvar grupo.', 'error');
                 }
             } catch (error) {
                 showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
             } finally {
                 btnSaveGroup.disabled = false;
-                btnSaveGroup.innerHTML = '<i class="ti ti-plus"></i> <span>Criar Grupo</span>';
+                btnSaveGroup.innerHTML = '<i class="ti ti-device-floppy"></i> <span>Salvar Grupo</span>';
             }
         });
     }

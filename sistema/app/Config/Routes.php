@@ -18,6 +18,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     // Grupos de WhatsApp
     $routes->get('grupos-whatsapp', 'WhatsappGroups::index', ['filter' => 'permission:whatsapp_groups,view']);
     $routes->get('grupos-whatsapp/feed', 'WhatsappGroups::feed', ['filter' => 'permission:whatsapp_groups,view']);
+    $routes->get('grupos-whatsapp/evolution-list', 'WhatsappGroups::evolutionList', ['filter' => 'permission:whatsapp_groups,create']);
+    $routes->post('grupos-whatsapp/salvar-selecionado', 'WhatsappGroups::saveSelected', ['filter' => ['permission:whatsapp_groups,create', 'csrf']]);
     $routes->post('grupos-whatsapp/sincronizar', 'WhatsappGroups::sync', ['filter' => ['permission:whatsapp_groups,create', 'csrf']]);
     $routes->post('grupos-whatsapp/novo', 'WhatsappGroups::create', ['filter' => ['permission:whatsapp_groups,create', 'csrf']]);
     $routes->post('grupos-whatsapp/(:num)/status', 'WhatsappGroups::toggleStatus/$1', ['filter' => ['permission:whatsapp_groups,edit', 'csrf']]);

@@ -76,6 +76,142 @@ class WhatsappGroups extends BaseController
         ]);
     }
 
+    public function evolutionList(): ResponseInterface
+    {
+        if (! UserPermissions::hasPermission('whatsapp_groups', 'create')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Sem permissão para listar grupos da Evolution API.'])->setStatusCode(403);
+        }
+
+        try {
+            $settings = $this->evolutionService->getSettings();
+            $instanceName = trim((string) ($settings['default_instance_name'] ?? ''));
+
+            if ($instanceName === '') {
+                $instances = $this->evolutionService->fetchInstances();
+                foreach ($instances as $inst) {
+                    if (! empty($inst['connected'])) {
+                        $instanceName = $inst['name'];
+                        break;
+                    }
+                }
+                if ($instanceName === '' && ! empty($instances[0]['name'])) {
+                    $instanceName = $instances[0]['name'];
+                }
+            }
+
+            if ($instanceName === '') {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Nenhuma instância da Evolution API configurada ou conectada.',
+                    'groups' => [],
+                ])->setStatusCode(400);
+            }
+
+            $remoteGroups = $this->evolutionService->fetchAllGroups($instanceName);
+            
+            // Buscar JIDs já cadastrados no banco para marcar no retorno
+            $existingJids = array_column($this->groupModel->select('group_jid')->findAll(), 'group_jid');
+            $existingJidMap = array_fill_keys($existingJids, true);
+
+            $formatted = [];
+            foreach ($remoteGroups as $item) {
+                $groupJid = (string) ($item['id'] ?? $item['jid'] ?? '');
+                if ($groupJid === '' || ! str_contains($groupJid, '@g.us')) {
+                    continue;
+                }
+
+                $subject = trim((string) ($item['subject'] ?? $item['name'] ?? 'Grupo WhatsApp'));
+                $description = (string) ($item['desc'] ?? $item['description'] ?? '');
+                $participants = $item['participants'] ?? [];
+                $participantsCount = is_array($participants) ? count($participants) : (int) ($item['size'] ?? 0);
+                $avatarUrl = (string) ($item['pictureUrl'] ?? $item['profilePicUrl'] ?? '');
+
+                $formatted[] = [
+                    'group_jid' => $groupJid,
+                    'instance_name' => $instanceName,
+                    'name' => $subject,
+                    'description' => $description,
+                    'participants_count' => $participantsCount,
+                    'avatar_url' => $avatarUrl,
+                    'is_already_added' => isset($existingJidMap[$groupJid]),
+                ];
+            }
+
+            // Ordenar alfabeticamente por nome
+            usort($formatted, fn($a, $b) => strcasecmp($a['name'], $b['name']));
+
+            return $this->response->setJSON([
+                'success' => true,
+                'instance_name' => $instanceName,
+                'total' => count($formatted),
+                'groups' => $formatted,
+            ]);
+        } catch (Throwable $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erro ao buscar grupos da Evolution API: ' . $e->getMessage(),
+                'groups' => [],
+            ])->setStatusCode(500);
+        }
+    }
+
+    public function saveSelected(): ResponseInterface
+    {
+        if (! UserPermissions::hasPermission('whatsapp_groups', 'create')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Sem permissão para adicionar grupos.'])->setStatusCode(403);
+        }
+
+        $groupJid = trim((string) $this->request->getPost('group_jid'));
+        $name = trim((string) $this->request->getPost('name'));
+        $description = trim((string) $this->request->getPost('description'));
+        $participantsCount = (int) $this->request->getPost('participants_count');
+        $avatarUrl = trim((string) $this->request->getPost('avatar_url'));
+        $instanceName = trim((string) $this->request->getPost('instance_name'));
+        $category = trim((string) $this->request->getPost('category')) ?: 'Dias Imports';
+
+        if ($groupJid === '' || ! str_contains($groupJid, '@g.us')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'ID do grupo do WhatsApp inválido.'])->setStatusCode(400);
+        }
+
+        if ($name === '') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Nome do grupo obrigatório.'])->setStatusCode(400);
+        }
+
+        try {
+            $existing = $this->groupModel->where('group_jid', $groupJid)->first();
+
+            $groupData = [
+                'group_jid' => $groupJid,
+                'instance_name' => $instanceName ?: 'default',
+                'name' => $name,
+                'description' => $description !== '' ? $description : ($existing['description'] ?? null),
+                'participants_count' => $participantsCount,
+                'avatar_url' => $avatarUrl !== '' ? $avatarUrl : ($existing['avatar_url'] ?? null),
+                'status' => 'active',
+                'category' => $category,
+                'last_synced_at' => date('Y-m-d H:i:s'),
+            ];
+
+            if ($existing) {
+                $this->groupModel->update($existing['id'], $groupData);
+                $message = "Grupo \"{$name}\" já existia e foi atualizado com sucesso!";
+            } else {
+                $this->groupModel->insert($groupData);
+                $message = "Grupo \"{$name}\" adicionado com sucesso ao sistema!";
+            }
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (Throwable $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erro ao salvar grupo: ' . $e->getMessage(),
+            ])->setStatusCode(500);
+        }
+    }
+
     public function sync(): ResponseInterface
     {
         if (! UserPermissions::hasPermission('whatsapp_groups', 'create') && ! UserPermissions::hasPermission('whatsapp_groups', 'edit')) {
