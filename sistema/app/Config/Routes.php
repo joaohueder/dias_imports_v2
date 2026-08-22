@@ -81,3 +81,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
 });
 
+// Rota pública para execução da fila via Cron / Webhook (protegida por token)
+$routes->get('cron/process-jobs', 'JobCenter::runCron');
+$routes->post('cron/process-jobs', 'JobCenter::runCron');
+

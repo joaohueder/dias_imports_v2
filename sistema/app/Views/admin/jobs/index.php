@@ -45,21 +45,43 @@
         </div>
     </div>
 
-    <!-- Informações do Agendador (Cron Job Linux) -->
+    <!-- Informações do Agendador (Cron Job Linux / URL Webhook) -->
     <div class="job-cron-card">
         <div class="job-cron-header">
             <i class="ti ti-terminal-2"></i>
-            <span>Agendador de Tarefas do Servidor (Cron Job Linux)</span>
+            <span>Agendador de Tarefas do Servidor (Cron Job / Webhook URL)</span>
         </div>
         <p class="job-cron-desc">
-            Para que a Central de Trabalho processe a fila em segundo plano de forma contínua e autônoma, adicione a linha abaixo ao <strong>crontab</strong> do seu servidor Linux (executa a cada minuto):
+            Para que a Central de Trabalho processe a fila em segundo plano continuamente, você pode utilizar a linha de comando no <strong>crontab</strong> ou configurar um serviço de <strong>Webcron (URL pública)</strong>:
         </p>
-        <div class="job-cron-input-group">
-            <input type="text" class="job-cron-input" readonly id="cron-command-input" value="* * * * * cd <?= esc($cronPath ?? (env('app.PathCronJob') ?: ROOTPATH)) ?> && php spark jobs:process >> /dev/null 2>&1">
-            <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('cron-command-input').value); alert('Comando copiado!');">
-                <i class="ti ti-copy" aria-hidden="true"></i>
-                <span>Copiar</span>
-            </button>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+            <div>
+                <span style="font-size: 12px; font-weight: 600; color: rgb(var(--text)); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block;">Opção 1: Via Linha de Comando (CLI / Crontab)</span>
+                <div class="job-cron-input-group">
+                    <input type="text" class="job-cron-input" readonly id="cron-command-input" value="* * * * * cd <?= esc($cronPath ?? (env('app.PathCronJob') ?: ROOTPATH)) ?> && php spark jobs:process >> /dev/null 2>&1">
+                    <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('cron-command-input').value); alert('Comando CLI copiado!');">
+                        <i class="ti ti-copy" aria-hidden="true"></i>
+                        <span>Copiar</span>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <span style="font-size: 12px; font-weight: 600; color: rgb(var(--text)); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block;">Opção 2: Via URL Pública (Webcron / cURL / Cron de Hospedagem)</span>
+                <?php 
+                    $token = env('app.cronToken') ?: env('app_cronToken') ?: 'cron_secret_token';
+                    $cronUrl = site_url("cron/process-jobs?token={$token}");
+                    $curlCommand = "* * * * * curl -s \"{$cronUrl}\" > /dev/null 2>&1";
+                ?>
+                <div class="job-cron-input-group">
+                    <input type="text" class="job-cron-input" readonly id="cron-url-input" value="<?= esc($curlCommand) ?>">
+                    <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('cron-url-input').value); alert('Comando Webcron copiado!');">
+                        <i class="ti ti-copy" aria-hidden="true"></i>
+                        <span>Copiar</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
