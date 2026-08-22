@@ -340,7 +340,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (btnToggle) {
                 const id = btnToggle.dataset.id;
-                toggleStatus(id);
+                const status = btnToggle.dataset.status;
+                const card = btnToggle.closest('.group-item-card');
+                const name = card?.querySelector('.user-full-name')?.textContent || 'este grupo';
+                const actionKey = status === 'active' ? 'group-status-inativar' : 'group-status-ativar';
+
+                if (typeof window.triggerActionConfirm === 'function') {
+                    window.triggerActionConfirm(actionKey, name, () => {
+                        toggleStatus(id);
+                    });
+                } else {
+                    toggleStatus(id);
+                }
             }
 
             if (btnTest) {
@@ -472,17 +483,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteGroup(id, name) {
-        if (typeof showConfirmModal === 'function') {
-            showConfirmModal(
-                'Excluir Grupo',
-                `Tem certeza que deseja excluir o grupo <strong>${name}</strong> do sistema? Esta ação apenas removerá o grupo do painel, não o apagará do WhatsApp.`,
-                'Excluir',
-                'ti-trash',
-                'danger',
-                async () => {
-                    executeDelete(id);
-                }
-            );
+        if (typeof window.triggerActionConfirm === 'function') {
+            window.triggerActionConfirm('group-delete', name, () => {
+                executeDelete(id);
+            });
         } else if (confirm(`Tem certeza que deseja excluir o grupo "${name}" do sistema?`)) {
             executeDelete(id);
         }

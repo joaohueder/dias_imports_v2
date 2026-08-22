@@ -228,6 +228,9 @@
             'user-status-inativar': { title: 'Inativar este usuário?', message: (name) => `O usuário “${name}” perderá o acesso ao sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
             'user-delete': { title: 'Excluir este usuário?', message: (name) => `O usuário “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             'lead-delete': { title: 'Excluir este lead?', message: (name) => `O lead “${name}” será excluído permanentemente da lista. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'group-status-ativar': { title: 'Ativar este grupo?', message: (name) => `O grupo “${name}” voltará a ficar ativo no sistema.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
+            'group-status-inativar': { title: 'Inativar este grupo?', message: (name) => `O grupo “${name}” ficará inativo no sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
+            'group-delete': { title: 'Excluir este grupo?', message: (name) => `O grupo “${name}” será removido do sistema. (Não será excluído do WhatsApp).`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             logout: { title: 'Deseja realmente sair?', message: () => 'Sua sessão atual será encerrada no navegador com segurança.', label: 'Sim, sair agora', icon: 'ti-logout', buttonIcon: 'ti-logout', variant: 'danger' },
         };
         const closeActionDialog = () => {
@@ -235,8 +238,32 @@
             actionDialog.hidden = true;
             document.body.style.overflow = '';
             pendingActionForm = null;
+            window.__pendingActionCallback = null;
             actionTrigger?.focus();
         };
+
+        window.triggerActionConfirm = (actionType, name, onConfirm) => {
+            const config = actions[actionType];
+            if (!config) {
+                if (typeof onConfirm === 'function') onConfirm();
+                return;
+            }
+            window.__pendingActionCallback = onConfirm;
+            pendingActionForm = null;
+            actionTitle.textContent = config.title;
+            actionMessage.textContent = config.message(name || 'selecionado');
+            actionButtonLabel.textContent = config.label;
+            actionIcon.className = `ti ${config.icon}`;
+            actionButtonIcon.className = `ti ${config.buttonIcon}`;
+            actionDialog.dataset.variant = config.variant;
+            confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
+            confirmAction.disabled = false;
+            actionDialog.hidden = false;
+            actionDialog.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            cancelAction.focus();
+        };
+
         // Delegação global para formulários com confirmação (inclusive os inseridos dinamicamente)
         document.addEventListener('submit', (event) => {
             const form = event.target.closest('[data-confirm-action]');
@@ -245,6 +272,7 @@
             const config = actions[form.dataset.confirmAction];
             if (!config) return;
             pendingActionForm = form;
+            window.__pendingActionCallback = null;
             actionTrigger = event.submitter;
             const name = form.dataset.whatsappName || form.dataset.actionName || 'selecionado';
             actionTitle.textContent = config.title;
@@ -264,6 +292,12 @@
         actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
         document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
         confirmAction.addEventListener('click', () => {
+            if (typeof window.__pendingActionCallback === 'function') {
+                const cb = window.__pendingActionCallback;
+                closeActionDialog();
+                cb();
+                return;
+            }
             if (!pendingActionForm) return;
             confirmAction.disabled = true;
             syncFormCsrf(pendingActionForm);
