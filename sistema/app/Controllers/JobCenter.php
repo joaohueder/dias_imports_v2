@@ -179,28 +179,4 @@ class JobCenter extends BaseController
         return redirect()->to(site_url('configuracoes?tab=central-trabalho'))
             ->with('success', "Configurações do trabalho '{$job['name']}' atualizadas com sucesso.");
     }
-
-    public function runCron(): ResponseInterface
-    {
-        $cronToken = env('app.cronToken') ?: env('app_cronToken') ?: 'cron_secret_token';
-        $providedToken = (string) ($this->request->getGet('token') ?? $this->request->getPost('token') ?? $this->request->getHeaderLine('X-Cron-Token'));
-
-        if (!hash_equals($cronToken, $providedToken)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Acesso negado: token inválido ou ausente.',
-            ])->setStatusCode(403);
-        }
-
-        $limit = max(1, (int) ($this->request->getGet('limit') ?? $this->request->getPost('limit') ?? 50));
-        $res = $this->jobCenterService->processPendingQueue($limit);
-
-        return $this->response->setJSON([
-            'success'   => true,
-            'message'   => "Execução finalizada com sucesso.",
-            'processed' => $res['processed'],
-            'failed'    => $res['failed'],
-            'timestamp' => date('Y-m-d H:i:s'),
-        ]);
-    }
 }

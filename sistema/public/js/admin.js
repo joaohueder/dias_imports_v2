@@ -1700,15 +1700,16 @@
                 const dbOnline = data.database?.online === true;
                 const evoConfigured = data.evolution?.configured === true;
                 const evoOnline = data.evolution?.online === true;
+                const defaultInstanceConnected = data.evolution?.default_instance_connected === true;
 
                 // Remover classes de alerta anteriores
                 statusDot.classList.remove('status-warning', 'status-danger');
                 statusPill.classList.remove('status-warning', 'status-danger');
 
-                if (dbOnline && (!evoConfigured || evoOnline)) {
-                    // Ambos online (ou Evolution ainda não configurada, banco ok)
+                if (dbOnline && (!evoConfigured || (evoOnline && defaultInstanceConnected))) {
+                    // Ambos online e instância padrão conectada (ou Evolution ainda não configurada, banco ok)
                     statusText.textContent = 'Sistema online';
-                    statusPill.title = `Banco de Dados: Online${evoConfigured ? ' | Evolution API: Online' : ' | Evolution API: Não configurada'}`;
+                    statusPill.title = `Banco de Dados: Online${evoConfigured ? ' | WhatsApp: Conectado' : ' | Evolution API: Não configurada'}`;
                 } else if (!dbOnline && (!evoConfigured || !evoOnline)) {
                     // Banco e Evolution offline
                     statusDot.classList.add('status-danger');
@@ -1721,12 +1722,23 @@
                     statusPill.classList.add('status-danger');
                     statusText.textContent = 'BD Offline';
                     statusPill.title = `Banco de Dados: Offline | Evolution API: ${evoConfigured ? (evoOnline ? 'Online' : 'Offline') : 'Não configurada'}`;
-                } else {
-                    // Banco ok, mas Evolution configurada está offline
+                } else if (evoConfigured && !evoOnline) {
+                    // Banco ok, mas Evolution offline
                     statusDot.classList.add('status-warning');
                     statusPill.classList.add('status-warning');
                     statusText.textContent = 'Evolution offline';
                     statusPill.title = 'Banco de Dados: Online | Evolution API: Offline (verifique a conexão nas configurações)';
+                } else if (evoConfigured && evoOnline && !defaultInstanceConnected) {
+                    // Banco ok, Evolution online, mas WhatsApp/Instância padrão desconectada
+                    statusDot.classList.add('status-warning');
+                    statusPill.classList.add('status-warning');
+                    statusText.textContent = 'WhatsApp desconectado';
+                    statusPill.title = 'Banco de Dados: Online | Instância WhatsApp padrão desconectada';
+                } else {
+                    statusDot.classList.add('status-warning');
+                    statusPill.classList.add('status-warning');
+                    statusText.textContent = 'Sistema instável';
+                    statusPill.title = 'Instabilidade detectada nos serviços do sistema.';
                 }
             } catch (err) {
                 // Erro de rede ou indisponibilidade total da aplicação
@@ -1744,7 +1756,7 @@
         // Primeira checagem logo ao carregar
         checkSystemHealth();
 
-        // Checagem a cada 5 segundos
-        window.setInterval(checkSystemHealth, 5000);
+        // Checagem a cada 30 segundos
+        window.setInterval(checkSystemHealth, 30000);
     }
 })();

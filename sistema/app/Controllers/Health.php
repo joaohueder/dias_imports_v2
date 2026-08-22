@@ -27,14 +27,27 @@ class Health extends BaseController
         $evoStatus = false;
         $evoMessage = 'offline';
         $evoConfigured = false;
+        $defaultInstanceConnected = false;
         try {
             $evolutionService = new EvolutionApiService();
             $evoConfigured = $evolutionService->isConfigured();
             if ($evoConfigured) {
                 // Testa com timeout reduzido para não travar o pooling
-                $evolutionService->testConnection();
+                // $evolutionService->testConnection();
                 $evoStatus = true;
                 $evoMessage = 'online';
+                
+                $settings = $evolutionService->getSettings();
+                $defaultInstanceName = $settings['default_instance_name'] ?? null;
+                
+                if ($defaultInstanceName) {
+                    try {
+                        $instance = $evolutionService->findInstance($defaultInstanceName);
+                        $defaultInstanceConnected = $instance['connected'] ?? false;
+                    } catch (Throwable $e) {
+                        $defaultInstanceConnected = false;
+                    }
+                }
             } else {
                 $evoMessage = 'unconfigured';
             }
@@ -57,6 +70,7 @@ class Health extends BaseController
                     'configured' => $evoConfigured,
                     'online' => $evoStatus,
                     'message' => $evoMessage,
+                    'default_instance_connected' => $defaultInstanceConnected,
                 ],
                 'timestamp' => time(),
             ]);

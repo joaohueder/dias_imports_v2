@@ -45,7 +45,6 @@ class JobCenterService
         $maxDelay = max($minDelay, (int) ($job['max_delay_seconds'] ?? 20));
 
         $now = time();
-        $cumulativeTime = $now;
         $enqueuedCount = 0;
         $existingCount = 0;
 
@@ -68,11 +67,6 @@ class JobCenterService
                 continue;
             }
 
-            if ($enqueuedCount > 0) {
-                $randomGap = random_int($minDelay, $maxDelay);
-                $cumulativeTime += $randomGap;
-            }
-
             $this->queueModel->insert([
                 'job_key'        => 'sync_whatsapp_groups',
                 'item_reference' => $groupName,
@@ -83,7 +77,7 @@ class JobCenterService
                     'name'          => $group['name'] ?? '',
                 ], JSON_UNESCAPED_UNICODE),
                 'status'         => 'pending',
-                'scheduled_at'   => date('Y-m-d H:i:s', $cumulativeTime),
+                'scheduled_at'   => date('Y-m-d H:i:s', $now),
                 'attempts'       => 0,
             ]);
 
@@ -111,25 +105,56 @@ class JobCenterService
     }
 
     /**
-     * Executa o processador da fila (chamado via Spark CLI / Cron Job)
+     * Executa o processador da fila (chamado via Spark CLI / Cron Job / Webcron)
      */
     public function processPendingQueue(int $limit = 50, ?callable $logger = null): array
     {
-        $now = date('Y-m-d H:i:s');
-        $processed = 0;
-        $failed = 0;
-
         $log = function (string $msg) use ($logger) {
             if ($logger) {
                 $logger($msg);
             }
         };
 
+        // Verifica se já existe uma execução ativa em andamento (status = 'processing' atualizado recentemente)
+        $runningThreshold = date('Y-m-d H:i:s', strtotime('-15 minutes'));
+        $runningJob = $this->queueModel
+            ->where('status', 'processing')
+            ->where('started_at >=', $runningThreshold)
+            ->first();
+
+        if ($runningJob) {
+            $log("Já existe um processamento em andamento (tarefa #{$runningJob['id']}). Ignorando nova chamada para evitar concorrência.");
+            return [
+                'processed' => 0,
+                'failed'    => 0,
+                'skipped'   => true,
+                'message'   => 'Já existe uma execução em andamento.',
+            ];
+        }
+
+        // Se houver tarefas travadas em processamento há mais de 15 minutos, resetar para pendente
+        $stuckJobs = $this->queueModel
+            ->where('status', 'processing')
+            ->where('started_at <', $runningThreshold)
+            ->findAll();
+
+        foreach ($stuckJobs as $stuck) {
+            $this->queueModel->update($stuck['id'], [
+                'status' => 'pending',
+                'error_message' => 'Processamento anterior expirou/interrompido. Retornado para a fila.',
+            ]);
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $processed = 0;
+        $failed = 0;
+
         $jobsConfig = [];
         foreach ($this->jobModel->findAll() as $j) {
             $jobsConfig[$j['job_key']] = $j;
         }
 
+        // Busca apenas tarefas pendentes e vencidas (scheduled_at <= $now)
         $items = $this->queueModel
             ->where('status', 'pending')
             ->where('scheduled_at <=', $now)
@@ -144,21 +169,30 @@ class JobCenterService
 
         $log("Iniciando processamento de " . count($items) . " tarefas...");
 
+        // Pré-marcar todos os itens selecionados como "processing" para evitar concorrência
+        $itemIds = array_column($items, 'id');
+        $this->queueModel->whereIn('id', $itemIds)->set([
+            'status'     => 'processing',
+            'started_at' => date('Y-m-d H:i:s'),
+        ])->update();
+
         foreach ($items as $item) {
             $jobConfig = $jobsConfig[$item['job_key']] ?? null;
             if ($jobConfig && empty($jobConfig['is_active'])) {
                 $log("Job {$item['job_key']} está inativo. Pulando item #{$item['id']}.");
+                // Retorna para pendente se o job estiver inativo
+                $this->queueModel->update($item['id'], ['status' => 'pending']);
                 continue;
             }
 
-            // Marcar como processando
+            $currentAttempts = ((int) ($item['attempts'] ?? 0)) + 1;
+
+            // Atualizar apenas a tentativa, pois já foi marcado como processing
             $this->queueModel->update($item['id'], [
-                'status'     => 'processing',
-                'started_at' => date('Y-m-d H:i:s'),
-                'attempts'   => ((int) $item['attempts']) + 1,
+                'attempts' => $currentAttempts,
             ]);
 
-            $log("Processando tarefa #{$item['id']} ({$item['job_key']} - ref: {$item['item_reference']})...");
+            $log("Processando tarefa #{$item['id']} ({$item['job_key']} - tentativa {$currentAttempts}/3 - ref: {$item['item_reference']})...");
 
             // Intervalo randomizado configurado
             $minDelay = (int) ($jobConfig['min_delay_seconds'] ?? 5);
@@ -174,37 +208,50 @@ class JobCenterService
             }
 
             $success = false;
-            $errorMsg = null;
+            $resultMsg = null;
 
             try {
                 if ($item['job_key'] === 'sync_whatsapp_groups') {
                     $res = $this->handleSyncWhatsappGroup($item);
                     $success = $res['success'];
-                    $errorMsg = $res['message'] ?? null;
+                    $resultMsg = $res['message'] ?? null;
                 } else {
-                    $errorMsg = "Manipulador não implementado para o trabalho {$item['job_key']}";
+                    $resultMsg = "Manipulador não implementado para o trabalho {$item['job_key']}";
                 }
             } catch (\Throwable $e) {
                 $success = false;
-                $errorMsg = $e->getMessage();
+                $resultMsg = $e->getMessage();
             }
 
             if ($success) {
                 $this->queueModel->update($item['id'], [
                     'status'        => 'completed',
                     'completed_at'  => date('Y-m-d H:i:s'),
-                    'error_message' => null,
+                    'error_message' => $resultMsg,
                 ]);
                 $processed++;
-                $log("Tarefa #{$item['id']} concluída com sucesso.");
+                $log("Tarefa #{$item['id']} concluída: " . ($resultMsg ?? 'Sucesso'));
             } else {
-                $this->queueModel->update($item['id'], [
-                    'status'        => 'failed',
-                    'completed_at'  => date('Y-m-d H:i:s'),
-                    'error_message' => $errorMsg ?? 'Erro desconhecido durante execução',
-                ]);
-                $failed++;
-                $log("Tarefa #{$item['id']} FALHOU: " . ($errorMsg ?? 'Erro'));
+                // Se falhar e ainda tiver menos de 3 tentativas, volta para pendente com retry agendado
+                if ($currentAttempts < 3) {
+                    $retryDelay = random_int($minDelay, $maxDelay);
+                    $nextSchedule = date('Y-m-d H:i:s', time() + max(30, $retryDelay));
+
+                    $this->queueModel->update($item['id'], [
+                        'status'        => 'pending',
+                        'scheduled_at'  => $nextSchedule,
+                        'error_message' => "Tentativa {$currentAttempts}/3 falhou: " . ($resultMsg ?? 'Erro desconhecido'),
+                    ]);
+                    $log("Tarefa #{$item['id']} falhou na tentativa {$currentAttempts}/3. Reagendada para {$nextSchedule} como pendente.");
+                } else {
+                    $this->queueModel->update($item['id'], [
+                        'status'        => 'failed',
+                        'completed_at'  => date('Y-m-d H:i:s'),
+                        'error_message' => "Falha definitiva após 3 tentativas: " . ($resultMsg ?? 'Erro desconhecido'),
+                    ]);
+                    $failed++;
+                    $log("Tarefa #{$item['id']} FALHOU definitivamente após 3 tentativas: " . ($resultMsg ?? 'Erro'));
+                }
             }
         }
 
@@ -273,36 +320,71 @@ class JobCenterService
             ];
         }
 
+        $changes = [];
         $updateData = [
             'last_synced_at' => date('Y-m-d H:i:s'),
         ];
 
+        // Nome
         if (!empty($found['subject'])) {
-            $updateData['name'] = $found['subject'];
-        }
-        if (isset($found['desc'])) {
-            $updateData['description'] = $found['desc'];
-        }
-        if (isset($found['size'])) {
-            $updateData['participants_count'] = (int) $found['size'];
-        } elseif (isset($found['participants']) && is_array($found['participants'])) {
-            $updateData['participants_count'] = count($found['participants']);
+            $newName = (string) $found['subject'];
+            $oldName = (string) ($group['name'] ?? '');
+            if ($oldName !== $newName) {
+                $changes[] = "Nome: \"{$oldName}\" → \"{$newName}\"";
+            }
+            $updateData['name'] = $newName;
         }
 
+        // Descrição
+        if (isset($found['desc'])) {
+            $newDesc = (string) $found['desc'];
+            $oldDesc = (string) ($group['description'] ?? '');
+            if ($oldDesc !== $newDesc) {
+                $oldShort = mb_strlen($oldDesc) > 30 ? mb_substr($oldDesc, 0, 30) . '...' : ($oldDesc ?: '(vazio)');
+                $newShort = mb_strlen($newDesc) > 30 ? mb_substr($newDesc, 0, 30) . '...' : ($newDesc ?: '(vazio)');
+                $changes[] = "Descrição alterada: \"{$oldShort}\" → \"{$newShort}\"";
+            }
+            $updateData['description'] = $newDesc;
+        }
+
+        // Membros / Participantes
+        $oldCount = (int) ($group['participants_count'] ?? 0);
+        $newCount = $oldCount;
+        if (isset($found['size'])) {
+            $newCount = (int) $found['size'];
+        } elseif (isset($found['participants']) && is_array($found['participants'])) {
+            $newCount = count($found['participants']);
+        }
+        if ($oldCount !== $newCount) {
+            $changes[] = "Membros: de {$oldCount} para {$newCount}";
+        }
+        $updateData['participants_count'] = $newCount;
+
+        // Foto de Perfil
+        $oldPic = (string) ($group['avatar_url'] ?? '');
+        $newPic = '';
         if (!empty($found['pictureUrl'])) {
-            $updateData['avatar_url'] = $found['pictureUrl'];
+            $newPic = (string) $found['pictureUrl'];
+            $updateData['avatar_url'] = $newPic;
         } else {
             $pic = $evolutionService->findGroupPicture($instanceName, $groupJid);
             if (!empty($pic)) {
-                $updateData['avatar_url'] = $pic;
+                $newPic = (string) $pic;
+                $updateData['avatar_url'] = $newPic;
             }
+        }
+        if ($newPic !== '' && $oldPic !== $newPic) {
+            $changes[] = "Foto de perfil atualizada";
         }
 
         $groupModel->update($group['id'], $updateData);
 
+        $details = empty($changes) ? "Nenhuma alteração detectada (dados já estavam sincronizados)." : implode(" | ", $changes);
+        $reportMessage = "Grupo \"{$group['name']}\" ({$groupJid}) sincronizado com sucesso.\nDetalhes: {$details}";
+
         return [
             'success' => true,
-            'message' => "Grupo {$groupJid} atualizado com sucesso.",
+            'message' => $reportMessage,
         ];
     }
 

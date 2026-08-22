@@ -1060,7 +1060,57 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
     <div class="settings-tab-panel central-trabalho-panel" id="central-trabalho-panel" role="tabpanel" aria-labelledby="central-trabalho-tab" data-settings-panel="central-trabalho" <?= $activeSettingsTab !== 'central-trabalho' ? 'hidden' : '' ?>>
         <div class="setting-intro">
             <h2>Central de Trabalho</h2>
-            <p>Configure os parâmetros de execução das tarefas em segundo plano do sistema.</p>
+            <p>Configure os parâmetros de execução das tarefas em segundo plano e endpoints para agendadores automáticos (Webcron / Cronjob).</p>
+        </div>
+
+        <!-- Endpoints de Execução e Limpeza (Webcron / URLs de Automação) -->
+        <div class="job-settings-card" style="margin-bottom: 24px;">
+            <div class="job-card-header">
+                <div class="job-card-title">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="ti ti-link" style="font-size: 20px; color: var(--primary, #6366f1);"></i>
+                        <h3 style="margin: 0;">URLs de Execução e Manutenção (Webcron)</h3>
+                    </div>
+                    <p style="margin-top: 4px;">Utilize estas URLs em serviços de Cron externo (como EasyCron, cron-job.org) ou requisições agendadas.</p>
+                </div>
+            </div>
+            <div class="job-card-body" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="form-field">
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <span>URL de Execução da Fila (cron-runner)</span>
+                        <span class="badge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary, #6366f1); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">A cada 1 minuto</span>
+                    </label>
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                        <input type="text" class="input" readonly id="setting-cron-runner-url" value="<?= base_url('cron-runner.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" style="background: rgb(var(--surface-secondary)); font-family: monospace; font-size: 13px; flex: 1;">
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-runner-url').value); alert('URL cron-runner copiada!');" style="white-space: nowrap;">
+                            <i class="ti ti-copy" aria-hidden="true"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <span style="font-size: 12px; color: rgb(var(--muted)); margin-top: 6px; display: block;">
+                        <i class="ti ti-info-circle" style="vertical-align: middle; margin-right: 4px;"></i>
+                        Processa o lote de tarefas pendentes na fila. Configure seu agendador para chamar esta URL <strong>a cada 1 minuto</strong>.
+                    </span>
+                </div>
+
+                <div class="form-field">
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <span>URL de Limpeza de Fila Travada (cron-clean)</span>
+                        <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">A cada 5 minutos</span>
+                    </label>
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                        <input type="text" class="input" readonly id="setting-cron-clean-url" value="<?= base_url('cron-clean.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" style="background: rgb(var(--surface-secondary)); font-family: monospace; font-size: 13px; flex: 1;">
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-clean-url').value); alert('URL cron-clean copiada!');" style="white-space: nowrap;">
+                            <i class="ti ti-copy" aria-hidden="true"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <span style="font-size: 12px; color: rgb(var(--muted)); margin-top: 6px; display: block;">
+                        <i class="ti ti-info-circle" style="vertical-align: middle; margin-right: 4px;"></i>
+                        Redefine automaticamente tarefas com status "Processando" de volta para "Pendente" e limpa travas de cache. Configure seu agendador para chamar esta URL <strong>a cada 5 minutos</strong>.
+                    </span>
+                </div>
+            </div>
         </div>
 
         <?php if (empty($systemJobs)): ?>

@@ -369,13 +369,21 @@ class WhatsappGroups extends BaseController
         }
 
         try {
-            $jobModel = new \App\Models\JobQueueModel();
-            $jobModel->insert([
-                'job_type' => 'sync_whatsapp_groups',
-                'payload' => json_encode(['group_id' => $id]),
-                'status' => 'pending',
-                'priority' => 10,
-                'created_at' => date('Y-m-d H:i:s'),
+            $queueModel = new \App\Models\SystemJobQueueModel();
+            $groupName = !empty($group['name']) ? $group['name'] : $group['group_jid'];
+
+            $queueModel->insert([
+                'job_key'        => 'sync_whatsapp_groups',
+                'item_reference' => $groupName,
+                'payload'        => json_encode([
+                    'group_id'      => $group['id'],
+                    'group_jid'     => $group['group_jid'],
+                    'instance_name' => $group['instance_name'] ?? '',
+                    'name'          => $group['name'] ?? '',
+                ], JSON_UNESCAPED_UNICODE),
+                'status'         => 'pending',
+                'scheduled_at'   => date('Y-m-d H:i:s'),
+                'attempts'       => 0,
             ]);
 
             return $this->response->setJSON([
