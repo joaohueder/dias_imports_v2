@@ -173,35 +173,34 @@
     }
 
     const settings = document.querySelector('[data-settings-root]');
-    if (!settings) return;
-
-    const tabs = [...settings.querySelectorAll('[data-settings-tab]')];
-    const panels = [...settings.querySelectorAll('[data-settings-panel]')];
-    const selectTab = (name) => {
-        tabs.forEach((tab) => {
-            const active = tab.dataset.settingsTab === name;
-            tab.classList.toggle('active', active);
-            tab.setAttribute('aria-selected', String(active));
-        });
-        panels.forEach((panel) => { panel.hidden = panel.dataset.settingsPanel !== name; });
-        const url = new URL(window.location.href);
-        name === 'layout' ? url.searchParams.delete('tab') : url.searchParams.set('tab', name);
-        window.history.replaceState({}, '', url);
-    };
-    tabs.forEach((tab) => tab.addEventListener('click', () => {
-        const name = tab.dataset.settingsTab;
-        if (name === 'evolution' && settings.dataset.activeTab !== 'evolution') {
-            showProcessingOverlay(
-                'Carregando instâncias',
-                'Sincronizando as instâncias com a Evolution API antes de mostrar os dados.',
-            );
+    if (settings) {
+        const tabs = [...settings.querySelectorAll('[data-settings-tab]')];
+        const panels = [...settings.querySelectorAll('[data-settings-panel]')];
+        const selectTab = (name) => {
+            tabs.forEach((tab) => {
+                const active = tab.dataset.settingsTab === name;
+                tab.classList.toggle('active', active);
+                tab.setAttribute('aria-selected', String(active));
+            });
+            panels.forEach((panel) => { panel.hidden = panel.dataset.settingsPanel !== name; });
             const url = new URL(window.location.href);
-            url.searchParams.set('tab', 'evolution');
-            window.location.assign(url);
-            return;
-        }
-        selectTab(name);
-    }));
+            name === 'layout' ? url.searchParams.delete('tab') : url.searchParams.set('tab', name);
+            window.history.replaceState({}, '', url);
+        };
+        tabs.forEach((tab) => tab.addEventListener('click', () => {
+            const name = tab.dataset.settingsTab;
+            if (name === 'evolution' && settings.dataset.activeTab !== 'evolution') {
+                showProcessingOverlay(
+                    'Carregando instâncias',
+                    'Sincronizando as instâncias com a Evolution API antes de mostrar os dados.',
+                );
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', 'evolution');
+                window.location.assign(url);
+                return;
+            }
+            selectTab(name);
+        }));
 
     const layoutForm = settings.querySelector('[data-layout-form]');
     const widthInput = settings.querySelector('[data-width-input]');
@@ -1227,58 +1226,179 @@
             // 4. Fechar o modal
             closeIconPickerModal();
         });
-    }
 
-    const actionIcon = settings.querySelector('[data-action-icon] i');
-    const actionButtonIcon = settings.querySelector('[data-action-button-icon]');
-    const actionButtonLabel = settings.querySelector('[data-action-button-label]');
-    let pendingActionForm = null;
-    let actionTrigger = null;
-    if (actionDialog && cancelAction && confirmAction && actionTitle && actionMessage && actionIcon && actionButtonIcon && actionButtonLabel) {
-        const actions = {
-            default: { title: 'Tornar WhatsApp padrão?', message: (name) => `O WhatsApp “${name}” será usado como padrão nos atendimentos.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
-            activate: { title: 'Ativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” voltará a ficar disponível para os atendimentos.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
-            deactivate: { title: 'Inativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” ficará indisponível até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
-            delete: { title: 'Excluir este WhatsApp?', message: (name) => `O WhatsApp “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
-            'evolution-default': { title: 'Tornar instância padrão?', message: (name) => `A instância “${name}” será usada como padrão nos novos envios.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
-            'evolution-logout': { title: 'Desconectar esta instância?', message: (name) => `A sessão de WhatsApp da instância “${name}” será encerrada. Será necessário ler outro QR Code para reconectar.`, label: 'Sim, desconectar', icon: 'ti-plug-off', buttonIcon: 'ti-plug-off', variant: 'warning' },
-            'evolution-delete': { title: 'Excluir esta instância?', message: (name) => `A instância “${name}” e sua sessão serão removidas da Evolution API. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+        const actionIcon = settings.querySelector('[data-action-icon] i');
+        const actionButtonIcon = settings.querySelector('[data-action-button-icon]');
+        const actionButtonLabel = settings.querySelector('[data-action-button-label]');
+        let pendingActionForm = null;
+        let actionTrigger = null;
+        if (actionDialog && cancelAction && confirmAction && actionTitle && actionMessage && actionIcon && actionButtonIcon && actionButtonLabel) {
+            const actions = {
+                default: { title: 'Tornar WhatsApp padrão?', message: (name) => `O WhatsApp “${name}” será usado como padrão nos atendimentos.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
+                activate: { title: 'Ativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” voltará a ficar disponível para os atendimentos.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
+                deactivate: { title: 'Inativar este WhatsApp?', message: (name) => `O WhatsApp “${name}” ficará indisponível até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
+                delete: { title: 'Excluir este WhatsApp?', message: (name) => `O WhatsApp “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+                'evolution-default': { title: 'Tornar instância padrão?', message: (name) => `A instância “${name}” será usada como padrão nos novos envios.`, label: 'Sim, tornar padrão', icon: 'ti-star', buttonIcon: 'ti-star', variant: 'primary' },
+                'evolution-logout': { title: 'Desconectar esta instância?', message: (name) => `A sessão de WhatsApp da instância “${name}” será encerrada. Será necessário ler outro QR Code para reconectar.`, label: 'Sim, desconectar', icon: 'ti-plug-off', buttonIcon: 'ti-plug-off', variant: 'warning' },
+                'evolution-delete': { title: 'Excluir esta instância?', message: (name) => `A instância “${name}” e sua sessão serão removidas da Evolution API. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            };
+            const closeActionDialog = () => {
+                actionDialog.classList.remove('open');
+                actionDialog.hidden = true;
+                document.body.style.overflow = '';
+                pendingActionForm = null;
+                actionTrigger?.focus();
+            };
+            settings.querySelectorAll('[data-confirm-action]').forEach((form) => form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const config = actions[form.dataset.confirmAction];
+                if (!config) return;
+                pendingActionForm = form;
+                actionTrigger = event.submitter;
+                const name = form.dataset.whatsappName || form.dataset.actionName || 'selecionado';
+                actionTitle.textContent = config.title;
+                actionMessage.textContent = config.message(name);
+                actionButtonLabel.textContent = config.label;
+                actionIcon.className = `ti ${config.icon}`;
+                actionButtonIcon.className = `ti ${config.buttonIcon}`;
+                actionDialog.dataset.variant = config.variant;
+                confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
+                confirmAction.disabled = false;
+                actionDialog.hidden = false;
+                window.requestAnimationFrame(() => actionDialog.classList.add('open'));
+                document.body.style.overflow = 'hidden';
+                cancelAction.focus();
+            }));
+            cancelAction.addEventListener('click', closeActionDialog);
+            actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
+            document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
+            confirmAction.addEventListener('click', () => {
+                if (!pendingActionForm) return;
+                confirmAction.disabled = true;
+                showProcessing(pendingActionForm, actionTrigger);
+                pendingActionForm.submit();
+            });
+        }
+    }
+}
+
+    // =========================================================================
+    // MÓDULO DE USUÁRIOS
+    // =========================================================================
+    const usersModule = document.querySelector('[data-users-module]');
+    if (usersModule) {
+        const searchInput = usersModule.querySelector('[data-users-filter-input]');
+        const filterPills = usersModule.querySelectorAll('.filter-pill');
+        const userCards = usersModule.querySelectorAll('[data-user-card]');
+        const emptyState = usersModule.querySelector('[data-users-empty-search]');
+
+        let currentStatusFilter = 'all';
+        let currentSearchQuery = '';
+
+        const applyFilters = () => {
+            let visibleCount = 0;
+            userCards.forEach(card => {
+                const name = (card.dataset.name || '').toLowerCase();
+                const email = (card.dataset.email || '').toLowerCase();
+                const status = card.dataset.status || '';
+                const role = card.dataset.role || '';
+
+                const matchesSearch = !currentSearchQuery || name.includes(currentSearchQuery) || email.includes(currentSearchQuery);
+                
+                let matchesStatus = true;
+                if (currentStatusFilter === 'active') {
+                    matchesStatus = (status === 'active');
+                } else if (currentStatusFilter === 'inactive') {
+                    matchesStatus = (status === 'inactive');
+                } else if (currentStatusFilter === 'admin') {
+                    matchesStatus = (role === 'admin');
+                }
+
+                const visible = matchesSearch && matchesStatus;
+                card.style.display = visible ? 'flex' : 'none';
+                if (visible) visibleCount++;
+            });
+
+            if (emptyState) {
+                emptyState.style.display = (visibleCount === 0) ? 'flex' : 'none';
+            }
         };
-        const closeActionDialog = () => {
-            actionDialog.classList.remove('open');
-            actionDialog.hidden = true;
-            document.body.style.overflow = '';
-            pendingActionForm = null;
-            actionTrigger?.focus();
-        };
-        settings.querySelectorAll('[data-confirm-action]').forEach((form) => form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const config = actions[form.dataset.confirmAction];
-            if (!config) return;
-            pendingActionForm = form;
-            actionTrigger = event.submitter;
-            const name = form.dataset.whatsappName || form.dataset.actionName || 'selecionado';
-            actionTitle.textContent = config.title;
-            actionMessage.textContent = config.message(name);
-            actionButtonLabel.textContent = config.label;
-            actionIcon.className = `ti ${config.icon}`;
-            actionButtonIcon.className = `ti ${config.buttonIcon}`;
-            actionDialog.dataset.variant = config.variant;
-            confirmAction.className = `button ${config.variant === 'primary' ? 'primary' : `${config.variant}-solid`}`;
-            confirmAction.disabled = false;
-            actionDialog.hidden = false;
-            window.requestAnimationFrame(() => actionDialog.classList.add('open'));
-            document.body.style.overflow = 'hidden';
-            cancelAction.focus();
-        }));
-        cancelAction.addEventListener('click', closeActionDialog);
-        actionDialog.addEventListener('click', (event) => event.target === actionDialog && closeActionDialog());
-        document.addEventListener('keydown', (event) => event.key === 'Escape' && actionDialog.classList.contains('open') && closeActionDialog());
-        confirmAction.addEventListener('click', () => {
-            if (!pendingActionForm) return;
-            confirmAction.disabled = true;
-            showProcessing(pendingActionForm, actionTrigger);
-            pendingActionForm.submit();
+
+        // Executar filtro inicial para garantir que o estado vazio seja ocultado se houver usuários
+        applyFilters();
+
+        searchInput?.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value.toLowerCase().trim();
+            applyFilters();
+        });
+
+        filterPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                filterPills.forEach(p => {
+                    p.classList.remove('active');
+                    p.setAttribute('aria-selected', 'false');
+                });
+                pill.classList.add('active');
+                pill.setAttribute('aria-selected', 'true');
+                currentStatusFilter = pill.dataset.filter;
+                applyFilters();
+            });
         });
     }
+
+    // =========================================================================
+    // FORMULÁRIO DE USUÁRIOS
+    // =========================================================================
+    const userFormRoot = document.querySelector('[data-user-form-root]');
+    if (userFormRoot) {
+        const dirtyUserForm = userFormRoot.querySelector('[data-dirty-form]');
+        const userSaveBar = userFormRoot.querySelector('[data-form-save-bar]');
+
+        // Toggle de permissões por módulo
+        userFormRoot.querySelectorAll('[data-toggle-module-all]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const moduleName = btn.dataset.toggleModuleAll;
+                const inputs = userFormRoot.querySelectorAll(`input[data-module="${moduleName}"]`);
+                const allChecked = [...inputs].every(i => i.checked);
+                inputs.forEach(i => {
+                    i.checked = !allChecked;
+                });
+                btn.textContent = allChecked ? 'Marcar tudo' : 'Desmarcar tudo';
+                dirtyUserForm?.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        });
+
+        // Detecção de alterações para exibição da Barra Flutuante Salvar/Cancelar
+        if (dirtyUserForm && userSaveBar) {
+            const getFormState = () => {
+                const data = new FormData(dirtyUserForm);
+                const obj = {};
+                for (let [k, v] of data.entries()) {
+                    obj[k] = v;
+                }
+                return JSON.stringify(obj);
+            };
+
+            const initialState = getFormState();
+
+            const checkDirty = () => {
+                const currentState = getFormState();
+                userSaveBar.hidden = (currentState === initialState);
+            };
+
+            dirtyUserForm.addEventListener('input', checkDirty);
+            dirtyUserForm.addEventListener('change', checkDirty);
+        }
+    }
+
+    // Toggle de visualização de senha
+    document.querySelectorAll('[data-toggle-pwd]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const input = btn.closest('.input-with-toggle')?.querySelector('input');
+            if (!input) return;
+            const isPassword = (input.type === 'password');
+            input.type = isPassword ? 'text' : 'password';
+            btn.querySelector('i').className = `ti ${isPassword ? 'ti-eye-off' : 'ti-eye'}`;
+        });
+    });
 })();
