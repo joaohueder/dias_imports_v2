@@ -1,10 +1,16 @@
 <?php if (empty($groups)): ?>
-    <div class="users-empty-search col-span-full" style="padding: 48px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgb(var(--muted));">
-        <div class="empty-icon" style="margin-bottom: 4px;">
-            <i class="ti ti-inbox" style="font-size: 36px;"></i>
+    <div class="users-empty-search col-span-full" style="grid-column: 1 / -1; width: 100%; padding: 60px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: rgb(var(--muted));">
+        <div class="empty-icon" style="width: 64px; height: 64px; border-radius: 16px; background: rgb(var(--surface-2)); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <i class="ti ti-inbox" style="font-size: 32px; color: rgb(var(--muted));"></i>
         </div>
-        <p style="margin: 0; font-size: 14px; font-weight: 600;">Nenhum grupo encontrado para os filtros selecionados.</p>
-        <span style="font-size: 14px;">Novos grupos sincronizados do WhatsApp aparecerão aqui automaticamente.</span>
+        <p style="margin: 0; font-size: 15px; font-weight: 600; color: rgb(var(--text));">Nenhum grupo encontrado para os filtros selecionados.</p>
+        <span style="font-size: 14px; margin-bottom: 12px;">Novos grupos sincronizados do WhatsApp aparecerão aqui automaticamente.</span>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'create')): ?>
+            <button type="button" class="button primary" onclick="document.getElementById('btn-open-new-group-modal')?.click()" style="margin-top: 4px;">
+                <i class="ti ti-plus" aria-hidden="true"></i>
+                <span>Novo Grupo</span>
+            </button>
+        <?php endif; ?>
     </div>
 <?php else: ?>
     <?php foreach ($groups as $group): ?>
