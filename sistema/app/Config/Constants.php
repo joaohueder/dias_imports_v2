@@ -83,4 +83,4 @@ defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest a
  | Versão do Sistema
  | --------------------------------------------------------------------------
  */
-defined('APP_VERSION')         || define('APP_VERSION', '2026.08.0024');
+defined('APP_VERSION')         || define('APP_VERSION', '2026.08.0025');

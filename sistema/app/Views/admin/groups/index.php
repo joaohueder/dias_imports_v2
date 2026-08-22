@@ -2,28 +2,30 @@
 
 <?= $this->section('content') ?>
 <div class="whatsapp-groups-wrap" data-groups-module>
-    <div class="users-header-actions">
-        <div class="users-search-box">
-            <i class="ti ti-search users-search-icon" aria-hidden="true"></i>
-            <input type="text" id="groups-search-input" class="users-search-input" placeholder="Filtrar pelo nome..." value="<?= esc($searchQuery) ?>" aria-label="Filtrar grupos pelo nome">
-            <?php if ($searchQuery !== ''): ?>
-                <button type="button" class="btn-clear-search" id="btn-clear-search" aria-label="Limpar busca"><i class="ti ti-x"></i></button>
-            <?php endif; ?>
+    <div class="users-header-actions" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; flex: 1;">
+            <div class="users-search-box">
+                <i class="ti ti-search users-search-icon" aria-hidden="true"></i>
+                <input type="text" id="groups-search-input" class="users-search-input" placeholder="Filtrar pelo nome..." value="<?= esc($searchQuery) ?>" aria-label="Filtrar grupos pelo nome">
+                <?php if ($searchQuery !== ''): ?>
+                    <button type="button" class="btn-clear-search" id="btn-clear-search" aria-label="Limpar busca"><i class="ti ti-x"></i></button>
+                <?php endif; ?>
+            </div>
+
+            <div class="users-filter-pills" role="tablist" aria-label="Filtros de status de grupos">
+                <button type="button" class="filter-pill <?= $currentStatus === 'all' ? 'active' : '' ?>" data-status="all" role="tab" aria-selected="<?= $currentStatus === 'all' ? 'true' : 'false' ?>">
+                    Todos <span class="pill-badge" id="badge-all"><?= esc($metrics['total']) ?></span>
+                </button>
+                <button type="button" class="filter-pill <?= $currentStatus === 'active' ? 'active' : '' ?>" data-status="active" role="tab" aria-selected="<?= $currentStatus === 'active' ? 'true' : 'false' ?>">
+                    Ativos <span class="pill-badge" id="badge-active"><?= esc($metrics['active']) ?></span>
+                </button>
+                <button type="button" class="filter-pill <?= $currentStatus === 'inactive' ? 'active' : '' ?>" data-status="inactive" role="tab" aria-selected="<?= $currentStatus === 'inactive' ? 'true' : 'false' ?>">
+                    Inativos <span class="pill-badge" id="badge-inactive"><?= esc($metrics['inactive']) ?></span>
+                </button>
+            </div>
         </div>
 
-        <div class="users-filter-pills" role="tablist" aria-label="Filtros de status de grupos">
-            <button type="button" class="filter-pill <?= $currentStatus === 'all' ? 'active' : '' ?>" data-status="all" role="tab" aria-selected="<?= $currentStatus === 'all' ? 'true' : 'false' ?>">
-                Todos <span class="pill-badge" id="badge-all"><?= esc($metrics['total']) ?></span>
-            </button>
-            <button type="button" class="filter-pill <?= $currentStatus === 'active' ? 'active' : '' ?>" data-status="active" role="tab" aria-selected="<?= $currentStatus === 'active' ? 'true' : 'false' ?>">
-                Ativos <span class="pill-badge" id="badge-active"><?= esc($metrics['active']) ?></span>
-            </button>
-            <button type="button" class="filter-pill <?= $currentStatus === 'inactive' ? 'active' : '' ?>" data-status="inactive" role="tab" aria-selected="<?= $currentStatus === 'inactive' ? 'true' : 'false' ?>">
-                Inativos <span class="pill-badge" id="badge-inactive"><?= esc($metrics['inactive']) ?></span>
-            </button>
-        </div>
-
-        <div class="users-create-action" style="display: flex; gap: 10px;">
+        <div class="users-create-action" style="display: flex; gap: 10px; margin-left: auto;">
             <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'create') || \App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'edit')): ?>
                 <button type="button" class="button secondary" id="btn-sync-groups">
                     <i class="ti ti-refresh" aria-hidden="true"></i>
