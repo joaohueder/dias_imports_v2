@@ -212,5 +212,6 @@ $globalSuccess = session()->getFlashdata('success');
 <?php if (isset($hasLeadsJs) && $hasLeadsJs): ?>
 <script src="<?= base_url('js/leads.js') ?>" defer></script>
 <?php endif; ?>
+<?= $this->renderSection('scripts') ?>
 </body>
 </html>

@@ -163,6 +163,68 @@ class EvolutionApiService
         ]);
     }
 
+    public function fetchAllGroups(string $name, bool $getParticipants = true): array
+    {
+        $name = $this->validateInstanceName($name);
+        $query = $getParticipants ? '?getParticipants=true' : '?getParticipants=false';
+        $payload = $this->request('GET', '/group/fetchAllGroups/' . rawurlencode($name) . $query);
+        $rows = array_is_list($payload) ? $payload : ($payload['groups'] ?? $payload['data'] ?? []);
+        return is_array($rows) ? $rows : [];
+    }
+
+    public function findGroupPicture(string $name, string $groupJid): string
+    {
+        try {
+            $name = $this->validateInstanceName($name);
+            $payload = $this->request('GET', '/group/findGroupPictureUrl/' . rawurlencode($name) . '?groupJid=' . rawurlencode($groupJid));
+            $url = $payload['pictureUrl'] ?? $payload['profilePicUrl'] ?? $payload['url'] ?? '';
+            return $this->safeImageUrl((string) $url);
+        } catch (Throwable) {
+            return '';
+        }
+    }
+
+    public function sendGroupTestMessage(string $name, string $groupJid, string $text = 'Mensagem de teste enviada pelo painel Dias Imports.'): void
+    {
+        $name = $this->validateInstanceName($name);
+        $instance = $this->findInstance($name);
+        if (! ($instance['connected'] ?? false)) {
+            throw new RuntimeException('A instância precisa estar conectada para enviar mensagens.');
+        }
+
+        $this->request('POST', '/message/sendText/' . rawurlencode($name), [
+            'number' => $groupJid,
+            'text' => $text,
+        ]);
+    }
+
+    public function createGroup(string $name, string $subject, array $participants, string $description = ''): array
+    {
+        $name = $this->validateInstanceName($name);
+        $subject = trim($subject);
+        if ($subject === '') {
+            throw new RuntimeException('Informe o nome do grupo.');
+        }
+
+        $cleanParticipants = [];
+        foreach ($participants as $p) {
+            $cleaned = preg_replace('/[^\d]/', '', (string)$p);
+            if ($cleaned !== '') {
+                $cleanParticipants[] = $cleaned;
+            }
+        }
+
+        $data = [
+            'subject' => $subject,
+            'participants' => $cleanParticipants,
+        ];
+        if ($description !== '') {
+            $data['description'] = $description;
+        }
+
+        return $this->request('POST', '/group/createGroup/' . rawurlencode($name), $data);
+    }
+
     public function logoutInstance(string $name): void
     {
         $this->request('DELETE', '/instance/logout/' . rawurlencode($this->validateInstanceName($name)));
