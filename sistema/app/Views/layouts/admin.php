@@ -93,7 +93,7 @@ $globalSuccess = session()->getFlashdata('success');
 
         <footer class="panel-footer">
             <span>&copy; <?= date('Y') ?> Dias Imports</span>
-            <span>Painel Administrativo</span>
+            <span>Painel Administrativo <span class="footer-version">v<?= esc(defined('APP_VERSION') ? APP_VERSION : '2026.08.0002') ?></span></span>
         </footer>
     </div>
 
