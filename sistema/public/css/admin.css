@@ -2605,6 +2605,435 @@ body.processing-locked { overflow: hidden; }
 }
 
 /* ==========================================================================
+   CENTRAL DE TRABALHO
+   ========================================================================== */
+
+.job-center-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.job-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.job-stat-card {
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--border));
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / .15);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.job-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--primary) / .3);
+}
+
+.job-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.job-stat-icon.pending {
+    background: rgb(var(--warning) / .12);
+    color: rgb(var(--warning));
+    border: 1px solid rgb(var(--warning) / .25);
+}
+
+.job-stat-icon.processing {
+    background: rgb(var(--primary) / .12);
+    color: rgb(var(--primary-hover));
+    border: 1px solid rgb(var(--primary) / .25);
+}
+
+.job-stat-icon.completed {
+    background: rgb(var(--success) / .12);
+    color: rgb(var(--success));
+    border: 1px solid rgb(var(--success) / .25);
+}
+
+.job-stat-icon.failed {
+    background: rgb(var(--danger) / .12);
+    color: rgb(var(--danger));
+    border: 1px solid rgb(var(--danger) / .25);
+}
+
+.job-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.job-stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(var(--muted));
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.job-stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: rgb(var(--foreground));
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.job-cron-card {
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--primary) / .25);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / .15);
+}
+
+.job-cron-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgb(var(--primary-hover));
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.job-cron-header i {
+    font-size: 18px;
+}
+
+.job-cron-desc {
+    margin: 0;
+    font-size: 13px;
+    color: rgb(var(--muted));
+    line-height: 1.5;
+}
+
+.job-cron-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.job-cron-input {
+    flex: 1;
+    min-height: 42px;
+    padding: 8px 14px;
+    background: rgb(var(--surface-secondary));
+    border: 1px solid rgb(var(--border));
+    border-radius: 10px;
+    color: rgb(var(--foreground));
+    font-family: monospace;
+    font-size: 13px;
+    outline: none;
+}
+
+.job-table-card {
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--border));
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgb(0 0 0 / .2);
+}
+
+.job-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgb(var(--border));
+}
+
+.job-table-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.job-table-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 750;
+    color: rgb(var(--foreground));
+}
+
+.job-table-subtitle {
+    margin: 0;
+    font-size: 12px;
+    color: rgb(var(--muted));
+}
+
+.job-table-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.job-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px 24px;
+    background: rgb(var(--surface-secondary) / .3);
+    border-bottom: 1px solid rgb(var(--border));
+}
+
+.job-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+    max-width: 360px;
+}
+
+.job-search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgb(var(--muted));
+    font-size: 15px;
+    pointer-events: none;
+}
+
+.job-search-box input {
+    width: 100%;
+    min-height: 38px;
+    padding: 6px 12px 6px 36px;
+    background: rgb(var(--surface-secondary));
+    border: 1px solid rgb(var(--border));
+    border-radius: 10px;
+    color: rgb(var(--foreground));
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.job-search-box input:focus {
+    border-color: rgb(var(--primary));
+}
+
+.job-table-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.job-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+    table-layout: auto;
+}
+
+.job-table th {
+    padding: 12px 16px;
+    background: rgb(var(--surface-secondary) / .5);
+    color: rgb(var(--muted));
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgb(var(--border));
+    white-space: nowrap;
+}
+
+.job-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgb(var(--border) / .6);
+    color: rgb(var(--foreground));
+    vertical-align: middle;
+}
+
+.job-table tr:hover td {
+    background: rgb(var(--surface-secondary) / .3);
+}
+
+.job-table tr:last-child td {
+    border-bottom: none;
+}
+
+.job-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.job-badge.pending {
+    background: rgb(var(--warning) / .12);
+    color: rgb(var(--warning));
+    border: 1px solid rgb(var(--warning) / .25);
+}
+
+.job-badge.processing {
+    background: rgb(var(--primary) / .12);
+    color: rgb(var(--primary-hover));
+    border: 1px solid rgb(var(--primary) / .25);
+}
+
+.job-badge.completed {
+    background: rgb(var(--success) / .12);
+    color: rgb(var(--success));
+    border: 1px solid rgb(var(--success) / .25);
+}
+
+.job-badge.failed {
+    background: rgb(var(--danger) / .12);
+    color: rgb(var(--danger));
+    border: 1px solid rgb(var(--danger) / .25);
+}
+
+/* Configurações da Central de Trabalho */
+.jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.job-settings-card {
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--border));
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    box-shadow: 0 4px 16px rgb(0 0 0 / .1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.job-settings-card:hover {
+    border-color: rgb(var(--primary) / .3);
+    box-shadow: 0 6px 20px rgb(0 0 0 / .15);
+}
+
+.job-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.job-card-title h3 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 750;
+    color: rgb(var(--foreground));
+}
+
+.job-card-title p {
+    margin: 0;
+    font-size: 13px;
+    color: rgb(var(--muted));
+    line-height: 1.5;
+}
+
+.job-card-toggle {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background: rgb(var(--surface-secondary));
+    border: 1px solid rgb(var(--border));
+    border-radius: 999px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background: rgb(var(--muted));
+    border-radius: 50%;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: rgb(var(--primary));
+    border-color: rgb(var(--primary));
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(22px);
+    background: #ffffff;
+}
+
+.toggle-switch input:focus-visible + .toggle-slider {
+    outline: 2px solid rgb(var(--primary));
+    outline-offset: 2px;
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toggle-label-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    min-width: 46px;
+    color: rgb(var(--muted));
+    transition: color 0.2s ease;
+}
+
+.toggle-switch input:checked ~ .toggle-label-text {
+    color: rgb(var(--primary-hover));
+}
+
+/* ==========================================================================
    MÓDULO DE USUÁRIOS
    ========================================================================== */
 

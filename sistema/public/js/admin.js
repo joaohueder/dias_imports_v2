@@ -345,6 +345,16 @@
         });
     }
 
+    // Toggle switch status dinamico nas configurações
+    document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(toggle => {
+        toggle.addEventListener('change', () => {
+            const labelText = toggle.closest('.toggle-switch')?.querySelector('.toggle-label-text');
+            if (labelText) {
+                labelText.textContent = toggle.checked ? 'Ativo' : 'Inativo';
+            }
+        });
+    });
+
     const settings = document.querySelector('[data-settings-root]');
     if (settings) {
         const tabs = [...settings.querySelectorAll('[data-settings-tab]')];

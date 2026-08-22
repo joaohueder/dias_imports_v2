@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentStatus = 'all';
     let searchTimeout = null;
 
+    // Listener para o toggle do switch nos cards de trabalho (se houver)
+    document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(toggle => {
+        toggle.addEventListener('change', () => {
+            const labelText = toggle.closest('.toggle-switch')?.querySelector('.toggle-label-text');
+            if (labelText) {
+                labelText.textContent = toggle.checked ? 'Ativo' : 'Inativo';
+            }
+        });
+    });
+
     // Filtros de status
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -442,6 +452,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    if (btnSyncGroups) {
+        btnSyncGroups.addEventListener('click', syncGroups);
+    }
+
     async function syncGroups() {
         const btn = document.getElementById('btn-sync-groups') || document.getElementById('btn-sync-empty');
         if (!btn) return;
@@ -452,8 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const appShell = document.querySelector('.app-shell');
 
         if (processingScreen && processingHeading && processingMessage) {
-            processingHeading.textContent = 'Sincronizando grupos';
-            processingMessage.textContent = 'Buscando informações atualizadas dos grupos na Evolution API...';
+            processingHeading.textContent = 'Enfileirando Atualização';
+            processingMessage.textContent = 'Enviando grupos para a Central de Trabalho...';
             processingScreen.hidden = false;
             processingScreen.setAttribute('aria-hidden', 'false');
             appShell?.setAttribute('inert', '');
@@ -477,10 +491,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.success) {
-                showToast('Sincronização Concluída', data.message, 'success');
-                loadGroups();
+                showToast('Atualização Enfileirada', data.message, 'success');
+                if (data.redirect) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1200);
+                } else {
+                    loadGroups();
+                }
             } else {
-                showToast('Erro na Sincronização', data.message || 'Erro ao sincronizar grupos.', 'error');
+                showToast('Rotina de Trabalho Desativada', data.message || 'Erro ao sincronizar grupos.', 'warning');
             }
         } catch (error) {
             showToast('Erro', 'Falha na comunicação com o servidor.', 'error');

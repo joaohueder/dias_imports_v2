@@ -31,6 +31,9 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'view')): ?>
             <button class="settings-tab <?= $activeSettingsTab === 'landing-leads' ? 'active' : '' ?>" type="button" role="tab" id="landing-leads-tab" aria-selected="<?= $activeSettingsTab === 'landing-leads' ? 'true' : 'false' ?>" aria-controls="landing-leads-panel" data-settings-tab="landing-leads">Landing Page de Leads</button>
         <?php endif; ?>
+        <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view')): ?>
+            <button class="settings-tab <?= $activeSettingsTab === 'central-trabalho' ? 'active' : '' ?>" type="button" role="tab" id="central-trabalho-tab" aria-selected="<?= $activeSettingsTab === 'central-trabalho' ? 'true' : 'false' ?>" aria-controls="central-trabalho-panel" data-settings-tab="central-trabalho">Central de Trabalho</button>
+        <?php endif; ?>
     </div>
 
     <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
@@ -162,11 +165,6 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             <div class="evolution-credentials">
                 <label class="form-field"><span>URL da API</span><input type="url" name="base_url" maxlength="255" required inputmode="url" autocomplete="url" placeholder="https://evolution.seudominio.com" value="<?= esc(old('base_url', $evolutionSettings['base_url'] ?? '')) ?>"><small>Informe somente a URL base HTTPS pública, sem /api ou caminhos adicionais.</small></label>
                 <label class="form-field"><span>Global API Key</span><span class="secret-input"><input type="password" name="api_key" maxlength="1000" autocomplete="new-password" placeholder="<?= ($evolutionSettings['api_key_encrypted'] ?? '') !== '' ? '•••••••• (manter atual)' : 'Informe a chave' ?>" data-secret-input><button type="button" aria-label="Mostrar Global API Key" data-toggle-secret><i class="ti ti-eye" aria-hidden="true"></i></button></span><small>Deixe vazio para manter a chave atual. O valor nunca retorna ao navegador.</small></label>
-                <div class="evolution-delay-grid">
-                    <label class="form-field"><span>Espera mínima entre envios</span><span class="unit-input"><input type="number" name="min_delay_seconds" min="1" max="3600" required value="<?= esc(old('min_delay_seconds', $evolutionSettings['min_delay_seconds'] ?? 5)) ?>"><em>seg</em></span></label>
-                    <label class="form-field"><span>Espera máxima entre envios</span><span class="unit-input"><input type="number" name="max_delay_seconds" min="1" max="3600" required value="<?= esc(old('max_delay_seconds', $evolutionSettings['max_delay_seconds'] ?? 30)) ?>"><em>seg</em></span></label>
-                </div>
-                <p class="delay-hint"><i class="ti ti-clock-shield" aria-hidden="true"></i>O sistema sorteará uma espera dentro desse intervalo entre cada grupo, reduzindo disparos consecutivos. Valores permitidos: 1 a 3600 segundos.</p>
             </div>
 
             <div class="evolution-test-row">
@@ -1055,6 +1053,72 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
             <?php endif; ?>
         </form>
+    </div>
+    <?php endif; ?>
+
+    <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view')): ?>
+    <div class="settings-tab-panel central-trabalho-panel" id="central-trabalho-panel" role="tabpanel" aria-labelledby="central-trabalho-tab" data-settings-panel="central-trabalho" <?= $activeSettingsTab !== 'central-trabalho' ? 'hidden' : '' ?>>
+        <div class="setting-intro">
+            <h2>Central de Trabalho</h2>
+            <p>Configure os parâmetros de execução das tarefas em segundo plano do sistema.</p>
+        </div>
+
+        <?php if (empty($systemJobs)): ?>
+            <div class="empty-state">
+                <i class="ti ti-cpu" aria-hidden="true"></i>
+                <p>Nenhum trabalho registrado no sistema.</p>
+            </div>
+        <?php else: ?>
+            <div class="jobs-list">
+                <?php foreach ($systemJobs as $job): ?>
+                    <form action="<?= site_url('configuracoes/central-trabalho') ?>" method="post" class="job-settings-card" data-dirty-form>
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="job_key" value="<?= esc($job['job_key']) ?>">
+                        
+                        <div class="job-card-header">
+                            <div class="job-card-title">
+                                <h3><?= esc($job['name']) ?></h3>
+                                <p><?= esc($job['description']) ?></p>
+                                <div style="margin-top: 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgb(var(--muted));">
+                                    <i class="ti ti-info-circle"></i>
+                                    <span>Define se a rotina em segundo plano pode ser executada ou chamada por outras partes do sistema.</span>
+                                </div>
+                            </div>
+                            <div class="job-card-toggle">
+                                <label class="toggle-switch" title="<?= $job['is_active'] ? 'Trabalho ativo' : 'Trabalho inativo' ?>">
+                                    <input type="checkbox" name="is_active" value="1" <?= $job['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'edit') ? 'disabled' : '' ?>>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-label-text"><?= $job['is_active'] ? 'Ativo' : 'Inativo' ?></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="job-card-body">
+                            <div class="form-grid">
+                                <label class="form-field">
+                                    <span>Tempo Mínimo de Espera (segundos)</span>
+                                    <input type="number" name="min_delay_seconds" value="<?= esc($job['min_delay_seconds']) ?>" min="1" required <?= !\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'edit') ? 'disabled' : '' ?>>
+                                </label>
+                                <label class="form-field">
+                                    <span>Tempo Máximo de Espera (segundos)</span>
+                                    <input type="number" name="max_delay_seconds" value="<?= esc($job['max_delay_seconds']) ?>" min="1" required <?= !\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'edit') ? 'disabled' : '' ?>>
+                                </label>
+                            </div>
+                        </div>
+
+                        <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'edit')): ?>
+                        <div class="save-bar" data-form-save-bar hidden>
+                            <p><strong>Alterações não salvas</strong><span>Salve para aplicar as novas configurações de tempo.</span></p>
+                            <div class="save-actions">
+                                <button class="button secondary" type="button" data-cancel-form>Cancelar</button>
+                                <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </form>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
     <?php endif; ?>
 
