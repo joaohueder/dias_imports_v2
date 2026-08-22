@@ -98,6 +98,55 @@
     };
     const showProcessing = (form, submitter = null) => {
         if (!form) return;
+        const action = form.getAttribute('action') || window.location.pathname;
+        const op = processingOperations.find(o => action.includes(o.match));
+        if (op) {
+            showProcessingOverlay(op.title, op.message);
+        } else {
+            const title = form.dataset.processingTitle || 'Processando sua solicitação';
+            const message = form.dataset.processingMessage || 'Estamos cuidando dos detalhes com segurança.';
+            showProcessingOverlay(title, message);
+        }
+    };
+
+    // Interceptar navegação de links do menu para mostrar tela de carregamento
+    document.querySelectorAll('.nav-link, .bottom-link, .sheet-link, .brand').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (e.ctrlKey || e.metaKey || e.shiftKey || e.defaultPrevented) return;
+            
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+            const url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin) return;
+
+            const path = url.pathname;
+            let title = 'Carregando módulo';
+            let message = 'Preparando a interface para você.';
+
+            if (path.includes('/grupos-whatsapp')) {
+                title = 'Carregando Grupos';
+                message = 'Buscando os grupos de WhatsApp.';
+            } else if (path.includes('/produtos')) {
+                title = 'Carregando Produtos';
+                message = 'Buscando o catálogo de produtos.';
+            } else if (path.includes('/leads-vip')) {
+                title = 'Carregando Leads';
+                message = 'Buscando os contatos captados.';
+            } else if (path.includes('/usuarios')) {
+                title = 'Carregando Usuários';
+                message = 'Buscando os usuários do sistema.';
+            } else if (path.includes('/configuracoes')) {
+                title = 'Carregando Configurações';
+                message = 'Buscando as configurações do sistema.';
+            } else if (path === '/' || path === '') {
+                title = 'Carregando Visão Geral';
+                message = 'Buscando os dados do dashboard.';
+            }
+
+            showProcessingOverlay(title, message);
+        });
+    });
         const action = submitter?.formAction || form.action;
         let pathname = '';
         try { pathname = new URL(action, window.location.href).pathname; } catch { pathname = ''; }
