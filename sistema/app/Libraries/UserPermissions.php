@@ -57,7 +57,7 @@ class UserPermissions
                 ],
                 'meta_ads' => [
                     'label' => 'Meta Ads',
-                    'actions' => ['view', 'create', 'edit', 'delete'],
+                    'actions' => ['view', 'edit'],
                 ],
                 'landing_leads' => [
                     'label' => 'Landing Page de Leads',
