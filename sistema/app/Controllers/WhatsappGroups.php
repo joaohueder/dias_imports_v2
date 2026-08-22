@@ -149,9 +149,9 @@ class WhatsappGroups extends BaseController
         } catch (Throwable $e) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Erro ao buscar grupos da Evolution API: ' . $e->getMessage(),
+                'message' => $e->getMessage(),
                 'groups' => [],
-            ])->setStatusCode(500);
+            ])->setStatusCode(200);
         }
     }
 

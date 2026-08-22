@@ -127,16 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 instanceGroupsData = [];
                 instanceGroupsEmpty.style.display = 'flex';
-                if (data.message) {
-                    const hint = instanceGroupsEmpty.querySelector('span');
-                    if (hint) hint.textContent = data.message;
+                const hint = instanceGroupsEmpty.querySelector('span');
+                if (hint) {
+                    hint.textContent = data.message || 'Nenhum grupo encontrado na instância.';
                 }
             }
         } catch (error) {
             instanceGroupsLoading.style.display = 'none';
             instanceGroupsEmpty.style.display = 'flex';
             const hint = instanceGroupsEmpty.querySelector('span');
-            if (hint) hint.textContent = 'Erro ao consultar a Evolution API.';
+            if (hint) hint.textContent = 'Erro de comunicação ao consultar a Evolution API.';
         }
     }
 
