@@ -36,6 +36,15 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('leads-vip/(:num)/editar', 'VipLeads::update/$1', ['filter' => ['permission:vip_leads,edit', 'csrf']]);
     $routes->post('leads-vip/(:num)/excluir', 'VipLeads::delete/$1', ['filter' => ['permission:vip_leads,delete', 'csrf']]);
 
+    // Central de Trabalho
+    $routes->get('central-trabalho', 'JobCenter::index', ['filter' => 'permission:job_center,view']);
+    $routes->get('central-trabalho/feed', 'JobCenter::feed', ['filter' => 'permission:job_center,view']);
+    $routes->post('central-trabalho/reprocessar-falhas', 'JobCenter::retryFailed', ['filter' => ['permission:job_center,edit', 'csrf']]);
+    $routes->post('central-trabalho/limpar-concluidas', 'JobCenter::clearCompleted', ['filter' => ['permission:job_center,delete', 'csrf']]);
+    $routes->post('central-trabalho/executar-agora', 'JobCenter::runNow', ['filter' => ['permission:job_center,edit', 'csrf']]);
+    $routes->post('central-trabalho/excluir-selecionados', 'JobCenter::deleteSelected', ['filter' => ['permission:job_center,delete', 'csrf']]);
+    $routes->post('central-trabalho/(:num)/excluir', 'JobCenter::deleteJob/$1', ['filter' => ['permission:job_center,delete', 'csrf']]);
+
     // Usuários (Apenas administradores)
     $routes->get('usuarios', 'Users::index');
     $routes->get('usuarios/novo', 'Users::create');
@@ -69,5 +78,6 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('configuracoes/modelos-mensagens/(:num)/status', 'Home::toggleMessageTemplate/$1', ['filter' => ['permission:message_templates,edit', 'csrf']]);
     $routes->post('configuracoes/modelos-mensagens/(:num)/excluir', 'Home::deleteMessageTemplate/$1', ['filter' => ['permission:message_templates,delete', 'csrf']]);
     $routes->post('configuracoes/landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
+    $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
 });
 

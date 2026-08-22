@@ -42,19 +42,22 @@ class EvolutionApiService
             && ($settings['api_key_encrypted'] ?? '') !== '';
     }
 
-    public function saveSettings(string $baseUrl, string $apiKey, int $minDelay, int $maxDelay): void
+    public function saveSettings(string $baseUrl, string $apiKey, ?int $minDelay = null, ?int $maxDelay = null): void
     {
         $baseUrl = $this->validateBaseUrl($baseUrl);
-        if ($minDelay < 1 || $maxDelay > 3600 || $maxDelay < $minDelay) {
-            throw new RuntimeException('Informe esperas entre 1 e 3600 segundos, com o máximo igual ou maior que o mínimo.');
-        }
-
         $current = $this->getSettings();
+
         $data = [
             'base_url' => $baseUrl,
-            'min_delay_seconds' => $minDelay,
-            'max_delay_seconds' => $maxDelay,
         ];
+
+        if ($minDelay !== null && $maxDelay !== null) {
+            if ($minDelay < 1 || $maxDelay > 3600 || $maxDelay < $minDelay) {
+                throw new RuntimeException('Informe esperas entre 1 e 3600 segundos, com o máximo igual ou maior que o mínimo.');
+            }
+            $data['min_delay_seconds'] = $minDelay;
+            $data['max_delay_seconds'] = $maxDelay;
+        }
 
         if ($apiKey !== '') {
             if (strlen($apiKey) > 1000) {

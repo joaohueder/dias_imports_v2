@@ -570,8 +570,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const appShell = document.querySelector('.app-shell');
 
         if (processingScreen && processingHeading && processingMessage) {
-            processingHeading.textContent = 'Atualizando grupo';
-            processingMessage.textContent = `Buscando informações atualizadas de "${name}" na Evolution API...`;
+            processingHeading.textContent = 'Enfileirando Atualização';
+            processingMessage.textContent = `Enviando atualização de "${name}" para a Central de Trabalho...`;
             processingScreen.hidden = false;
             processingScreen.setAttribute('aria-hidden', 'false');
             appShell?.setAttribute('inert', '');
@@ -591,10 +591,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.success) {
-                showToast('Sucesso', data.message, 'success');
-                loadGroups();
+                showToast('Atualização Enfileirada', data.message, 'success');
             } else {
-                showToast('Erro', data.message || 'Erro ao atualizar dados do grupo.', 'error');
+                showToast('Rotina de Trabalho Desativada', data.message || 'Erro ao atualizar dados do grupo.', 'warning');
             }
         } catch (error) {
             showToast('Erro', 'Falha na comunicação com o servidor.', 'error');

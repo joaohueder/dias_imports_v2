@@ -36,6 +36,15 @@ class UserPermissions
                 ],
             ],
         ],
+        'jobs' => [
+            'label' => 'CENTRAL DE TRABALHO',
+            'modules' => [
+                'job_center' => [
+                    'label' => 'Central de Trabalho',
+                    'actions' => ['view', 'edit', 'delete'],
+                ],
+            ],
+        ],
         'users' => [
             'label' => 'USUÁRIOS',
             'modules' => [
@@ -70,6 +79,10 @@ class UserPermissions
                 ],
                 'landing_leads' => [
                     'label' => 'Landing Page de Leads',
+                    'actions' => ['view', 'edit'],
+                ],
+                'central_trabalho' => [
+                    'label' => 'Central de Trabalho',
                     'actions' => ['view', 'edit'],
                 ],
             ],

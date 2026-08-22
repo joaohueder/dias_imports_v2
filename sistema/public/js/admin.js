@@ -421,15 +421,50 @@
         layoutForm.addEventListener('submit', () => { layoutForm.querySelector('button[type="submit"]').disabled = true; });
     }
 
-    const dirtyForm = settings.querySelector('[data-dirty-form]');
-    const formSaveBar = settings.querySelector('[data-form-save-bar]');
-    if (dirtyForm && formSaveBar) {
-        const initial = new FormData(dirtyForm);
-        const isDirty = () => [...initial.entries()].some(([key, value]) => dirtyForm.elements[key]?.value !== value);
-        dirtyForm.addEventListener('input', () => { formSaveBar.hidden = !isDirty(); });
-        dirtyForm.addEventListener('reset', () => window.setTimeout(() => { formSaveBar.hidden = true; }));
-        dirtyForm.addEventListener('submit', () => { dirtyForm.querySelector('button[type="submit"]').disabled = true; });
-    }
+    const dirtyForms = settings.querySelectorAll('[data-dirty-form]');
+    dirtyForms.forEach((dirtyForm) => {
+        const formSaveBar = dirtyForm.querySelector('[data-form-save-bar]');
+        const cancelBtn = dirtyForm.querySelector('[data-cancel-form]');
+        if (!formSaveBar) return;
+
+        const getFormState = () => {
+            const data = {};
+            Array.from(dirtyForm.elements).forEach(el => {
+                if (!el.name) return;
+                if (el.type === 'checkbox') {
+                    data[el.name] = el.checked ? el.value : '';
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+            return JSON.stringify(data);
+        };
+
+        const initialState = getFormState();
+        const checkDirty = () => {
+            formSaveBar.hidden = getFormState() === initialState;
+        };
+
+        dirtyForm.addEventListener('input', checkDirty);
+        dirtyForm.addEventListener('change', checkDirty);
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                dirtyForm.reset();
+                // Força atualização visual do toggle switch se houver
+                const toggle = dirtyForm.querySelector('.toggle-switch input[type="checkbox"]');
+                const labelText = dirtyForm.querySelector('.toggle-label-text');
+                if (toggle && labelText) {
+                    labelText.textContent = toggle.checked ? 'Ativo' : 'Inativo';
+                }
+                formSaveBar.hidden = true;
+            });
+        }
+
+        dirtyForm.addEventListener('submit', () => {
+            dirtyForm.querySelector('button[type="submit"]')?.setAttribute('disabled', 'true');
+        });
+    });
 
     const formatPhone = (value) => {
         let digits = value.replace(/\D/g, '');

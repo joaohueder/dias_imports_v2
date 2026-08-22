@@ -43,6 +43,10 @@ class WhatsappGroups extends BaseController
         $firstName = trim(explode(' ', $userName)[0] ?? 'Usuário');
         $userInitials = $this->extractInitials($userName);
 
+        $systemJobModel = new \App\Models\SystemJobModel();
+        $syncJob = $systemJobModel->getByKey('sync_whatsapp_groups');
+        $isSyncJobActive = $syncJob && !empty($syncJob['is_active']);
+
         return view('admin/groups/index', array_merge($data, [
             'pageTitle' => 'Grupos de WhatsApp',
             'pageDescription' => 'Gestão e sincronização dos grupos de WhatsApp da empresa.',
@@ -56,6 +60,7 @@ class WhatsappGroups extends BaseController
             'navigation' => Home::getNavigationList(),
             'currentStatus' => $status,
             'searchQuery' => $search,
+            'isSyncJobActive' => $isSyncJobActive,
         ]));
     }
 
@@ -349,58 +354,38 @@ class WhatsappGroups extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Sem permissão para atualizar dados.'])->setStatusCode(403);
         }
 
+        $systemJobModel = new \App\Models\SystemJobModel();
+        $syncJob = $systemJobModel->getByKey('sync_whatsapp_groups');
+        if (!$syncJob || empty($syncJob['is_active'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'A rotina de atualização de grupos está desativada nas configurações da Central de Trabalho.',
+            ])->setStatusCode(400);
+        }
+
         $group = $this->groupModel->find($id);
         if (! $group) {
             return $this->response->setJSON(['success' => false, 'message' => 'Grupo não encontrado.'])->setStatusCode(404);
         }
 
         try {
-            $instanceName = $group['instance_name'];
-            if ($instanceName === '') {
-                $settings = $this->evolutionService->getSettings();
-                $instanceName = (string) ($settings['default_instance_name'] ?? '');
-            }
-
-            if ($instanceName === '') {
-                return $this->response->setJSON(['success' => false, 'message' => 'Nenhuma instância configurada para a atualização.'])->setStatusCode(400);
-            }
-
-            $remoteGroups = $this->evolutionService->fetchAllGroups($instanceName);
-            $remoteGroup = null;
-            foreach ($remoteGroups as $item) {
-                $groupJid = (string) ($item['id'] ?? $item['jid'] ?? '');
-                if ($groupJid === $group['group_jid']) {
-                    $remoteGroup = $item;
-                    break;
-                }
-            }
-
-            if (! $remoteGroup) {
-                return $this->response->setJSON(['success' => false, 'message' => 'Grupo não encontrado na Evolution API.'])->setStatusCode(404);
-            }
-
-            $subject = trim((string) ($remoteGroup['subject'] ?? $remoteGroup['name'] ?? 'Grupo WhatsApp'));
-            $description = (string) ($remoteGroup['desc'] ?? $remoteGroup['description'] ?? '');
-            $participants = $remoteGroup['participants'] ?? [];
-            $participantsCount = is_array($participants) ? count($participants) : (int) ($remoteGroup['size'] ?? 0);
-            $avatarUrl = (string) ($remoteGroup['pictureUrl'] ?? $remoteGroup['profilePicUrl'] ?? '');
-
-            $this->groupModel->update($id, [
-                'name' => $subject,
-                'description' => $description,
-                'participants_count' => $participantsCount,
-                'avatar_url' => $avatarUrl,
-                'last_synced_at' => date('Y-m-d H:i:s'),
+            $jobModel = new \App\Models\JobQueueModel();
+            $jobModel->insert([
+                'job_type' => 'sync_whatsapp_groups',
+                'payload' => json_encode(['group_id' => $id]),
+                'status' => 'pending',
+                'priority' => 10,
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
 
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Dados do grupo atualizados com sucesso!',
+                'message' => 'Atualização do grupo enfileirada com sucesso!',
             ]);
         } catch (Throwable $e) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Erro ao atualizar dados: ' . $e->getMessage(),
+                'message' => 'Erro ao enfileirar atualização: ' . $e->getMessage(),
             ])->setStatusCode(500);
         }
     }

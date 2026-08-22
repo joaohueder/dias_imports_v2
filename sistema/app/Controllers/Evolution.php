@@ -17,10 +17,8 @@ class Evolution extends BaseController
             (new EvolutionApiService())->saveSettings(
                 (string) $this->request->getPost('base_url'),
                 (string) $this->request->getPost('api_key'),
-                (int) $this->request->getPost('min_delay_seconds'),
-                (int) $this->request->getPost('max_delay_seconds'),
             );
-            return $this->back()->with('success', 'Credenciais e esperas da Evolution API salvas com segurança.');
+            return $this->back()->with('success', 'Credenciais da Evolution API salvas com segurança.');
         } catch (RuntimeException $exception) {
             return $this->back()->withInput()->with('error', $exception->getMessage());
         }

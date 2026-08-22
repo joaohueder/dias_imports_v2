@@ -27,7 +27,7 @@
 
         <div class="users-create-action" style="display: flex; gap: 10px; margin-left: auto;">
             <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'create') || \App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'edit')): ?>
-                <button type="button" class="button secondary" id="btn-sync-groups">
+                <button type="button" class="button secondary" id="btn-sync-groups" <?= empty($isSyncJobActive) ? 'disabled title="A rotina de atualização de grupos está desativada nas configurações da Central de Trabalho."' : 'title="Atualizar dados de todos os grupos cadastrados"' ?>>
                     <i class="ti ti-refresh" aria-hidden="true"></i>
                     <span>Atualizar Grupos</span>
                 </button>
@@ -43,7 +43,7 @@
 
     <!-- Grid de cards dos grupos -->
     <div class="users-grid" id="groups-container">
-        <?= view('admin/groups/_cards', ['groups' => $groups]) ?>
+        <?= view('admin/groups/_cards', ['groups' => $groups, 'isSyncJobActive' => $isSyncJobActive]) ?>
     </div>
 
     <!-- Empty search state para filtragem dinâmica -->

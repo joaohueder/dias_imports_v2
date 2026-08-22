@@ -86,7 +86,7 @@
 
             <div class="user-card-actions">
                 <?php if (\App\Libraries\UserPermissions::hasPermission('whatsapp_groups', 'edit')): ?>
-                    <button type="button" class="btn-card-action btn-refresh-group" data-id="<?= esc($group['id']) ?>" data-name="<?= esc($group['name']) ?>" title="Atualizar dados, nome e quantidade de participantes">
+                    <button type="button" class="btn-card-action btn-refresh-group" data-id="<?= esc($group['id']) ?>" data-name="<?= esc($group['name']) ?>" <?= empty($isSyncJobActive) ? 'disabled title="A rotina de atualização de grupos está desativada nas configurações da Central de Trabalho."' : 'title="Atualizar dados, nome e quantidade de participantes"' ?>>
                         <i class="ti ti-refresh"></i>
                         <span>Atualizar</span>
                     </button>

@@ -111,7 +111,7 @@ $globalSuccess = session()->getFlashdata('success');
     </div>
 
     <nav class="bottom-nav" aria-label="Navegação móvel">
-        <?php foreach (['overview', 'whatsapp', 'products', 'vip'] as $key): $item = $navigation[$key]; ?>
+        <?php foreach (['overview', 'whatsapp', 'products', 'jobs'] as $key): $item = $navigation[$key]; ?>
             <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
             <a class="bottom-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
                 <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i><span><?= esc($item['mobileLabel']) ?></span>

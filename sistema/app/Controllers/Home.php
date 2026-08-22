@@ -49,6 +49,13 @@ class Home extends BaseController
             'icon' => 'ti-diamond',
             'description' => 'Acompanhamento dos contatos prioritários.',
         ],
+        'jobs' => [
+            'label' => 'Central de Trabalho',
+            'mobileLabel' => 'Trabalhos',
+            'path' => 'central-trabalho',
+            'icon' => 'ti-cpu',
+            'description' => 'Fila e monitoramento de tarefas em segundo plano.',
+        ],
         'users' => [
             'label' => 'Usuários',
             'mobileLabel' => 'Usuários',
@@ -434,6 +441,7 @@ class Home extends BaseController
                 'meta-ads' => \App\Libraries\UserPermissions::hasPermission('meta_ads', 'view'),
                 'modelos-mensagens' => \App\Libraries\UserPermissions::hasPermission('message_templates', 'view'),
                 'landing-leads' => \App\Libraries\UserPermissions::hasPermission('landing_leads', 'view'),
+                'central-trabalho' => \App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view'),
             ];
 
             if ($requestedTab !== '' && isset($tabPermissions[$requestedTab]) && $tabPermissions[$requestedTab]) {
@@ -457,6 +465,12 @@ class Home extends BaseController
                 $landingLeadSetting = (new \App\Models\LandingLeadSettingModel())->first();
             } catch (\Throwable) {
                 $landingLeadSetting = null;
+            }
+
+            try {
+                $systemJobs = (new \App\Models\SystemJobModel())->findAll();
+            } catch (\Throwable) {
+                $systemJobs = [];
             }
 
             $evolution = new EvolutionApiService();
@@ -487,6 +501,7 @@ class Home extends BaseController
             'evolutionSettings' => $evolutionSettings,
             'firstName' => $firstName,
             'landingLeadSetting' => $landingLeadSetting,
+            'systemJobs' => $systemJobs ?? [],
             'layoutMaxWidth' => $layoutMaxWidth,
             'messageTemplates' => $messageTemplates,
             'metaAdsEncryptionReady' => $metaAdsEncryptionReady,
