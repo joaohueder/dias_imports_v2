@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^php -r '\\$loaded=extension_loaded\\(\"curl\"\\); echo \"curl=\" \\. \\(\\$loaded\\?\"ok\":\"missing\"\\) \\. PHP_EOL; if\\(\\$loaded\\)\\{\\$v=curl_version\\(\\); echo \"ssl=\" \\. \\(\\(\\$v\\[\"ssl_version\"\\]\\?\\?\"\"\\)!==\"\"\\?\"ok\":\"missing\"\\) \\. PHP_EOL; echo \"ca=\" \\. \\(\\(ini_get\\(\"curl\\.cainfo\"\\)!==\"\" \\|\\| ini_get\\(\"openssl\\.cafile\"\\)!==\"\" \\|\\| getenv\\(\"SSL_CERT_FILE\"\\)\\)\\?\"configured\":\"default\"\\) \\. PHP_EOL;\\}'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
