@@ -219,82 +219,25 @@ class WhatsappGroups extends BaseController
         }
 
         try {
-            $settings = $this->evolutionService->getSettings();
-            $instanceName = trim((string) ($settings['default_instance_name'] ?? ''));
+            $jobService = new \App\Services\JobCenterService();
+            $result = $jobService->enqueueWhatsappGroupsSync();
 
-            if ($instanceName === '') {
-                $instances = $this->evolutionService->fetchInstances();
-                foreach ($instances as $inst) {
-                    if (! empty($inst['connected'])) {
-                        $instanceName = $inst['name'];
-                        break;
-                    }
-                }
-                if ($instanceName === '' && ! empty($instances[0]['name'])) {
-                    $instanceName = $instances[0]['name'];
-                }
-            }
-
-            if ($instanceName === '') {
+            if (!$result['success']) {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Nenhuma instância da Evolution API configurada ou conectada. Configure em Configurações > Evolution API.',
-                ])->setStatusCode(400);
-            }
-
-            $remoteGroups = $this->evolutionService->fetchAllGroups($instanceName);
-            $syncedCount = 0;
-
-            foreach ($remoteGroups as $item) {
-                $groupJid = (string) ($item['id'] ?? $item['jid'] ?? '');
-                if ($groupJid === '' || ! str_contains($groupJid, '@g.us')) {
-                    continue;
-                }
-
-                $subject = trim((string) ($item['subject'] ?? $item['name'] ?? 'Grupo WhatsApp'));
-                $description = (string) ($item['desc'] ?? $item['description'] ?? '');
-                
-                $participants = $item['participants'] ?? [];
-                $participantsCount = is_array($participants) ? count($participants) : (int) ($item['size'] ?? 0);
-
-                $avatarUrl = (string) ($item['pictureUrl'] ?? $item['profilePicUrl'] ?? '');
-                $isAdminOnly = !empty($item['announce']) || !empty($item['restrict']) || (!empty($item['mode']) && $item['mode'] === 'admins_only') ? 1 : 0;
-                $isRestricted = !empty($item['restrict']) || !empty($item['isRestricted']) ? 1 : 0;
-
-                $existing = $this->groupModel->where('group_jid', $groupJid)->first();
-
-                $groupData = [
-                    'group_jid' => $groupJid,
-                    'instance_name' => $instanceName,
-                    'name' => $subject,
-                    'description' => $description !== '' ? $description : ($existing['description'] ?? null),
-                    'participants_count' => $participantsCount,
-                    'avatar_url' => $avatarUrl !== '' ? $avatarUrl : ($existing['avatar_url'] ?? null),
-                    'is_admin_only' => $isAdminOnly,
-                    'is_restricted' => $isRestricted,
-                    'last_synced_at' => date('Y-m-d H:i:s'),
-                ];
-
-                if ($existing) {
-                    $this->groupModel->update($existing['id'], $groupData);
-                } else {
-                    $groupData['status'] = 'active';
-                    $groupData['category'] = 'Dias Imports';
-                    $this->groupModel->insert($groupData);
-                }
-
-                $syncedCount++;
+                    'message' => $result['message'],
+                ])->setStatusCode(200); // Retorna 200 para o JS tratar como aviso, não como erro de servidor
             }
 
             return $this->response->setJSON([
                 'success' => true,
-                'message' => "Sincronização concluída com sucesso! {$syncedCount} grupos processados.",
-                'syncedCount' => $syncedCount,
+                'message' => $result['message'],
+                'redirect' => site_url('central-trabalho'),
             ]);
         } catch (Throwable $e) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Erro ao sincronizar grupos: ' . $e->getMessage(),
+                'message' => 'Erro ao enfileirar sincronização: ' . $e->getMessage(),
             ])->setStatusCode(500);
         }
     }
