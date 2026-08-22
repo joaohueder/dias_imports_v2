@@ -573,25 +573,48 @@
         if (filterContainer) {
             const filterBtns = filterContainer.querySelectorAll('.filter-btn');
             const templateCards = settings.querySelectorAll('.template-card');
+            const emptyFilterState = settings.querySelector('[data-templates-empty-filter]');
             
+            const applyTemplateFilter = (filter) => {
+                let visibleCount = 0;
+                templateCards.forEach(card => {
+                    const isInactive = card.classList.contains('inactive');
+                    let visible = true;
+                    if (filter === 'active') {
+                        visible = !isInactive;
+                    } else if (filter === 'inactive') {
+                        visible = isInactive;
+                    }
+                    card.style.display = visible ? '' : 'none';
+                    if (visible) visibleCount++;
+                });
+
+                if (emptyFilterState) {
+                    emptyFilterState.style.display = (visibleCount === 0 && templateCards.length > 0) ? 'flex' : 'none';
+                }
+            };
+
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    
-                    const filter = btn.dataset.filter;
-                    templateCards.forEach(card => {
-                        const isInactive = card.classList.contains('inactive');
-                        if (filter === 'all') {
-                            card.style.display = '';
-                        } else if (filter === 'active') {
-                            card.style.display = isInactive ? 'none' : '';
-                        } else if (filter === 'inactive') {
-                            card.style.display = isInactive ? '' : 'none';
-                        }
-                    });
+                    applyTemplateFilter(btn.dataset.filter);
                 });
             });
+
+            const clearBtn = settings.querySelector('[data-templates-clear-filters]');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        if (b.dataset.filter === 'all') {
+                            b.classList.add('active');
+                        } else {
+                            b.classList.remove('active');
+                        }
+                    });
+                    applyTemplateFilter('all');
+                });
+            }
         }
     }
 
@@ -1402,11 +1425,37 @@
 
             if (emptyState) {
                 emptyState.style.display = (visibleCount === 0) ? 'flex' : 'none';
+                const clearBtn = emptyState.querySelector('[data-users-clear-filters]');
+                if (clearBtn) {
+                    const hasFilter = Boolean(currentSearchQuery || currentStatusFilter !== 'all');
+                    clearBtn.style.display = hasFilter ? 'inline-flex' : 'none';
+                }
             }
         };
 
         // Executar filtro inicial para garantir que o estado vazio seja ocultado se houver usuários
         applyFilters();
+
+        const resetFilters = () => {
+            if (searchInput) searchInput.value = '';
+            currentSearchQuery = '';
+            currentStatusFilter = 'all';
+            filterPills.forEach(p => {
+                if (p.dataset.filter === 'all') {
+                    p.classList.add('active');
+                    p.setAttribute('aria-selected', 'true');
+                } else {
+                    p.classList.remove('active');
+                    p.setAttribute('aria-selected', 'false');
+                }
+            });
+            applyFilters();
+        };
+
+        const clearBtn = emptyState?.querySelector('[data-users-clear-filters]');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', resetFilters);
+        }
 
         searchInput?.addEventListener('input', (e) => {
             currentSearchQuery = e.target.value.toLowerCase().trim();

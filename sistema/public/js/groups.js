@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const cards = document.querySelectorAll('[data-group-card]');
-        const emptyState = document.querySelector('.users-empty-search');
+        const dynamicEmpty = document.querySelector('[data-groups-client-empty]');
+        const serverEmpty = document.querySelector('[data-groups-empty-state]');
         let visibleCount = 0;
 
         cards.forEach(card => {
@@ -78,10 +79,41 @@ document.addEventListener('DOMContentLoaded', () => {
             if (visible) visibleCount++;
         });
 
-        if (emptyState) {
-            emptyState.style.display = (visibleCount === 0) ? 'flex' : 'none';
+        if (dynamicEmpty) {
+            dynamicEmpty.style.display = (visibleCount === 0 && cards.length > 0) ? 'flex' : 'none';
+        }
+
+        if (serverEmpty) {
+            const hasFilter = Boolean(query || currentStatus !== 'all');
+            const clearBtn = serverEmpty.querySelector('[data-clear-filters]');
+            const newBtn = serverEmpty.querySelector('[data-new-group-btn]');
+            const desc = serverEmpty.querySelector('.empty-desc');
+            
+            if (clearBtn) clearBtn.style.display = hasFilter ? 'inline-flex' : 'none';
+            if (newBtn) newBtn.style.display = hasFilter ? 'none' : 'inline-flex';
+            if (desc) desc.textContent = hasFilter ? 'Tente ajustar a busca ou o status selecionado.' : 'Novos grupos sincronizados do WhatsApp aparecerão aqui automaticamente.';
         }
     }
+
+    const resetFilters = () => {
+        if (searchInput) searchInput.value = '';
+        if (btnClearSearch) btnClearSearch.remove();
+        currentStatus = 'all';
+        filterBtns.forEach(b => {
+            if (b.dataset.status === 'all') {
+                b.classList.add('active');
+                b.setAttribute('aria-selected', 'true');
+            } else {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            }
+        });
+        applyFilters();
+    };
+
+    document.querySelectorAll('[data-clear-filters]').forEach(btn => {
+        btn.addEventListener('click', resetFilters);
+    });
 
     function openModal(dialog) {
         if (!dialog) return;

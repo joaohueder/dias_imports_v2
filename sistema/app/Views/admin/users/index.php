@@ -169,6 +169,10 @@ $helperInitials = static function(string $name): string {
         <div class="empty-icon"><i class="ti ti-user-search"></i></div>
         <h3>Nenhum usuário encontrado</h3>
         <p>Tente ajustar os filtros ou os termos digitados na busca.</p>
+        <button type="button" class="button secondary" data-users-clear-filters style="margin-top: 12px;">
+            <i class="ti ti-filter-off" aria-hidden="true"></i>
+            <span>Limpar Filtros</span>
+        </button>
     </div>
 </section>
 

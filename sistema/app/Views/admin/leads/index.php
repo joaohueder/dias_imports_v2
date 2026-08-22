@@ -72,6 +72,21 @@
                 <tbody data-leads-tbody>
                     <?= view('admin/leads/_table_rows', ['leads' => $leads]) ?>
                 </tbody>
+                <tbody data-leads-client-empty style="display: none;">
+                    <tr>
+                        <td colspan="5" class="lead-empty-row">
+                            <div class="lead-empty-content">
+                                <i class="ti ti-inbox" aria-hidden="true"></i>
+                                <p>Nenhum contato encontrado para os filtros selecionados.</p>
+                                <span>Tente ajustar a busca ou a data selecionada.</span>
+                                <button type="button" class="button secondary" data-leads-clear-filters style="margin-top: 8px;">
+                                    <i class="ti ti-filter-off" aria-hidden="true"></i>
+                                    <span>Limpar Filtros</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>

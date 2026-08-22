@@ -377,7 +377,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <span>Crie o primeiro modelo reutilizável para disparo.</span>
             </div>
         <?php else: ?>
-            <div class="templates-grid">
+            <div class="templates-grid" data-templates-grid>
                 <?php foreach ($messageTemplates as $tpl): ?>
                     <article class="template-card <?= (int)$tpl['is_active'] !== 1 ? 'inactive' : '' ?>">
                         <div class="template-card-header">
@@ -421,6 +421,16 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         </div>
                     </article>
                 <?php endforeach; ?>
+            </div>
+
+            <div class="template-empty-state" data-templates-empty-filter style="display: none; grid-column: 1 / -1; margin-top: 16px;">
+                <div class="template-empty-icon"><i class="ti ti-message-off" aria-hidden="true"></i></div>
+                <p>Nenhum modelo encontrado para o filtro selecionado.</p>
+                <span>Tente alternar para outra visualização.</span>
+                <button type="button" class="button secondary" data-templates-clear-filters style="margin-top: 8px;">
+                    <i class="ti ti-filter-off" aria-hidden="true"></i>
+                    <span>Limpar Filtro</span>
+                </button>
             </div>
         <?php endif; ?>
     </div>

@@ -155,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const dateVal = dateInput ? dateInput.value.trim() : '';
         const rows = document.querySelectorAll('[data-lead-row]');
+        const clientEmpty = document.querySelector('[data-leads-client-empty]');
+        const serverEmpty = document.querySelector('[data-leads-empty-server-row]');
         let visibleCount = 0;
 
         rows.forEach(row => {
@@ -170,10 +172,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (visible) visibleCount++;
         });
 
+        if (clientEmpty) {
+            clientEmpty.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+        }
+
+        if (serverEmpty) {
+            const hasFilter = Boolean(query || dateVal);
+            const clearBtn = serverEmpty.querySelector('[data-leads-clear-filters]');
+            const desc = serverEmpty.querySelector('span');
+            
+            if (clearBtn) clearBtn.style.display = hasFilter ? 'inline-flex' : 'none';
+            if (desc) desc.textContent = hasFilter ? 'Tente ajustar a busca ou a data selecionada.' : 'Novos contatos captados pela Landing Page aparecerão aqui automaticamente.';
+        }
+
         if (leadsCounter) {
             leadsCounter.textContent = String(visibleCount);
         }
     };
+
+    const resetFilters = () => {
+        if (searchInput) searchInput.value = '';
+        if (dateInput) dateInput.value = '';
+        if (clearSearchBtn) clearSearchBtn.remove();
+        if (clearDateBtn) clearDateBtn.remove();
+        applyClientSideFilters();
+    };
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('[data-leads-clear-filters]')) {
+            resetFilters();
+        }
+    });
 
     if (searchInput) {
         searchInput.addEventListener('input', () => {

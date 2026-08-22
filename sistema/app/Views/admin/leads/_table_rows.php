@@ -1,10 +1,14 @@
 <?php if (empty($leads)): ?>
-    <tr>
+    <tr data-leads-empty-server-row>
         <td colspan="5" class="lead-empty-row">
             <div class="lead-empty-content">
                 <i class="ti ti-inbox" aria-hidden="true"></i>
                 <p>Nenhum contato encontrado para os filtros selecionados.</p>
                 <span>Novos contatos captados pela Landing Page aparecerão aqui automaticamente.</span>
+                <button type="button" class="button secondary" data-leads-clear-filters style="margin-top: 8px;">
+                    <i class="ti ti-filter-off" aria-hidden="true"></i>
+                    <span>Limpar Filtros</span>
+                </button>
             </div>
         </td>
     </tr>

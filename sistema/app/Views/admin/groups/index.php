@@ -45,6 +45,19 @@
     <div class="users-grid" id="groups-container">
         <?= view('admin/groups/_cards', ['groups' => $groups]) ?>
     </div>
+
+    <!-- Empty search state para filtragem dinâmica -->
+    <div class="users-empty-search col-span-full" data-groups-client-empty style="display: none; grid-column: 1 / -1; width: 100%; padding: 60px 20px; text-align: center; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: rgb(var(--muted));">
+        <div class="empty-icon" style="width: 64px; height: 64px; border-radius: 16px; background: rgb(var(--surface-2)); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <i class="ti ti-inbox" style="font-size: 32px; color: rgb(var(--muted));"></i>
+        </div>
+        <p style="margin: 0; font-size: 15px; font-weight: 600; color: rgb(var(--text));">Nenhum grupo encontrado para os filtros selecionados.</p>
+        <span style="font-size: 14px; margin-bottom: 12px;">Tente ajustar a busca ou o status selecionado.</span>
+        <button type="button" class="button secondary" data-clear-filters style="margin-top: 4px;">
+            <i class="ti ti-filter-off" aria-hidden="true"></i>
+            <span>Limpar Filtros</span>
+        </button>
+    </div>
 </div>
 
 <!-- Modal Novo Grupo / Selecionar da Instância -->
