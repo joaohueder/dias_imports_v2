@@ -147,6 +147,31 @@
         document.addEventListener('keydown', (event) => event.key === 'Escape' && errorDialog.classList.contains('open') && closeError());
     }
 
+    const successDialog = document.querySelector('[data-success-dialog]');
+    const closeSuccessButton = successDialog?.querySelector('[data-close-success]');
+    if (successDialog && closeSuccessButton) {
+        const closeSuccess = () => {
+            successDialog.classList.remove('open');
+            successDialog.setAttribute('aria-hidden', 'true');
+            appShell?.removeAttribute('inert');
+            document.body.classList.remove('processing-locked');
+            document.body.style.overflow = '';
+            window.setTimeout(() => { successDialog.hidden = true; }, 200);
+        };
+        successDialog.hidden = false;
+        successDialog.setAttribute('aria-hidden', 'false');
+        appShell?.setAttribute('inert', '');
+        document.body.classList.add('processing-locked');
+        document.body.style.overflow = 'hidden';
+        window.requestAnimationFrame(() => {
+            successDialog.classList.add('open');
+            closeSuccessButton.focus();
+        });
+        closeSuccessButton.addEventListener('click', closeSuccess);
+        successDialog.addEventListener('click', (event) => event.target === successDialog && closeSuccess());
+        document.addEventListener('keydown', (event) => event.key === 'Escape' && successDialog.classList.contains('open') && closeSuccess());
+    }
+
     const settings = document.querySelector('[data-settings-root]');
     if (!settings) return;
 
@@ -794,14 +819,80 @@
             return false;
         };
 
+        const mockupScreen = settings.querySelector('[data-mockup-screen]');
+        const modelRadios = landingForm.querySelectorAll('[data-lp-model-radio]');
+        const paletteRadios = landingForm.querySelectorAll('[data-lp-palette-radio]');
+        const bgAnimRadios = landingForm.querySelectorAll('[data-lp-bganim-radio]');
+        const btnAnimRadios = landingForm.querySelectorAll('[data-lp-btnanim-radio]');
+
+        const updateModelAndPalettePreview = () => {
+            const selectedModel = landingForm.querySelector('[data-lp-model-radio]:checked')?.value || 'model-1';
+            const selectedPalette = landingForm.querySelector('[data-lp-palette-radio]:checked')?.value || 'palette-aurora';
+            const selectedBgAnim = landingForm.querySelector('[data-lp-bganim-radio]:checked')?.value || 'bg-particles';
+            const selectedBtnAnim = landingForm.querySelector('[data-lp-btnanim-radio]:checked')?.value || 'btn-pulse';
+
+            if (mockupScreen) {
+                mockupScreen.setAttribute('data-mockup-model', selectedModel);
+                mockupScreen.setAttribute('data-mockup-palette', selectedPalette);
+                mockupScreen.setAttribute('data-mockup-bganim', selectedBgAnim);
+                mockupScreen.setAttribute('data-mockup-btnanim', selectedBtnAnim);
+            }
+
+            modelRadios.forEach((r) => {
+                r.closest('.template-model-card')?.classList.toggle('active', r.checked);
+            });
+
+            paletteRadios.forEach((p) => {
+                p.closest('.color-palette-card')?.classList.toggle('active', p.checked);
+            });
+
+            bgAnimRadios.forEach((b) => {
+                b.closest('.template-model-card')?.classList.toggle('active', b.checked);
+            });
+
+            btnAnimRadios.forEach((btn) => {
+                btn.closest('.template-model-card')?.classList.toggle('active', btn.checked);
+            });
+        };
+
+        modelRadios.forEach((r) => {
+            r.addEventListener('change', () => {
+                updateModelAndPalettePreview();
+                landingSaveBar.hidden = !isLandingDirty();
+            });
+        });
+
+        paletteRadios.forEach((p) => {
+            p.addEventListener('change', () => {
+                updateModelAndPalettePreview();
+                landingSaveBar.hidden = !isLandingDirty();
+            });
+        });
+
+        bgAnimRadios.forEach((b) => {
+            b.addEventListener('change', () => {
+                updateModelAndPalettePreview();
+                landingSaveBar.hidden = !isLandingDirty();
+            });
+        });
+
+        btnAnimRadios.forEach((btn) => {
+            btn.addEventListener('change', () => {
+                updateModelAndPalettePreview();
+                landingSaveBar.hidden = !isLandingDirty();
+            });
+        });
+
         landingForm.addEventListener('input', () => {
             updateLandingLivePreview();
+            updateModelAndPalettePreview();
             landingSaveBar.hidden = !isLandingDirty();
         });
 
         cancelLandingButton?.addEventListener('click', () => {
             landingForm.reset();
             updateLandingLivePreview();
+            updateModelAndPalettePreview();
             landingSaveBar.hidden = true;
         });
 

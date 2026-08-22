@@ -16,6 +16,10 @@ class Landing extends BaseController
         $metaAds = (new MetaAdsSettingModel())->first();
         $settingModel = new LandingLeadSettingModel();
         $landing = $settingModel->first() ?? [
+            'template_model' => 'model-1',
+            'color_palette' => 'palette-aurora',
+            'bg_animation' => 'bg-particles',
+            'btn_animation' => 'btn-pulse',
             'headline' => 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
             'subheadline' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
             'badge_text' => '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',

@@ -296,7 +296,21 @@ class Home extends BaseController
 
     public function saveLandingLeadSettings(): RedirectResponse
     {
+        $validModels = ['model-1', 'model-2', 'model-3', 'model-4', 'model-5', 'model-6'];
+        $validPalettes = ['palette-aurora', 'palette-emerald', 'palette-amber', 'palette-ocean', 'palette-crimson', 'palette-obsidian'];
+        $validBgAnimations = ['bg-particles', 'bg-mesh-gradient', 'bg-cyber-grid', 'bg-radial-pulse', 'bg-floating-shapes', 'bg-minimal-static'];
+        $validBtnAnimations = ['btn-pulse', 'btn-shimmer', 'btn-shake', 'btn-bounce', 'btn-glow-expand', 'btn-none'];
+
+        $templateModel = (string) $this->request->getPost('template_model');
+        $colorPalette = (string) $this->request->getPost('color_palette');
+        $bgAnimation = (string) $this->request->getPost('bg_animation');
+        $btnAnimation = (string) $this->request->getPost('btn_animation');
+
         $data = [
+            'template_model' => in_array($templateModel, $validModels, true) ? $templateModel : 'model-1',
+            'color_palette' => in_array($colorPalette, $validPalettes, true) ? $colorPalette : 'palette-aurora',
+            'bg_animation' => in_array($bgAnimation, $validBgAnimations, true) ? $bgAnimation : 'bg-particles',
+            'btn_animation' => in_array($btnAnimation, $validBtnAnimations, true) ? $btnAnimation : 'btn-pulse',
             'headline' => trim((string) $this->request->getPost('headline')),
             'subheadline' => trim((string) $this->request->getPost('subheadline')),
             'badge_text' => trim((string) $this->request->getPost('badge_text')),

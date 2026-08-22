@@ -21,10 +21,6 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         <button class="settings-tab <?= $activeSettingsTab === 'landing-leads' ? 'active' : '' ?>" type="button" role="tab" id="landing-leads-tab" aria-selected="<?= $activeSettingsTab === 'landing-leads' ? 'true' : 'false' ?>" aria-controls="landing-leads-panel" data-settings-tab="landing-leads">Landing Page de Leads</button>
     </div>
 
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="settings-alert success" role="status"><i class="ti ti-circle-check" aria-hidden="true"></i><?= esc(session()->getFlashdata('success')) ?></div>
-    <?php endif; ?>
-
     <form action="<?= site_url('configuracoes/layout') ?>" method="post" data-layout-form>
         <?= csrf_field() ?>
         <input type="hidden" name="layout_max_width" value="<?= esc($layoutMaxWidth) ?>" data-width-input>
@@ -395,6 +391,10 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 
         <?php
         $lp = $landingLeadSetting ?? [
+            'template_model' => 'model-1',
+            'color_palette' => 'palette-aurora',
+            'bg_animation' => 'bg-particles',
+            'btn_animation' => 'btn-pulse',
             'headline' => 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
             'subheadline' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
             'badge_text' => '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
@@ -421,6 +421,120 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             <div class="landing-split-layout">
                 <!-- Coluna da Esquerda: Configurações -->
                 <div class="landing-config-col">
+                    <!-- SELETOR DE MODELO VISUAL (6 MODELOS) -->
+                    <div class="settings-card-block">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(99, 91, 255, 0.15); color: #635bff;"><i class="ti ti-template"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">Modelo Visual da Landing Page (6 Opções)</h3>
+                                <p class="settings-section-subtitle">Selecione a estrutura e experiência visual da página. O mockup ao lado atualiza em tempo real.</p>
+                            </div>
+                        </div>
+
+                        <div class="template-models-grid">
+                            <?php
+                            $modelsList = [
+                                ['id' => 'model-1', 'name' => 'Hero Direct & Glass', 'desc' => 'Form no topo com glassmorphism e foco total na conversão imediata.', 'icon' => 'ti-layout-topbar'],
+                                ['id' => 'model-2', 'name' => 'Benefits First', 'desc' => 'Benefícios e prova de valor antes do form para gerar mais desejo.', 'icon' => 'ti-layout-list'],
+                                ['id' => 'model-3', 'name' => 'Minimal Compact', 'desc' => 'Pílulas arredondadas, direto ao ponto e otimizado para 1 polegar.', 'icon' => 'ti-pill'],
+                                ['id' => 'model-4', 'name' => 'Bento Grid', 'desc' => 'Layout moderno em blocos assimétricos estilo Bento Box.', 'icon' => 'ti-layout-grid'],
+                                ['id' => 'model-5', 'name' => 'Cyber Tech Neon', 'desc' => 'Bordas tracejadas neon, visual escuro e tipografia futurista.', 'icon' => 'ti-bolt'],
+                                ['id' => 'model-6', 'name' => 'Editorial Luxury', 'desc' => 'Estilo premium e sofisticado para produtos de alto padrão.', 'icon' => 'ti-crown'],
+                            ];
+                            $currentModel = $lp['template_model'] ?? 'model-1';
+                            ?>
+                            <?php foreach ($modelsList as $m): ?>
+                                <label class="template-model-card <?= $currentModel === $m['id'] ? 'active' : '' ?>">
+                                    <input type="radio" name="template_model" value="<?= esc($m['id']) ?>" <?= $currentModel === $m['id'] ? 'checked' : '' ?> data-lp-model-radio>
+                                    <div class="template-card-inner">
+                                        <div class="template-card-icon"><i class="ti <?= esc($m['icon']) ?>"></i></div>
+                                        <div class="template-card-info">
+                                            <strong><?= esc($m['name']) ?></strong>
+                                            <p><?= esc($m['desc']) ?></p>
+                                        </div>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- SELETOR DE PALETA DE CORES (6 PALETAS) -->
+                    <div class="settings-card-block">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i class="ti ti-palette"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">Paleta de Cores & Efeitos (6 Opções)</h3>
+                                <p class="settings-section-subtitle">Alterne as cores e vibração de contraste da página de captura instantaneamente.</p>
+                            </div>
+                        </div>
+
+                        <div class="color-palettes-grid">
+                            <?php
+                            $palettesList = [
+                                ['id' => 'palette-aurora', 'name' => 'Aurora Neon', 'colors' => ['#635bff', '#ec4899'], 'desc' => 'Violeta & Rosa'],
+                                ['id' => 'palette-emerald', 'name' => 'Emerald Tech', 'colors' => ['#10b981', '#059669'], 'desc' => 'Verde WhatsApp VIP'],
+                                ['id' => 'palette-amber', 'name' => 'Amber Gold', 'colors' => ['#f59e0b', '#ea580c'], 'desc' => 'Ouro & Luxo'],
+                                ['id' => 'palette-ocean', 'name' => 'Ocean Cyan', 'colors' => ['#0ea5e9', '#2563eb'], 'desc' => 'Azul & Ciano Tech'],
+                                ['id' => 'palette-crimson', 'name' => 'Crimson Ruby', 'colors' => ['#f43f5e', '#be123c'], 'desc' => 'Vermelho Urgência'],
+                                ['id' => 'palette-obsidian', 'name' => 'Obsidian Minimal', 'colors' => ['#ffffff', '#71717a'], 'desc' => 'Preto Puro & Titânio'],
+                            ];
+                            $currentPalette = $lp['color_palette'] ?? 'palette-aurora';
+                            ?>
+                            <?php foreach ($palettesList as $p): ?>
+                                <label class="color-palette-card <?= $currentPalette === $p['id'] ? 'active' : '' ?>">
+                                    <input type="radio" name="color_palette" value="<?= esc($p['id']) ?>" <?= $currentPalette === $p['id'] ? 'checked' : '' ?> data-lp-palette-radio>
+                                    <div class="palette-card-inner">
+                                        <div class="palette-preview-dots">
+                                            <span style="background: <?= esc($p['colors'][0]) ?>;"></span>
+                                            <span style="background: <?= esc($p['colors'][1]) ?>;"></span>
+                                        </div>
+                                        <div class="palette-info">
+                                            <strong><?= esc($p['name']) ?></strong>
+                                            <small><?= esc($p['desc']) ?></small>
+                                        </div>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- SELETOR DE ANIMAÇÃO DO BACKGROUND (6 MODELOS) -->
+                    <div class="settings-card-block">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(14, 165, 233, 0.15); color: #0ea5e9;"><i class="ti ti-sparkles"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">Animação de Fundo (6 Modelos de Background)</h3>
+                                <p class="settings-section-subtitle">Escolha o efeito dinâmico de partículas, luzes e fluidos do background.</p>
+                            </div>
+                        </div>
+
+                        <div class="template-models-grid">
+                            <?php
+                            $bgAnimationsList = [
+                                ['id' => 'bg-particles', 'name' => 'Partículas & Orbes', 'desc' => 'Orbes e luzes suaves flutuando harmonicamente no fundo.', 'icon' => 'ti-flare'],
+                                ['id' => 'bg-mesh-gradient', 'name' => 'Gradiente Líquido Mesh', 'desc' => 'Fluxo fluido de gradiente que se move continuamente.', 'icon' => 'ti-ripple'],
+                                ['id' => 'bg-cyber-grid', 'name' => 'Grid Tech Futurista', 'desc' => 'Grade tecnológica em perspectiva com linhas luminosas.', 'icon' => 'ti-grid-dots'],
+                                ['id' => 'bg-radial-pulse', 'name' => 'Pulso Radial Concêntrico', 'desc' => 'Ondas circulares pulsando a partir do centro da tela.', 'icon' => 'ti-circle-dashed'],
+                                ['id' => 'bg-floating-shapes', 'name' => 'Geometrias Flutuantes', 'desc' => 'Formas geométricas translúcidas com rotação suave.', 'icon' => 'ti-polygon'],
+                                ['id' => 'bg-minimal-static', 'name' => 'Estático Minimalista', 'desc' => 'Sem animação de fundo, foco total no conteúdo e conversão.', 'icon' => 'ti-app-window'],
+                            ];
+                            $currentBgAnimation = $lp['bg_animation'] ?? 'bg-particles';
+                            ?>
+                            <?php foreach ($bgAnimationsList as $b): ?>
+                                <label class="template-model-card <?= $currentBgAnimation === $b['id'] ? 'active' : '' ?>">
+                                    <input type="radio" name="bg_animation" value="<?= esc($b['id']) ?>" <?= $currentBgAnimation === $b['id'] ? 'checked' : '' ?> data-lp-bganim-radio>
+                                    <div class="template-card-inner">
+                                        <div class="template-card-icon" style="background: rgba(14, 165, 233, 0.12); color: #0ea5e9;"><i class="ti <?= esc($b['icon']) ?>"></i></div>
+                                        <div class="template-card-info">
+                                            <strong><?= esc($b['name']) ?></strong>
+                                            <p><?= esc($b['desc']) ?></p>
+                                        </div>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
                     <div class="settings-card-block">
                         <div class="settings-card-header">
                             <div class="card-header-icon"><i class="ti ti-flame"></i></div>
@@ -462,7 +576,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                             <div class="card-header-icon" style="background: rgba(37, 211, 102, 0.15); color: #25d366;"><i class="ti ti-brand-whatsapp"></i></div>
                             <div>
                                 <h3 class="settings-section-title">Chamada para Ação (CTA) e Grupo VIP</h3>
-                                <p class="settings-section-subtitle">Configurações do botão de envio e link oficial do grupo no WhatsApp.</p>
+                                <p class="settings-section-subtitle">Configurações do botão de envio, animação atrativa e link oficial do grupo no WhatsApp.</p>
                             </div>
                         </div>
                         
@@ -485,6 +599,39 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                     <span>Microtexto de Segurança (Abaixo do Botão)</span>
                                     <input type="text" name="button_subtext" value="<?= esc($lp['button_subtext']) ?>" maxlength="150" data-lp-input="button-subtext">
                                 </label>
+                            </div>
+
+                            <!-- SELETOR DE ANIMAÇÕES DO BOTÃO CTA (6 OPÇÕES) -->
+                            <div class="cta-animation-group" style="margin-top: 10px;">
+                                <span class="field-label-row" style="margin-bottom: 8px;">
+                                    <span style="font-weight: 700; font-size: 13px; color: var(--text-heading);">Animação do Botão CTA (6 Opções)</span>
+                                    <small class="field-hint">Efeito de movimento para atrair o clique</small>
+                                </span>
+                                <div class="template-models-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                                    <?php
+                                    $btnAnimationsList = [
+                                        ['id' => 'btn-pulse', 'name' => 'Pulso Rítmico', 'desc' => 'Respiração contínua com halo de luz e escala.', 'icon' => 'ti-heart-rate-monitor'],
+                                        ['id' => 'btn-shimmer', 'name' => 'Feixe de Luz (Shimmer)', 'desc' => 'Reflexo metálico brilhante passando pelo botão.', 'icon' => 'ti-sparkles'],
+                                        ['id' => 'btn-shake', 'name' => 'Microvibração (Shake)', 'desc' => 'Vibração atrativa em intervalos regulares.', 'icon' => 'ti-device-mobile-vibration'],
+                                        ['id' => 'btn-bounce', 'name' => 'Salto Suave (Bounce)', 'desc' => 'Pequeno pulo vertical periódico chamando atenção.', 'icon' => 'ti-arrow-autofit-up'],
+                                        ['id' => 'btn-glow-expand', 'name' => 'Onda Expansiva (Ripple)', 'desc' => 'Onda luminosa circular que se propaga continuamente.', 'icon' => 'ti-ripple'],
+                                        ['id' => 'btn-none', 'name' => 'Estático (Sem Efeito)', 'desc' => 'Sem animação contínua, efeito apenas ao passar o mouse.', 'icon' => 'ti-hand-finger'],
+                                    ];
+                                    $currentBtnAnimation = $lp['btn_animation'] ?? 'btn-pulse';
+                                    ?>
+                                    <?php foreach ($btnAnimationsList as $btn): ?>
+                                        <label class="template-model-card <?= $currentBtnAnimation === $btn['id'] ? 'active' : '' ?>">
+                                            <input type="radio" name="btn_animation" value="<?= esc($btn['id']) ?>" <?= $currentBtnAnimation === $btn['id'] ? 'checked' : '' ?> data-lp-btnanim-radio>
+                                            <div class="template-card-inner">
+                                                <div class="template-card-icon" style="background: rgba(37, 211, 102, 0.12); color: #25d366;"><i class="ti <?= esc($btn['icon']) ?>"></i></div>
+                                                <div class="template-card-info">
+                                                    <strong><?= esc($btn['name']) ?></strong>
+                                                    <p><?= esc($btn['desc']) ?></p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -634,9 +781,30 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                 </div>
                             </div>
                             
-                            <div class="mobile-screen-content">
+                            <div class="mobile-screen-content" data-mockup-screen data-mockup-model="<?= esc($lp['template_model'] ?? 'model-1') ?>" data-mockup-palette="<?= esc($lp['color_palette'] ?? 'palette-aurora') ?>" data-mockup-bganim="<?= esc($lp['bg_animation'] ?? 'bg-particles') ?>" data-mockup-btnanim="<?= esc($lp['btn_animation'] ?? 'btn-pulse') ?>">
+                                <!-- Camada de Efeitos Dinâmicos de Fundo no Mockup -->
+                                <div class="bg-fx-layer" aria-hidden="true">
+                                    <div class="bg-particles-wrap">
+                                        <div class="particle-orb"></div>
+                                        <div class="particle-orb"></div>
+                                        <div class="particle-orb"></div>
+                                    </div>
+                                    <div class="bg-mesh-wrap"></div>
+                                    <div class="bg-grid-wrap"><div class="bg-grid-plane"></div></div>
+                                    <div class="bg-pulse-wrap">
+                                        <div class="pulse-ring"></div>
+                                        <div class="pulse-ring"></div>
+                                        <div class="pulse-ring"></div>
+                                    </div>
+                                    <div class="bg-shapes-wrap">
+                                        <div class="shape-item"></div>
+                                        <div class="shape-item"></div>
+                                        <div class="shape-item"></div>
+                                    </div>
+                                </div>
+
                                 <!-- Modo 1: Página de Captura -->
-                                <div class="lp-preview-body" data-preview-screen="page">
+                                <div class="lp-preview-body" data-preview-screen="page" style="position: relative; z-index: 1;">
                                     <div class="lp-preview-brand">
                                         <div class="lp-preview-logo">DI</div>
                                         <span class="lp-preview-brandname"><?= esc($companyProfile['name'] ?? 'Dias Imports') ?></span>

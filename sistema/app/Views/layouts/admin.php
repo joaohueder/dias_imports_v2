@@ -1,4 +1,7 @@
-<?php $globalError = session()->getFlashdata('error'); ?>
+<?php
+$globalError = session()->getFlashdata('error');
+$globalSuccess = session()->getFlashdata('success');
+?>
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -148,6 +151,21 @@
         <h2 id="global-error-title">Não foi possível concluir</h2>
         <p id="global-error-message"><?= esc($globalError) ?></p>
         <button class="button danger-solid" type="button" data-close-error><i class="ti ti-x" aria-hidden="true"></i>Entendi</button>
+    </section>
+</div>
+<?php endif; ?>
+
+<?php if (is_string($globalSuccess) && $globalSuccess !== ''): ?>
+<div class="success-dialog" data-success-dialog hidden aria-hidden="true">
+    <section class="success-dialog-card" role="dialog" aria-modal="true" aria-labelledby="global-success-title" aria-describedby="global-success-message" tabindex="-1">
+        <div class="success-dialog-icon" aria-hidden="true">
+            <span class="success-dialog-ring" aria-hidden="true"></span>
+            <i class="ti ti-mood-smile-beam"></i>
+        </div>
+        <p class="success-dialog-kicker">Tudo certo por aqui!</p>
+        <h2 id="global-success-title">Operação realizada</h2>
+        <p id="global-success-message"><?= esc($globalSuccess) ?></p>
+        <button class="button success-solid" type="button" data-close-success><i class="ti ti-check" aria-hidden="true"></i>Maravilha, entendi!</button>
     </section>
 </div>
 <?php endif; ?>

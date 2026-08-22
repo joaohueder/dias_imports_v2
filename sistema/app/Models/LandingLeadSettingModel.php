@@ -13,6 +13,10 @@ class LandingLeadSettingModel extends Model
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields = [
+        'template_model',
+        'color_palette',
+        'bg_animation',
+        'btn_animation',
         'headline',
         'subheadline',
         'badge_text',

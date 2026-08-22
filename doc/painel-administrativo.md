@@ -39,16 +39,17 @@ O banco atual não possui função, perfil ou permissão administrativa. Portant
 - Estados ativos usam `aria-current="page"`.
 - Layout considera safe areas, `100dvh`, navegação por teclado, foco visível, contraste e preferência por movimento reduzido.
 
-## Feedback global de processamento e erros
+## Feedback global de processamento, confirmações e erros
 
 - Todo formulário `POST` do painel abre uma camada fullscreen que bloqueia novas interações somente depois que a validação nativa do formulário é aprovada.
 - A camada informa a operação em andamento, exibe ícone, órbitas, progresso e elementos de fundo animados, além de sortear uma mensagem leve a cada envio.
 - As mensagens mudam conforme a ação: salvar layout, empresa ou WhatsApp; testar a Evolution API; criar, conectar, definir, desconectar ou excluir instância; e encerrar sessão.
 - Ações críticas continuam exigindo confirmação; a camada de processamento começa apenas após a confirmação final.
 - O fluxo `POST`/redirect encerra a camada naturalmente quando a resposta carrega e libera a interface.
+- Mensagens de sucesso (`success` em flashdata) não são exibidas inline na página: abrem um modal global amigável com ícone divertido e animado, mensagem e botão de confirmação para fechar.
 - Falhas armazenadas em flashdata `error` são escapadas no servidor e apresentadas em modal global acessível, fechado por botão, backdrop ou tecla Escape.
 - A tela de login usa o mesmo padrão: bloqueio durante validação das credenciais e modal para erros de autenticação.
-- No mobile, o modal de erro assume comportamento de folha inferior, respeitando safe areas e alvos de toque.
+- No mobile, os modais de sucesso e erro assumem comportamento de folha inferior, respeitando safe areas e alvos de toque.
 - Todas as animações respeitam `prefers-reduced-motion`.
 
 ## Código
@@ -223,7 +224,40 @@ A aba `Modelos de Mensagens` em `/configuracoes?tab=modelos-mensagens` permite c
 
 ## Landing Page de Leads
 
-A aba `Landing Page de Leads` em `/configuracoes?tab=landing-leads` permite configurar os textos, promessas, benefícios e link de redirecionamento para o Grupo VIP no WhatsApp, com visualização prévia em tempo real simulando um dispositivo mobile.
+A aba `Landing Page de Leads` em `/configuracoes?tab=landing-leads` permite configurar os textos, promessas, benefícios, link de redirecionamento para o Grupo VIP no WhatsApp, modelo de layout visual e paleta de cores, com visualização prévia em tempo real simulando um dispositivo mobile.
+
+### Modelos Visuais (6 Opções)
+1. **Hero Direct & Glass** (`model-1`): Formulário no topo com efeito glassmorphism e foco total na conversão direta.
+2. **Benefits First** (`model-2`): Benefícios e prova de valor apresentados antes do formulário para gerar desejo prévio.
+3. **Minimal Compact** (`model-3`): Pílulas arredondadas, direto ao ponto e otimizado para navegação com 1 polegar.
+4. **Bento Grid** (`model-4`): Grade moderna em blocos assimétricos estilo Bento Box.
+5. **Cyber Tech Neon** (`model-5`): Bordas tracejadas neon pulsantes, visual escuro e tipografia futurista (`Space Grotesk`).
+6. **Editorial Luxury** (`model-6`): Tipografia refinada (`Outfit`), curvas orgânicas e gradientes suaves para produtos premium.
+
+### Paletas de Cores (6 Opções)
+1. **Aurora Neon** (`palette-aurora`): Violeta & Magenta elétrico com brilhos profundos.
+2. **Emerald Tech** (`palette-emerald`): Verde Esmeralda & WhatsApp VIP de alta confiança.
+3. **Amber Gold** (`palette-amber`): Ouro e âmbar quente luxuoso.
+4. **Ocean Cyan** (`palette-ocean`): Azul Profundo & Ciano moderno.
+5. **Crimson Ruby** (`palette-crimson`): Vermelho de alta urgência e impacto de oferta.
+6. **Obsidian Minimal** (`palette-obsidian`): Preto Puro e Titânio monocromático.
+
+### Animações de Fundo (6 Modelos de Background)
+1. **Partículas & Orbes** (`bg-particles`): Orbes e luzes suaves flutuando harmonicamente com profundidade.
+2. **Gradiente Líquido Mesh** (`bg-mesh-gradient`): Fluxo fluido de cores dinâmicas que se misturam em movimento suave contínuo.
+3. **Grid Tech Futurista** (`bg-cyber-grid`): Grade tecnológica em perspectiva com linhas luminosas animadas.
+4. **Pulso Radial Concêntrico** (`bg-radial-pulse`): Ondas circulares luminosas pulsando e expandindo a partir do centro.
+5. **Geometrias Flutuantes** (`bg-floating-shapes`): Formas geométricas translúcidas flutuando com rotação e desfoque suave.
+6. **Estático Minimalista** (`bg-minimal-static`): Fundo limpo sem animações contínuas, garantindo foco total no formulário.
+
+### Animações do Botão CTA (6 Opções)
+*(Localizado no grupo **Chamada para Ação (CTA) e Grupo VIP** do painel)*
+1. **Pulso Rítmico** (`btn-pulse`): Respiração suave periódica com expansão de escala e halo luminoso.
+2. **Feixe de Luz / Shimmer** (`btn-shimmer`): Reflexo metálico brilhante atravessando a extensão do botão.
+3. **Microvibração / Shake** (`btn-shake`): Vibração atrativa inteligente a cada 4 segundos para despertar a atenção do lead.
+4. **Salto Suave / Bounce** (`btn-bounce`): Pulo vertical rítmico direcionando o foco do olhar para o clique.
+5. **Onda Expansiva / Ripple** (`btn-glow-expand`): Halo circular de energia que se irradia continuamente para fora do botão.
+6. **Estático** (`btn-none`): Botão sem animação contínua automática, com transição suave apenas no hover e active.
 
 ### Rotas e Operações
 
@@ -231,14 +265,15 @@ A aba `Landing Page de Leads` em `/configuracoes?tab=landing-leads` permite conf
 | --- | --- | --- |
 | `GET` | `/leads` | Página pública de captura de alta conversão (100% mobile-first) |
 | `POST` | `/leads/capture` | Captura AJAX do nome/WhatsApp do lead e retorno dos dados do modal VIP |
-| `POST` | `/configuracoes/landing-leads` | Salvar configurações e textos da landing page |
+| `POST` | `/configuracoes/landing-leads` | Salvar configurações, modelos, paletas e animações da landing page |
 
 ### Código e Banco
 - Controllers: `sistema/app/Controllers/Landing.php`, `sistema/app/Controllers/Home.php`
 - Models: `sistema/app/Models/LandingLeadSettingModel.php`, `sistema/app/Models/LeadModel.php`
 - Views: `sistema/app/Views/landing/leads.php`, `sistema/app/Views/admin/settings.php`
 - Tabelas: `landing_lead_settings`, `leads`
-- SQL incremental: `bd/006-landing-page-leads.sql`
+- Migrations: `2026-08-22-020000_AddTemplateAndPaletteToLandingLeadSettings.php`, `2026-08-22-030000_AddBgAnimationAndBtnAnimationToLandingLeadSettings.php`
+- SQL incremental: `bd/006-landing-page-leads.sql`, `bd/008-landing-modelos-paletas.sql`, `bd/009-landing-animacoes-bg-btn.sql`
 - SQL completo: `bd/master.sql`
 
 ## Meta Ads (Pixel & Conversions API)

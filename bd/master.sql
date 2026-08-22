@@ -90,6 +90,10 @@ CREATE TABLE `message_templates` (
 
 CREATE TABLE `landing_lead_settings` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `template_model` VARCHAR(50) NOT NULL DEFAULT 'model-1',
+  `color_palette` VARCHAR(50) NOT NULL DEFAULT 'palette-aurora',
+  `bg_animation` VARCHAR(50) NOT NULL DEFAULT 'bg-particles',
+  `btn_animation` VARCHAR(50) NOT NULL DEFAULT 'btn-pulse',
   `headline` VARCHAR(255) NOT NULL DEFAULT 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
   `subheadline` TEXT NULL,
   `badge_text` VARCHAR(100) NOT NULL DEFAULT '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
@@ -138,12 +142,16 @@ CREATE TABLE `meta_ads_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `landing_lead_settings` (
-  `id`, `headline`, `subheadline`, `badge_text`, `button_text`, `button_subtext`,
+  `id`, `template_model`, `color_palette`, `bg_animation`, `btn_animation`, `headline`, `subheadline`, `badge_text`, `button_text`, `button_subtext`,
   `whatsapp_group_link`, `card1_icon`, `card1_title`, `card1_desc`,
   `card2_icon`, `card2_title`, `card2_desc`, `card3_icon`, `card3_title`, `card3_desc`,
   `modal_title`, `modal_desc`, `modal_button_text`, `created_at`, `updated_at`
 ) VALUES (
   1,
+  'model-1',
+  'palette-aurora',
+  'bg-particles',
+  'btn-pulse',
   'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
   'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
   '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
