@@ -1351,8 +1351,21 @@
     // =========================================================================
     const userFormRoot = document.querySelector('[data-user-form-root]');
     if (userFormRoot) {
-        const dirtyUserForm = userFormRoot.querySelector('[data-dirty-form]');
+        const dirtyUserForm = userFormRoot.querySelector('[data-dirty-user-form]');
         const userSaveBar = userFormRoot.querySelector('[data-form-save-bar]');
+        const roleSelect = userFormRoot.querySelector('[data-role-select]');
+        const permissionsContainer = userFormRoot.querySelector('[data-permissions-container]');
+
+        // Alternância da visibilidade do grupo Permissões conforme o perfil selecionado
+        if (roleSelect && permissionsContainer) {
+            const updatePermissionsVisibility = () => {
+                const isUser = (roleSelect.value === 'user');
+                permissionsContainer.style.display = isUser ? '' : 'none';
+            };
+
+            roleSelect.addEventListener('change', updatePermissionsVisibility);
+            updatePermissionsVisibility();
+        }
 
         // Toggle de permissões por módulo
         userFormRoot.querySelectorAll('[data-toggle-module-all]').forEach(btn => {
