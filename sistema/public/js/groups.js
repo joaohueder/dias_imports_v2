@@ -85,6 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Fechar modais ao clicar no botão de fechar
+    document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const dialog = e.target.closest('.template-dialog');
+            if (dialog) closeModal(dialog);
+        });
+    });
+
     // Expor função global para chamada pelo empty-state
     window.openGroupModal = function() {
         if (btnOpenNewGroupModal) {
