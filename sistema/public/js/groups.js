@@ -1,0 +1,370 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const groupsContainer = document.getElementById('groups-container');
+    const searchInput = document.getElementById('groups-search-input');
+    const btnClearSearch = document.getElementById('btn-clear-search');
+    const filterBtns = document.querySelectorAll('.users-filter-pills .filter-pill');
+    const btnSyncGroups = document.getElementById('btn-sync-groups');
+    
+    // Modal Novo Grupo
+    const btnOpenNewGroupModal = document.getElementById('btn-open-new-group-modal');
+    const dialogNewGroup = document.getElementById('dialog-new-group');
+    const formNewGroup = document.getElementById('form-new-group');
+    const btnSaveGroup = document.getElementById('btn-save-group');
+
+    // Modal Testar Envio
+    const dialogTestSend = document.getElementById('dialog-test-send');
+    const formTestSend = document.getElementById('form-test-send');
+    const btnSubmitTestSend = document.getElementById('btn-submit-test-send');
+    const testSendGroupName = document.getElementById('test-send-group-name');
+
+    let currentStatus = 'all';
+    let searchTimeout = null;
+
+    // Filtros de status
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            currentStatus = btn.dataset.status;
+            loadGroups();
+        });
+    });
+
+    // Busca rápida
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(loadGroups, 350);
+        });
+    }
+
+    if (btnClearSearch) {
+        btnClearSearch.addEventListener('click', () => {
+            searchInput.value = '';
+            btnClearSearch.remove();
+            loadGroups();
+        });
+    }
+
+    function openModal(dialog) {
+        if (!dialog) return;
+        dialog.hidden = false;
+        dialog.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(() => dialog.classList.add('open'));
+    }
+
+    function closeModal(dialog) {
+        if (!dialog) return;
+        dialog.classList.remove('open');
+        dialog.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            if (!dialog.classList.contains('open')) {
+                dialog.hidden = true;
+            }
+        }, 200);
+    }
+
+    // Abertura / Fechamento de Modais
+    if (btnOpenNewGroupModal && dialogNewGroup) {
+        btnOpenNewGroupModal.addEventListener('click', () => {
+            openModal(dialogNewGroup);
+        });
+    }
+
+    document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            closeModal(dialogNewGroup);
+            closeModal(dialogTestSend);
+        });
+    });
+
+    [dialogNewGroup, dialogTestSend].forEach(dialog => {
+        if (!dialog) return;
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) closeModal(dialog);
+        });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(dialogNewGroup);
+            closeModal(dialogTestSend);
+        }
+    });
+
+    // Sincronizar Grupos
+    if (btnSyncGroups) {
+        btnSyncGroups.addEventListener('click', syncGroups);
+    }
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-sync-empty')) {
+            syncGroups();
+        }
+    });
+
+    // Criar Grupo
+    if (formNewGroup) {
+        formNewGroup.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (btnSaveGroup.disabled) return;
+
+            const formData = new FormData(formNewGroup);
+            btnSaveGroup.disabled = true;
+            btnSaveGroup.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Criando...</span>';
+
+            try {
+                const response = await fetch(formNewGroup.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Sucesso', data.message, 'success');
+                    closeModal(dialogNewGroup);
+                    formNewGroup.reset();
+                    loadGroups();
+                } else {
+                    showToast('Erro', data.message || 'Erro ao criar grupo.', 'error');
+                }
+            } catch (error) {
+                showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+            } finally {
+                btnSaveGroup.disabled = false;
+                btnSaveGroup.innerHTML = '<i class="ti ti-plus"></i> <span>Criar Grupo</span>';
+            }
+        });
+    }
+
+    // Testar Envio Form Submit
+    if (formTestSend) {
+        formTestSend.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (btnSubmitTestSend.disabled) return;
+
+            const formData = new FormData(formTestSend);
+            btnSubmitTestSend.disabled = true;
+            btnSubmitTestSend.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Enviando...</span>';
+
+            try {
+                const response = await fetch(formTestSend.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Sucesso', data.message, 'success');
+                    closeModal(dialogTestSend);
+                } else {
+                    showToast('Erro', data.message || 'Erro ao enviar mensagem.', 'error');
+                }
+            } catch (error) {
+                showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+            } finally {
+                btnSubmitTestSend.disabled = false;
+                btnSubmitTestSend.innerHTML = '<i class="ti ti-send"></i> <span>Enviar Agora</span>';
+            }
+        });
+    }
+
+    // Ações nos cards (delegadas)
+    if (groupsContainer) {
+        groupsContainer.addEventListener('click', async (e) => {
+            const btnToggle = e.target.closest('.btn-toggle-status');
+            const btnTest = e.target.closest('.btn-test-send');
+            const btnDelete = e.target.closest('.btn-delete-group');
+
+            if (btnToggle) {
+                const id = btnToggle.dataset.id;
+                toggleStatus(id);
+            }
+
+            if (btnTest) {
+                const id = btnTest.dataset.id;
+                const name = btnTest.dataset.name;
+                openTestSendModal(id, name);
+            }
+
+            if (btnDelete) {
+                const id = btnDelete.dataset.id;
+                const name = btnDelete.dataset.name;
+                deleteGroup(id, name);
+            }
+        });
+    }
+
+    async function loadGroups() {
+        const q = searchInput ? searchInput.value.trim() : '';
+        const url = `${window.location.origin}/grupos-whatsapp/feed?status=${currentStatus}&q=${encodeURIComponent(q)}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                groupsContainer.innerHTML = data.htmlCards;
+                
+                // Atualiza contadores
+                const badgeAll = document.getElementById('badge-all');
+                const badgeActive = document.getElementById('badge-active');
+                const badgeInactive = document.getElementById('badge-inactive');
+
+                if (badgeAll) badgeAll.textContent = data.metrics.total;
+                if (badgeActive) badgeActive.textContent = data.metrics.active;
+                if (badgeInactive) badgeInactive.textContent = data.metrics.inactive;
+            }
+        } catch (error) {
+            console.error('Erro ao carregar grupos:', error);
+        }
+    }
+
+    async function syncGroups() {
+        const btn = document.getElementById('btn-sync-groups') || document.getElementById('btn-sync-empty');
+        if (!btn) return;
+
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Sincronizando...</span>';
+
+        try {
+            const response = await fetch(`${window.location.origin}/grupos-whatsapp/sincronizar`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `csrf_test_name=${getCsrfToken()}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Sincronização Concluída', data.message, 'success');
+                loadGroups();
+            } else {
+                showToast('Erro na Sincronização', data.message || 'Erro ao sincronizar grupos.', 'error');
+            }
+        } catch (error) {
+            showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    }
+
+    async function toggleStatus(id) {
+        try {
+            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/status`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `csrf_test_name=${getCsrfToken()}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Sucesso', data.message, 'success');
+                loadGroups();
+            } else {
+                showToast('Erro', data.message || 'Erro ao alterar status.', 'error');
+            }
+        } catch (error) {
+            showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        }
+    }
+
+    function openTestSendModal(id, name) {
+        if (!dialogTestSend || !formTestSend) return;
+        formTestSend.action = `${window.location.origin}/grupos-whatsapp/${id}/testar-envio`;
+        if (testSendGroupName) {
+            testSendGroupName.textContent = `Envio de validação para o grupo: ${name}`;
+        }
+        openModal(dialogTestSend);
+    }
+
+    function deleteGroup(id, name) {
+        if (typeof showConfirmModal === 'function') {
+            showConfirmModal(
+                'Excluir Grupo',
+                `Tem certeza que deseja excluir o grupo <strong>${name}</strong> do sistema? Esta ação apenas removerá o grupo do painel, não o apagará do WhatsApp.`,
+                'Excluir',
+                'ti-trash',
+                'danger',
+                async () => {
+                    executeDelete(id);
+                }
+            );
+        } else if (confirm(`Tem certeza que deseja excluir o grupo "${name}" do sistema?`)) {
+            executeDelete(id);
+        }
+    }
+
+    async function executeDelete(id) {
+        try {
+            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/excluir`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `csrf_test_name=${getCsrfToken()}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Sucesso', data.message, 'success');
+                loadGroups();
+            } else {
+                showToast('Erro', data.message || 'Erro ao excluir grupo.', 'error');
+            }
+        } catch (error) {
+            showToast('Erro', 'Falha na comunicação com o servidor.', 'error');
+        }
+    }
+
+    function getCsrfToken() {
+        return document.querySelector('meta[name="X-CSRF-TOKEN"]')?.getAttribute('content') || 
+               document.querySelector('input[name="csrf_test_name"]')?.value || '';
+    }
+
+    function showToast(title, message, type = 'info') {
+        const container = document.querySelector('[data-toast-container]');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `app-toast is-${type}`;
+        toast.innerHTML = `
+            <div class="toast-indicator" aria-hidden="true"></div>
+            <div class="toast-body">
+                <p class="toast-title">${title}</p>
+                <p class="toast-message">${message}</p>
+            </div>
+            <button class="toast-close" type="button" aria-label="Fechar">&times;</button>
+        `;
+
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('is-visible'));
+
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => removeToast(toast));
+        }
+
+        setTimeout(() => removeToast(toast), 4000);
+    }
+
+    function removeToast(toast) {
+        toast.classList.remove('is-visible');
+        setTimeout(() => toast.remove(), 250);
+    }
+});
