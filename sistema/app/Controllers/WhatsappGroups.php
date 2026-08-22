@@ -411,6 +411,7 @@ class WhatsappGroups extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Grupo não encontrado.'])->setStatusCode(404);
         }
 
+        $phone = preg_replace('/\D+/', '', (string) ($this->request->getPost('phone') ?? ''));
         $message = trim((string) ($this->request->getPost('message') ?? ''));
         if ($message === '') {
             $message = "🚀 *Mensagem de Teste*\nEsta é uma mensagem de validação de envio do painel Dias Imports.";
@@ -427,11 +428,17 @@ class WhatsappGroups extends BaseController
                 return $this->response->setJSON(['success' => false, 'message' => 'Nenhuma instância configurada para o envio.'])->setStatusCode(400);
             }
 
-            $this->evolutionService->sendGroupTestMessage($instanceName, $group['group_jid'], $message);
+            if ($phone !== '') {
+                $this->evolutionService->sendTextMessage($instanceName, $phone, $message);
+                $successMsg = "Mensagem de teste enviada com sucesso para {$phone}!";
+            } else {
+                $this->evolutionService->sendGroupTestMessage($instanceName, $group['group_jid'], $message);
+                $successMsg = 'Mensagem de teste enviada com sucesso para o grupo!';
+            }
 
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Mensagem de teste enviada com sucesso para o grupo!',
+                'message' => $successMsg,
             ]);
         } catch (Throwable $e) {
             return $this->response->setJSON([

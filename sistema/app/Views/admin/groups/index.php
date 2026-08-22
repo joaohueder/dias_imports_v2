@@ -127,6 +127,11 @@
         <form id="form-test-send" action="" method="post">
             <?= csrf_field() ?>
             <div class="field-group">
+                <label for="test_send_phone">Número do WhatsApp *</label>
+                <input type="text" id="test_send_phone" name="phone" required placeholder="Ex: 5511999999999" data-mask="phone">
+                <small class="field-hint">Digite o número com DDI e DDD (somente números).</small>
+            </div>
+            <div class="field-group">
                 <label for="test_send_message">Mensagem *</label>
                 <textarea id="test_send_message" name="message" rows="4" required placeholder="Digite a mensagem de teste...">🚀 *Mensagem de Teste*&#10;Esta é uma mensagem de validação de envio do painel Dias Imports.</textarea>
             </div>
