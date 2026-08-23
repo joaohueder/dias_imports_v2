@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPeriod = parseInt(initialActivePeriodBtn.dataset.periodBtn, 10) || 7;
     }
 
-    const REFRESH_INTERVAL_MS = 10000; // 10 segundos
+    const REFRESH_INTERVAL_MS = 30000; // 30 segundos
     let remainingMs = REFRESH_INTERVAL_MS;
     let timerId = null;
     let isFetching = false;

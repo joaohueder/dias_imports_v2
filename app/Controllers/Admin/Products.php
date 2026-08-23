@@ -56,13 +56,22 @@ class Products extends BaseController
     {
         $products = $this->productModel->orderBy('created_at', 'DESC')->findAll();
         
-        // Carregar imagens para cada produto
-        foreach ($products as $product) {
-            $product->images = $this->productImageModel
-                ->where('product_id', $product->id)
+        if (! empty($products)) {
+            $productIds = array_column($products, 'id');
+            $allImages = $this->productImageModel
+                ->whereIn('product_id', $productIds)
                 ->orderBy('is_cover', 'DESC')
                 ->orderBy('sort_order', 'ASC')
                 ->findAll();
+
+            $imagesByProduct = [];
+            foreach ($allImages as $img) {
+                $imagesByProduct[$img->product_id][] = $img;
+            }
+
+            foreach ($products as $product) {
+                $product->images = $imagesByProduct[$product->id] ?? [];
+            }
         }
 
         $data = [
@@ -133,8 +142,9 @@ class Products extends BaseController
         $data['active'] = 1;
 
         // Pula validação interna do Model pois já validamos no Controller
-        if ($this->productModel->skipValidation(true)->insert($data)) {
-            return redirect()->to('produtos')->with('success', 'Produto criado com sucesso.');
+        $insertId = $this->productModel->skipValidation(true)->insert($data);
+        if ($insertId) {
+            return redirect()->to("produtos/{$insertId}/editar")->with('success', 'Produto criado com sucesso.');
         }
 
         $modelErrors = $this->productModel->errors();
@@ -219,7 +229,7 @@ class Products extends BaseController
 
         // Pula validação interna do Model pois já validamos no Controller
         if ($this->productModel->skipValidation(true)->update($id, $data)) {
-            return redirect()->to('produtos')->with('success', 'Produto atualizado com sucesso.');
+            return redirect()->to("produtos/{$id}/editar")->with('success', 'Produto atualizado com sucesso.');
         }
 
         $modelErrors = $this->productModel->errors();

@@ -56,6 +56,13 @@ class Home extends BaseController
             'icon' => 'ti-cpu',
             'description' => 'Fila e monitoramento de tarefas em segundo plano.',
         ],
+        'landing_leads' => [
+            'label' => 'Landing Page VIP',
+            'mobileLabel' => 'Landing',
+            'path' => 'landing-leads',
+            'icon' => 'ti-browser',
+            'description' => 'Configuração da página de captura de leads.',
+        ],
         'users' => [
             'label' => 'Usuários',
             'mobileLabel' => 'Usuários',
@@ -116,10 +123,10 @@ class Home extends BaseController
         $layoutWidth = trim((string) $this->request->getPost('layout_max_width'));
         $numericWidth = filter_var($layoutWidth, FILTER_VALIDATE_INT);
         $isValid = $layoutWidth === 'fluid'
-            || ($numericWidth !== false && $numericWidth >= 900 && $numericWidth <= 1800);
+            || ($numericWidth !== false && $numericWidth >= 1200 && $numericWidth <= 1800);
 
         if (! $isValid) {
-            return redirect()->back()->withInput()->with('error', 'Escolha uma largura válida entre 900px e 1800px.');
+            return redirect()->back()->withInput()->with('error', 'Escolha uma largura válida entre 1200px e 1800px.');
         }
 
         $settingModel = new AppSettingModel();
@@ -154,7 +161,7 @@ class Home extends BaseController
             'number' => 'required|max_length[20]',
             'district' => 'required|max_length[100]',
             'city' => 'required|max_length[100]',
-            'public_url' => 'required|max_length[255]|valid_url_strict[https]',
+            'public_url' => 'required|max_length[255]|valid_url_strict',
         ];
         $urlHost = parse_url($data['public_url'], PHP_URL_HOST);
 
@@ -162,9 +169,8 @@ class Home extends BaseController
             || ! in_array($data['state'], self::BRAZILIAN_STATES, true)
             || ! is_string($urlHost)
             || $urlHost === ''
-            || in_array(mb_strtolower($urlHost), ['localhost', '127.0.0.1', '::1'], true)
         ) {
-            return redirect()->to('/configuracoes?tab=empresa')->withInput()->with('error', 'Revise os dados da empresa e informe uma URL pública HTTPS válida.');
+            return redirect()->to('/configuracoes?tab=empresa')->withInput()->with('error', 'Revise os dados da empresa e informe uma URL pública válida.');
         }
 
         $model = new CompanyProfileModel();
@@ -310,6 +316,31 @@ class Home extends BaseController
         return redirect()->to('/configuracoes?tab=modelos-mensagens')->with('success', 'Modelo excluído com sucesso.');
     }
 
+    public function landingLeadsSettings(): string
+    {
+        $settingsModel = new \App\Models\LandingLeadSettingModel();
+        $companyModel = new CompanyProfileModel();
+        $appSettingModel = new AppSettingModel();
+        
+        $layoutSetting = $appSettingModel->where('setting_key', 'layout_max_width')->first();
+        $layoutMaxWidth = $layoutSetting['setting_value'] ?? '1200';
+        
+        $data = [
+            'pageTitle' => 'Landing Page de Leads',
+            'pageDescription' => 'Configurações da landing page de captação de leads.',
+            'activePage' => 'landing_leads',
+            'userInitials' => session()->get('user_initials') ?? 'U',
+            'userName' => session()->get('user_name') ?? 'Usuário',
+            'userEmail' => session()->get('user_email') ?? '',
+            'navigation' => self::NAVIGATION,
+            'landingLeadSetting' => $settingsModel->first(),
+            'companyProfile' => $companyModel->first() ?? [],
+            'layoutMaxWidth' => $layoutMaxWidth,
+        ];
+
+        return view('admin/landing_leads', $data);
+    }
+
     public function saveLandingLeadSettings(): RedirectResponse
     {
         $validModels = ['model-1', 'model-2', 'model-3', 'model-4', 'model-5', 'model-6'];
@@ -350,7 +381,7 @@ class Home extends BaseController
         ];
 
         if ($data['headline'] === '' || $data['button_text'] === '' || $data['whatsapp_group_link'] === '') {
-            return redirect()->to('/configuracoes?tab=landing-leads')->withInput()->with('error', 'Preencha o título principal, o texto do botão e o link do grupo do WhatsApp.');
+            return redirect()->to('/landing-leads')->withInput()->with('error', 'Preencha o título principal, o texto do botão e o link do grupo do WhatsApp.');
         }
 
         $model = new \App\Models\LandingLeadSettingModel();
@@ -398,7 +429,7 @@ class Home extends BaseController
             $model->update($existing['id'], $data);
         }
 
-        return redirect()->to('/configuracoes?tab=landing-leads')->with('success', 'Configurações da Landing Page salvas com sucesso.');
+        return redirect()->to('/landing-leads')->with('success', 'Configurações da Landing Page salvas com sucesso.');
     }
 
     private function renderPage(string $activePage): string

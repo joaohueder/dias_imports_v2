@@ -39,7 +39,33 @@ $globalSuccess = session()->getFlashdata('success');
         <nav class="main-nav" aria-label="Navegação principal">
             <div class="nav-label">Administração</div>
             <ul class="nav-list">
-                <?php foreach ($navigation as $key => $item): ?>
+                <?php foreach (['overview', 'whatsapp', 'products'] as $key): $item = $navigation[$key]; ?>
+                    <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
+                    <li>
+                        <a class="nav-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" data-tooltip="<?= esc($item['label']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
+                            <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i>
+                            <span><?= esc($item['label']) ?></span>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <div class="nav-label">Operacional</div>
+            <ul class="nav-list">
+                <?php foreach (['vip', 'landing_leads'] as $key): $item = $navigation[$key]; ?>
+                    <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
+                    <li>
+                        <a class="nav-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" data-tooltip="<?= esc($item['label']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
+                            <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i>
+                            <span><?= esc($item['label']) ?></span>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <div class="nav-label">Sistema</div>
+            <ul class="nav-list">
+                <?php foreach (['jobs', 'users', 'settings'] as $key): $item = $navigation[$key]; ?>
                     <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
                     <li>
                         <a class="nav-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" data-tooltip="<?= esc($item['label']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
@@ -86,6 +112,12 @@ $globalSuccess = session()->getFlashdata('success');
         <header class="topbar">
             <div class="breadcrumb">Painel <span aria-hidden="true">/</span> <strong><?= esc($pageTitle) ?></strong></div>
             <div class="topbar-actions">
+                <a href="<?= site_url('central-trabalho') ?>" class="queue-status-pill" id="header-queue-pill" title="Fila de Execução: 0 pendentes, 0 em execução, 0 falhas">
+                    <i class="ti ti-cpu" aria-hidden="true"></i>
+                    <span class="queue-status-label">Fila:</span>
+                    <span class="queue-status-count" id="header-queue-total">0</span>
+                    <span class="queue-status-breakdown" id="header-queue-breakdown">(0/0/0)</span>
+                </a>
                 <span class="status-pill" id="system-status-pill" data-health-url="<?= site_url('health/status') ?>">
                     <span class="status-dot" id="system-status-dot" aria-hidden="true"></span>
                     <span id="system-status-text">Sistema online</span>
@@ -111,7 +143,7 @@ $globalSuccess = session()->getFlashdata('success');
     </div>
 
     <nav class="bottom-nav" aria-label="Navegação móvel">
-        <?php foreach (['overview', 'whatsapp', 'products', 'jobs'] as $key): $item = $navigation[$key]; ?>
+        <?php foreach (['overview', 'whatsapp', 'products', 'jobs', 'landing_leads'] as $key): $item = $navigation[$key]; ?>
             <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
             <a class="bottom-link <?= $activePage === $key ? 'active' : '' ?>" href="<?= site_url($item['path']) ?>" <?= $activePage === $key ? 'aria-current="page"' : '' ?>>
                 <i class="ti <?= esc($item['icon']) ?>" aria-hidden="true"></i><span><?= esc($item['mobileLabel']) ?></span>

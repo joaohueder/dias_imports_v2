@@ -77,6 +77,7 @@
         { match: '/configuracoes/modelos-mensagens/status', title: 'Atualizando o modelo', message: 'Alterando o status de disponibilidade do modelo.' },
         { match: '/configuracoes/modelos-mensagens', title: 'Salvando modelo de mensagem', message: 'Gravando os dados e tags do modelo com segurança.' },
         { match: '/configuracoes/landing-leads', title: 'Salvando Landing Page', message: 'Publicando as novas configurações da página de leads.' },
+        { match: '/landing-leads', title: 'Salvando Landing Page', message: 'Publicando as novas configurações da página de leads.' },
         { match: '/usuarios/status', title: 'Atualizando o usuário', message: 'Aplicando o novo status de acesso do usuário.' },
         { match: '/usuarios/excluir', title: 'Excluindo o usuário', message: 'Removendo permanentemente a conta de acesso.' },
         { match: '/usuarios/redefinir-senha', title: 'Redefinindo a senha', message: 'Criptografando e atualizando as novas credenciais.' },
@@ -109,6 +110,11 @@
             'evolution-default': { title: 'Atualizando a instância padrão', message: 'Salvando a preferência para os próximos envios.' },
             'evolution-logout': { title: 'Desconectando a instância', message: 'Encerrando a sessão do WhatsApp com segurança.' },
             'evolution-delete': { title: 'Excluindo a instância', message: 'Removendo a instância e seus vínculos da Evolution API.' },
+            'job-reprocess': { title: 'Reprocessando tarefas', message: 'Reagendando as tarefas com falha para execução imediata.' },
+            'job-clear-completed': { title: 'Limpando histórico', message: 'Removendo as tarefas concluídas da base de dados.' },
+            'job-delete-multiple': { title: 'Excluindo tarefas', message: 'Removendo as tarefas selecionadas da fila.' },
+            'job-delete-single': { title: 'Excluindo tarefa', message: 'Removendo a tarefa da fila de trabalho.' },
+            'job-run-single': { title: 'Executando tarefa', message: 'Processando a tarefa manualmente na Central de Trabalho.' },
         };
         const operation = confirmedOperations[form.dataset.confirmAction] || processingOperations.find(({ match }) => pathname.includes(match));
         form.dataset.processingActive = 'true';
@@ -188,7 +194,6 @@
         syncFormCsrf(form);
         if (form.matches('[data-qr-connect-form]') || form.matches('[data-confirm-action]')) return;
         if (form.dataset.processingActive === 'true') {
-            event.preventDefault();
             return;
         }
         showProcessing(form, event.submitter);
@@ -267,9 +272,16 @@
             'user-status-inativar': { title: 'Inativar este usuário?', message: (name) => `O usuário “${name}” perderá o acesso ao sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
             'user-delete': { title: 'Excluir este usuário?', message: (name) => `O usuário “${name}” será removido permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             'lead-delete': { title: 'Excluir este lead?', message: (name) => `O lead “${name}” será excluído permanentemente da lista. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'product-delete': { title: 'Excluir este produto?', message: (name) => `O produto “${name}” será excluído permanentemente. Essa ação não pode ser desfeita.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             'group-status-ativar': { title: 'Ativar este grupo?', message: (name) => `O grupo “${name}” voltará a ficar ativo no sistema.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
             'group-status-inativar': { title: 'Inativar este grupo?', message: (name) => `O grupo “${name}” ficará inativo no sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
             'group-delete': { title: 'Excluir este grupo?', message: (name) => `O grupo “${name}” será removido do sistema. (Não será excluído do WhatsApp).`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'group-sync-all': { title: 'Atualizar todos os grupos?', message: () => 'Uma tarefa de atualização de todos os grupos cadastrados será enviada para a fila da Central de Trabalho.', label: 'Sim, atualizar grupos', icon: 'ti-refresh', buttonIcon: 'ti-refresh', variant: 'primary' },
+            'job-reprocess': { title: 'Reprocessar tarefas com falha?', message: () => 'Todas as tarefas com status de falha serão reagendadas para execução imediata na fila.', label: 'Sim, reprocessar', icon: 'ti-reload', buttonIcon: 'ti-reload', variant: 'primary' },
+            'job-clear-completed': { title: 'Limpar tarefas concluídas?', message: () => 'O histórico de todas as tarefas concluídas será removido permanentemente.', label: 'Sim, limpar concluídas', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'job-delete-multiple': { title: 'Excluir tarefas selecionadas?', message: (count) => `Deseja realmente excluir as ${count} tarefas selecionadas que não estejam concluídas?`, label: 'Sim, excluir selecionadas', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'job-delete-single': { title: 'Excluir esta tarefa?', message: (id) => `A tarefa #${id} será removida da fila de trabalho permanentemente.`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'job-run-single': { title: 'Executar tarefa agora?', message: (id) => `A tarefa #${id} será executada imediatamente na Central de Trabalho.`, label: 'Sim, executar agora', icon: 'ti-player-play', buttonIcon: 'ti-player-play', variant: 'primary' },
             'image-delete': { title: 'Excluir imagem?', message: () => 'A imagem será removida do produto permanentemente. Essa ação não pode ser desfeita.', label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             logout: { title: 'Deseja realmente sair?', message: () => 'Sua sessão atual será encerrada no navegador com segurança.', label: 'Sim, sair agora', icon: 'ti-logout', buttonIcon: 'ti-logout', variant: 'danger' },
         };
@@ -289,6 +301,8 @@
                 return;
             }
             window.__pendingActionCallback = onConfirm;
+            window.__pendingActionType = actionType;
+            window.__pendingActionName = name;
             pendingActionForm = null;
             actionTitle.textContent = config.title;
             actionMessage.textContent = config.message(name || 'selecionado');
@@ -334,7 +348,16 @@
         confirmAction.addEventListener('click', () => {
             if (typeof window.__pendingActionCallback === 'function') {
                 const cb = window.__pendingActionCallback;
+                const actionType = window.__pendingActionType;
+                const name = window.__pendingActionName;
                 closeActionDialog();
+                if (actionType && actions[actionType]) {
+                    const config = actions[actionType];
+                    showProcessingOverlay(
+                        config.title.replace('?', ''),
+                        config.message(name || 'selecionado')
+                    );
+                }
                 cb();
                 return;
             }
@@ -522,19 +545,18 @@
         instanceEditor.addEventListener('submit', () => { instanceEditor.querySelector('button[type="submit"]').disabled = true; });
     }
 
-    const templateDialog = settings.querySelector('[data-template-dialog]');
+    const templateDialog = document.querySelector('[data-template-dialog]');
     const templateEditor = templateDialog?.querySelector('[data-template-editor]');
-    const openTemplate = settings.querySelector('[data-open-template]');
     const closeTemplate = templateDialog?.querySelector('[data-close-template]');
     const cancelTemplate = templateDialog?.querySelector('[data-cancel-template]');
     const modalTitle = templateDialog?.querySelector('[data-template-modal-title]');
 
-    if (templateDialog && templateEditor && openTemplate && closeTemplate && cancelTemplate) {
+    if (templateDialog && templateEditor && closeTemplate && cancelTemplate) {
         const nameInput = templateEditor.querySelector('[data-template-name]');
         const idInput = templateEditor.querySelector('[data-template-id]');
         const contentInput = templateEditor.querySelector('[data-template-content]');
         const bubbleText = templateDialog.querySelector('[data-template-bubble-text]');
-        const getBackgroundElements = () => [...settings.children].filter((el) => el !== templateDialog);
+        const getBackgroundElements = () => [...document.body.children].filter((el) => el !== templateDialog && !el.contains(templateDialog) && !el.matches('script, style, link'));
         let templateTrigger = null;
 
         const formatWhatsAppText = (text) => {
@@ -562,6 +584,16 @@
         const updatePreview = () => {
             if (!bubbleText) return;
             const raw = contentInput?.value || '';
+            
+            const imagePreview = templateDialog.querySelector('.bubble-image-preview');
+            const imagePreviewImg = imagePreview?.querySelector('img');
+            
+            if (imagePreview && imagePreviewImg) {
+                // Exibe imagem do produto no preview do WhatsApp
+                imagePreviewImg.src = 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
+                imagePreview.style.display = 'block';
+            }
+            
             if (!raw.trim()) {
                 bubbleText.innerHTML = 'Olá! Confira as novidades imperdíveis da nossa loja.';
                 return;
@@ -589,7 +621,6 @@
             updatePreview();
             templateDialog.hidden = false;
             templateDialog.setAttribute('aria-hidden', 'false');
-            getBackgroundElements().forEach((el) => el.setAttribute('inert', ''));
             document.body.style.overflow = 'hidden';
             window.requestAnimationFrame(() => {
                 templateDialog.classList.add('open');
@@ -600,7 +631,6 @@
         const closeTpl = () => {
             templateDialog.classList.remove('open');
             templateDialog.setAttribute('aria-hidden', 'true');
-            getBackgroundElements().forEach((el) => el.removeAttribute('inert'));
             document.body.style.overflow = '';
             window.setTimeout(() => {
                 templateDialog.hidden = true;
@@ -612,12 +642,21 @@
 
         contentInput?.addEventListener('input', updatePreview);
 
-        settings.querySelectorAll('[data-open-template]').forEach((button) => {
-            button.addEventListener('click', (e) => {
+        document.addEventListener('click', (e) => {
+            const openBtn = e.target.closest('[data-open-template]');
+            if (openBtn) {
                 e.preventDefault();
-                openTpl({}, e.currentTarget);
-            });
+                openTpl({}, openBtn);
+                return;
+            }
+            const editBtn = e.target.closest('[data-edit-template]');
+            if (editBtn) {
+                e.preventDefault();
+                openTpl(editBtn.dataset, editBtn);
+                return;
+            }
         });
+
         closeTemplate.addEventListener('click', (e) => {
             e.preventDefault();
             closeTpl();
@@ -631,13 +670,6 @@
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && templateDialog.classList.contains('open')) closeTpl();
-        });
-
-        settings.querySelectorAll('[data-edit-template]').forEach((button) => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                openTpl(button.dataset, e.currentTarget);
-            });
         });
 
         templateEditor.querySelectorAll('[data-insert-tag]').forEach((button) => {
@@ -680,7 +712,8 @@
             };
 
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     filterBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     applyTemplateFilter(btn.dataset.filter);
@@ -689,7 +722,8 @@
 
             const clearBtn = settings.querySelector('[data-templates-clear-filters]');
             if (clearBtn) {
-                clearBtn.addEventListener('click', () => {
+                clearBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     filterBtns.forEach(b => {
                         if (b.dataset.filter === 'all') {
                             b.classList.add('active');
@@ -812,7 +846,7 @@
         if (isEvolutionVisible()) scheduleInstanceStatusUpdate();
     }
 
-    const sendTestDialog = settings.querySelector('[data-send-test-dialog]');
+    const sendTestDialog = document.querySelector('[data-send-test-dialog]');
     const sendTestForm = sendTestDialog?.querySelector('[data-send-test-form]');
     const sendTestPhone = sendTestDialog?.querySelector('[data-send-test-phone]');
     const sendTestInstanceName = sendTestDialog?.querySelector('[data-send-test-instance-name]');
@@ -821,7 +855,6 @@
     const cancelSendTestButton = sendTestDialog?.querySelector('[data-cancel-send-test]');
     let sendTestTrigger = null;
     if (sendTestDialog && sendTestForm && sendTestPhone && sendTestInstanceName && sendTestInstance && closeSendTestButton && cancelSendTestButton) {
-        const backgroundElements = [...settings.children].filter((element) => element !== sendTestDialog);
         const closeSendTestDialog = () => {
             sendTestDialog.classList.remove('open');
             sendTestDialog.setAttribute('aria-hidden', 'true');
@@ -830,7 +863,9 @@
             sendTestForm.reset();
             sendTestTrigger?.focus();
         };
-        settings.querySelectorAll('[data-instance-send-test]').forEach((button) => button.addEventListener('click', () => {
+        document.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-instance-send-test]');
+            if (!button) return;
             sendTestTrigger = button;
             sendTestInstanceName.value = button.dataset.instanceName || '';
             sendTestInstance.textContent = button.dataset.instanceLabel || button.dataset.instanceName || 'esta instância';
@@ -840,7 +875,7 @@
             document.body.style.overflow = 'hidden';
             window.requestAnimationFrame(() => sendTestDialog.classList.add('open'));
             sendTestPhone.focus();
-        }));
+        });
         sendTestPhone.addEventListener('input', () => { sendTestPhone.value = formatPhone(sendTestPhone.value); });
         closeSendTestButton.addEventListener('click', closeSendTestDialog);
         cancelSendTestButton.addEventListener('click', closeSendTestDialog);
@@ -865,7 +900,7 @@
         });
     }
 
-    const qrDialog = settings.querySelector('[data-qr-dialog]');
+    const qrDialog = document.querySelector('[data-qr-dialog]');
     const closeQrButton = qrDialog?.querySelector('[data-close-qr]');
     const retryQrButton = qrDialog?.querySelector('[data-retry-qr]');
     const qrImage = qrDialog?.querySelector('[data-qr-image]');
@@ -958,7 +993,9 @@
             qrLastFocused?.focus();
             activeQrForm = null;
         };
-        settings.querySelectorAll('[data-qr-connect-form]').forEach((form) => form.addEventListener('submit', (event) => {
+        document.addEventListener('submit', (event) => {
+            const form = event.target.closest('[data-qr-connect-form]');
+            if (!form) return;
             event.preventDefault();
             activeQrForm = form;
             qrLastFocused = event.submitter;
@@ -969,7 +1006,7 @@
             window.requestAnimationFrame(() => qrDialog.classList.add('open'));
             closeQrButton.focus();
             requestQrCode(true, true);
-        }));
+        });
         retryQrButton.addEventListener('click', () => requestQrCode(true, false));
         closeQrButton.addEventListener('click', closeQrDialog);
         qrDialog.addEventListener('click', (event) => event.target === qrDialog && closeQrDialog());
@@ -1051,8 +1088,6 @@
                     const num = target.replace('card', '').replace('-icon', '');
                     const cardHeaderIcon = settings.querySelector(`[data-benefit-icon-preview="${num}"]`);
                     if (cardHeaderIcon) cardHeaderIcon.className = `ti ${value || 'ti-star'}`;
-                    const inputFieldIcon = settings.querySelector(`[data-input-icon-preview="${num}"]`);
-                    if (inputFieldIcon) inputFieldIcon.className = `ti ${value || 'ti-star'}`;
                 }
             });
         };
@@ -1066,19 +1101,20 @@
             return false;
         };
 
-        const mockupScreen = settings.querySelector('[data-mockup-screen]');
+        const mockupScreen = settings.querySelector('#lp_live_preview_container');
         const modelRadios = landingForm.querySelectorAll('[data-lp-model-radio]');
         const paletteRadios = landingForm.querySelectorAll('[data-lp-palette-radio]');
-        const bgAnimRadios = landingForm.querySelectorAll('[data-lp-bganim-radio]');
-        const btnAnimRadios = landingForm.querySelectorAll('[data-lp-btnanim-radio]');
+        const bgAnimRadios = landingForm.querySelectorAll('[data-lp-bg-radio]');
+        const btnAnimRadios = landingForm.querySelectorAll('[data-lp-btn-radio]');
 
         const updateModelAndPalettePreview = () => {
             const selectedModel = landingForm.querySelector('[data-lp-model-radio]:checked')?.value || 'model-1';
             const selectedPalette = landingForm.querySelector('[data-lp-palette-radio]:checked')?.value || 'palette-aurora';
-            const selectedBgAnim = landingForm.querySelector('[data-lp-bganim-radio]:checked')?.value || 'bg-particles';
-            const selectedBtnAnim = landingForm.querySelector('[data-lp-btnanim-radio]:checked')?.value || 'btn-pulse';
+            const selectedBgAnim = landingForm.querySelector('[data-lp-bg-radio]:checked')?.value || 'bg-particles';
+            const selectedBtnAnim = landingForm.querySelector('[data-lp-btn-radio]:checked')?.value || 'btn-pulse';
 
             if (mockupScreen) {
+                mockupScreen.className = 'mobile-screen-content';
                 mockupScreen.setAttribute('data-mockup-model', selectedModel);
                 mockupScreen.setAttribute('data-mockup-palette', selectedPalette);
                 mockupScreen.setAttribute('data-mockup-bganim', selectedBgAnim);
@@ -1136,16 +1172,17 @@
             landingSaveBar.hidden = !isLandingDirty();
         });
 
+        if (cancelLandingButton) {
+            cancelLandingButton.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+
         cancelLandingButton?.addEventListener('click', () => {
             landingForm.reset();
             updateLandingLivePreview();
             updateModelAndPalettePreview();
             landingSaveBar.hidden = true;
-        });
-
-        landingForm.addEventListener('submit', () => {
-            const submitBtn = landingSaveBar.querySelector('button[type="submit"]');
-            if (submitBtn) submitBtn.disabled = true;
         });
 
         // Uploader e Cropper de Imagem SEO / WhatsApp
@@ -1159,10 +1196,10 @@
         const whatsappPreviewImg = settings.querySelector('#whatsapp_preview_img');
 
         const cropperModal = document.getElementById('cropper_modal');
-        const cropperImage = document.getElementById('cropper_image');
+        const cropperImage = document.getElementById('cropper_image_element');
         const btnCloseCropper = document.getElementById('btn_close_cropper');
         const btnCancelCropper = document.getElementById('btn_cancel_cropper');
-        const btnApplyCropper = document.getElementById('btn_apply_cropper');
+        const btnApplyCropper = document.getElementById('btn_apply_crop');
 
         let cropperInstance = null;
         let flipX = 1;
@@ -1250,9 +1287,23 @@
                 seoBase64Input.value = croppedBase64;
                 seoActionInput.value = 'upload';
 
-                seoPreviewImg.src = croppedBase64;
-                if (whatsappPreviewImg) whatsappPreviewImg.src = croppedBase64;
-                if (ogThumbLabel) ogThumbLabel.textContent = 'Personalizada';
+                const seoPreviewImg = document.getElementById('seo_image_preview');
+                const seoPlaceholder = document.getElementById('seo_image_placeholder');
+                const ogPreviewImg = document.getElementById('og_card_preview_img');
+                const ogPlaceholder = document.getElementById('og_card_preview_placeholder');
+
+                if (seoPreviewImg) {
+                    seoPreviewImg.src = croppedBase64;
+                    seoPreviewImg.style.display = 'block';
+                }
+                if (seoPlaceholder) seoPlaceholder.style.display = 'none';
+
+                if (ogPreviewImg) {
+                    ogPreviewImg.src = croppedBase64;
+                    ogPreviewImg.style.display = 'block';
+                }
+                if (ogPlaceholder) ogPlaceholder.style.display = 'none';
+
                 if (btnRemoveSeo) btnRemoveSeo.style.display = 'inline-flex';
 
                 landingSaveBar.hidden = false;
@@ -1260,12 +1311,10 @@
             });
 
             // Controles da Toolbar do Cropper
-            const btnCropZoomIn = document.getElementById('btn_crop_zoom_in');
-            const btnCropZoomOut = document.getElementById('btn_crop_zoom_out');
-            const btnCropRotateLeft = document.getElementById('btn_crop_rotate_left');
-            const btnCropRotateRight = document.getElementById('btn_crop_rotate_right');
-            const btnCropFlipX = document.getElementById('btn_crop_flip_x');
-            const btnCropReset = document.getElementById('btn_crop_reset');
+            const btnCropZoomIn = document.getElementById('btn_cropper_zoom_in');
+            const btnCropZoomOut = document.getElementById('btn_cropper_zoom_out');
+            const btnCropRotateRight = document.getElementById('btn_cropper_rotate');
+            const btnCropReset = document.getElementById('btn_cropper_reset');
 
             btnCropZoomIn?.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1279,24 +1328,10 @@
                 cropperInstance?.zoom(-0.1);
             });
 
-            btnCropRotateLeft?.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                cropperInstance?.rotate(-90);
-            });
-
             btnCropRotateRight?.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 cropperInstance?.rotate(90);
-            });
-
-            btnCropFlipX?.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (!cropperInstance) return;
-                flipX = flipX === 1 ? -1 : 1;
-                cropperInstance.scaleX(flipX);
             });
 
             btnCropReset?.addEventListener('click', (e) => {
@@ -1308,12 +1343,26 @@
             });
 
             btnRemoveSeo?.addEventListener('click', () => {
-                const defaultSrc = seoPreviewImg.dataset.defaultSrc;
                 seoBase64Input.value = '';
                 seoActionInput.value = 'remove';
-                seoPreviewImg.src = defaultSrc;
-                if (whatsappPreviewImg) whatsappPreviewImg.src = defaultSrc;
-                if (ogThumbLabel) ogThumbLabel.textContent = 'Padrão (DI)';
+                
+                const seoPreviewImg = document.getElementById('seo_image_preview');
+                const seoPlaceholder = document.getElementById('seo_image_placeholder');
+                const ogPreviewImg = document.getElementById('og_card_preview_img');
+                const ogPlaceholder = document.getElementById('og_card_preview_placeholder');
+                
+                if (seoPreviewImg) {
+                    seoPreviewImg.src = '';
+                    seoPreviewImg.style.display = 'none';
+                }
+                if (seoPlaceholder) seoPlaceholder.style.display = 'flex';
+                
+                if (ogPreviewImg) {
+                    ogPreviewImg.src = '';
+                    ogPreviewImg.style.display = 'none';
+                }
+                if (ogPlaceholder) ogPlaceholder.style.display = 'flex';
+                
                 btnRemoveSeo.style.display = 'none';
                 landingSaveBar.hidden = false;
             });
@@ -1321,12 +1370,12 @@
     }
 
     // Modal Picker de Ícones para Benefícios da Landing Page
-    const iconPickerDialog = settings.querySelector('[data-icon-picker-dialog]');
-    const closeIconPicker = iconPickerDialog?.querySelector('[data-close-icon-picker]');
+    const iconPickerDialog = document.querySelector('[data-icon-picker-dialog]');
+    const closeIconPickers = iconPickerDialog?.querySelectorAll('[data-close-icon-picker]');
     const iconGrid = iconPickerDialog?.querySelector('[data-icon-grid]');
     const iconSearchInput = iconPickerDialog?.querySelector('[data-icon-search-input]');
 
-    if (iconPickerDialog && closeIconPicker && iconGrid && iconSearchInput) {
+    if (iconPickerDialog && iconGrid && iconSearchInput) {
         let currentBenefitTarget = null;
         let iconTriggerBtn = null;
 
@@ -1409,7 +1458,7 @@
         };
 
         // Escuta os botões que abrem o modal
-        settings.querySelectorAll('[data-open-icon-picker]').forEach(btn => {
+        document.querySelectorAll('[data-open-icon-picker]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -1419,9 +1468,11 @@
         });
 
         // Fechar modal
-        closeIconPicker.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeIconPickerModal();
+        closeIconPickers?.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeIconPickerModal();
+            });
         });
 
         iconPickerDialog.addEventListener('click', (e) => {
@@ -1459,13 +1510,7 @@
                 headerIcon.className = `ti ${iconClass}`;
             }
 
-            // 3. Atualizar o preview do input
-            const inputIcon = settings.querySelector(`[data-input-icon-preview="${currentBenefitTarget}"]`);
-            if (inputIcon) {
-                inputIcon.className = `ti ${iconClass}`;
-            }
-
-            // 4. Fechar o modal
+            // 3. Fechar o modal
             closeIconPickerModal();
         });
     }
@@ -1668,12 +1713,48 @@
         });
     });
 
+    // Máscaras Globais
+    document.querySelectorAll('[data-mask-phone]').forEach(input => {
+        input.addEventListener('input', () => {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.substring(0, 11);
+            if (v.length > 10) {
+                input.value = `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+            } else if (v.length > 6) {
+                input.value = `(${v.substring(0, 2)}) ${v.substring(2, 6)}-${v.substring(6)}`;
+            } else if (v.length > 2) {
+                input.value = `(${v.substring(0, 2)}) ${v.substring(2)}`;
+            } else if (v.length > 0) {
+                input.value = `(${v}`;
+            } else {
+                input.value = '';
+            }
+        });
+    });
+
+    document.querySelectorAll('.money-mask').forEach(input => {
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value === '') {
+                e.target.value = '';
+                return;
+            }
+            value = (parseInt(value, 10) / 100).toFixed(2);
+            value = value.replace('.', ',');
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            e.target.value = value;
+        });
+    });
+
     // =========================================================================
-    // MONITORAMENTO DE STATUS DO SISTEMA (BANCO DE DADOS & EVOLUTION API - 5s)
+    // MONITORAMENTO DE STATUS DO SISTEMA E FILA DE EXECUÇÃO
     // =========================================================================
     const statusPill = document.getElementById('system-status-pill');
     const statusDot = document.getElementById('system-status-dot');
     const statusText = document.getElementById('system-status-text');
+    const queuePill = document.getElementById('header-queue-pill');
+    const queueTotal = document.getElementById('header-queue-total');
+    const queueBreakdown = document.getElementById('header-queue-breakdown');
 
     if (statusPill && statusDot && statusText) {
         const healthUrl = statusPill.dataset.healthUrl || `${window.location.origin}/health/status`;
@@ -1702,6 +1783,22 @@
                 const evoConfigured = data.evolution?.configured === true;
                 const evoOnline = data.evolution?.online === true;
                 const defaultInstanceConnected = data.evolution?.default_instance_connected === true;
+
+                // Atualizar Fila de Execução (Pendentes, Processando, Falhas)
+                if (queuePill && data.queue) {
+                    const pending = data.queue.pending || 0;
+                    const processing = data.queue.processing || 0;
+                    const failed = data.queue.failed || 0;
+                    const totalActive = pending + processing + failed;
+
+                    if (queueTotal) queueTotal.textContent = totalActive;
+                    if (queueBreakdown) queueBreakdown.textContent = `(${pending}/${processing}/${failed})`;
+
+                    queuePill.title = `Fila de Execução: ${pending} pendente(s), ${processing} em execução, ${failed} falha(s)`;
+
+                    queuePill.classList.toggle('has-failed', failed > 0);
+                    queuePill.classList.toggle('is-processing', processing > 0 && failed === 0);
+                }
 
                 // Remover classes de alerta anteriores
                 statusDot.classList.remove('status-warning', 'status-danger');
@@ -1757,7 +1854,7 @@
         // Primeira checagem logo ao carregar
         checkSystemHealth();
 
-        // Checagem a cada 30 segundos
+        // Checagem periódica para atualizar status e fila
         window.setInterval(checkSystemHealth, 30000);
     }
 })();

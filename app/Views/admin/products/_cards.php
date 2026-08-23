@@ -143,7 +143,7 @@ $helperInitials = static function(string $name): string {
                     <?php endif; ?>
 
                     <?php if (\App\Libraries\UserPermissions::hasPermission('products', 'delete')): ?>
-                        <form action="<?= site_url('produtos/' . $product->id . '/excluir') ?>" method="post" data-confirm-action="delete" data-processing-title="Excluindo produto" data-processing-message="Removendo o produto do catálogo." style="margin:0; width:100%;">
+                        <form action="<?= site_url('produtos/' . $product->id . '/excluir') ?>" method="post" data-confirm-action="product-delete" data-action-name="<?= esc($product->name) ?>" data-processing-title="Excluindo produto" data-processing-message="Removendo o produto do catálogo." style="margin:0; width:100%;">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn-product-action action-danger" style="width:100%;">
                                 <span>Excluir</span>

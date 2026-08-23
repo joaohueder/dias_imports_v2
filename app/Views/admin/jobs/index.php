@@ -8,11 +8,11 @@
             <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: rgb(var(--foreground));">
                 <i class="ti ti-refresh rotate" style="color: var(--primary, #6366f1); font-size: 16px;"></i>
                 <span>Sincronização em Tempo Real</span>
+                <span style="color: rgb(var(--foreground-muted)); font-weight: 400; margin-left: 4px;">(atualiza em <strong id="refresh-countdown">30s</strong>)</span>
             </div>
-            <span style="font-size: 12px; color: rgb(var(--muted)); font-weight: 500;">Atualizando a cada 5 segundos</span>
         </div>
         <div style="height: 6px; background: rgba(99, 102, 241, 0.15); border-radius: 999px; overflow: hidden; position: relative;">
-            <div id="refresh-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 999px;"></div>
+            <div id="refresh-progress-bar" style="height: 100%; width: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 999px;"></div>
         </div>
     </div>
 
@@ -67,15 +67,8 @@
                 <p class="job-table-subtitle">Últimas 100 tarefas registradas no sistema.</p>
             </div>
             <div class="job-table-actions">
-                <form action="<?= site_url('central-trabalho/executar-agora') ?>" method="post" data-processing-title="Executando Tarefas" data-processing-message="Processando lote de tarefas da fila agora...">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="button primary">
-                        <i class="ti ti-player-play" aria-hidden="true"></i>
-                        <span>Executar Agora Manualmente</span>
-                    </button>
-                </form>
                 <?php if ($stats['failed'] > 0): ?>
-                <form action="<?= site_url('central-trabalho/reprocessar-falhas') ?>" method="post" data-processing-title="Reagendando" data-processing-message="Reenviando tarefas com falha para a fila...">
+                <form action="<?= site_url('central-trabalho/reprocessar-falhas') ?>" method="post" data-confirm-action="job-reprocess" data-processing-title="Reagendando" data-processing-message="Reenviando tarefas com falha para a fila...">
                     <?= csrf_field() ?>
                     <button type="submit" class="button secondary">
                         <i class="ti ti-reload" aria-hidden="true"></i>
@@ -84,7 +77,7 @@
                 </form>
                 <?php endif; ?>
                 <?php if ($stats['completed'] > 0): ?>
-                <form action="<?= site_url('central-trabalho/limpar-concluidas') ?>" method="post" data-processing-title="Limpando" data-processing-message="Removendo histórico concluído...">
+                <form action="<?= site_url('central-trabalho/limpar-concluidas') ?>" method="post" data-confirm-action="job-clear-completed" data-processing-title="Limpando" data-processing-message="Removendo histórico concluído...">
                     <?= csrf_field() ?>
                     <button type="submit" class="button outline">
                         <i class="ti ti-trash" aria-hidden="true"></i>
@@ -111,7 +104,7 @@
         </div>
 
         <!-- Tabela -->
-        <form id="form-delete-multiple-jobs" action="<?= site_url('central-trabalho/excluir-selecionados') ?>" method="post" onsubmit="return confirm('Deseja realmente excluir as tarefas selecionadas que não estejam concluídas?');">
+        <form id="form-delete-multiple-jobs" action="<?= site_url('central-trabalho/excluir-selecionados') ?>" method="post">
             <?= csrf_field() ?>
 
             <!-- Ações em Lote (oculta por padrão) -->
@@ -119,7 +112,7 @@
                 <div style="font-size: 13px; font-weight: 600; color: rgb(var(--foreground));">
                     <span id="selected-count">0</span> tarefa(s) selecionada(s)
                 </div>
-                <button type="submit" class="button danger" style="padding: 6px 14px; font-size: 13px;">
+                <button type="button" id="btn-batch-delete" class="button danger" style="padding: 6px 14px; font-size: 13px;">
                     <i class="ti ti-trash"></i>
                     <span>Excluir Selecionadas</span>
                 </button>
@@ -129,16 +122,16 @@
                 <table class="job-table" id="job-queue-table">
                     <thead>
                         <tr>
-                            <th style="width: 40px; text-align: center;">
+                            <th style="width: 36px; text-align: center;">
                                 <input type="checkbox" id="select-all-jobs" title="Selecionar todas tarefas não concluídas" style="cursor: pointer;">
                             </th>
-                            <th style="width: 70px;">ID</th>
-                            <th>Trabalho / Referência</th>
-                            <th>Status</th>
-                            <th>Horários (Agendamento / Conclusão)</th>
-                            <th style="text-align: center; width: 90px;">Tentativas</th>
-                            <th>Resultado / Mensagem</th>
-                            <th style="width: 50px; text-align: right;">Ações</th>
+                            <th style="width: 50px;">ID</th>
+                            <th style="width: 25%;">Trabalho / Referência</th>
+                            <th style="width: 110px;">Status</th>
+                            <th style="width: 150px;">Horários</th>
+                            <th style="text-align: center; width: 80px;">Tentativas</th>
+                            <th style="width: 28%;">Resultado</th>
+                            <th style="width: 100px; text-align: right; padding-right: 24px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="job-queue-tbody">
@@ -163,8 +156,8 @@
                                     </td>
                                     <td><span style="color: rgb(var(--muted)); font-weight: 600;">#<?= esc($item['id']) ?></span></td>
                                     <td>
-                                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                                            <strong style="color: rgb(var(--foreground)); font-size: 13px;">
+                                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                                            <strong style="color: rgb(var(--foreground)); font-size: 12px; font-weight: 600;">
                                                 <?php
                                                 if ($item['job_key'] === 'sync_whatsapp_groups') {
                                                     echo 'Atualizar Grupo WhatsApp';
@@ -173,9 +166,9 @@
                                                 }
                                                 ?>
                                             </strong>
-                                            <div style="display: inline-flex; align-items: center; gap: 6px;">
-                                                <span style="font-size: 11px; color: rgb(var(--muted));">Ref:</span>
-                                                <code style="background: rgb(var(--surface-secondary)); padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid rgb(var(--border)); font-weight: 600; color: rgb(var(--foreground));"><?= esc($item['item_reference'] ?: '-') ?></code>
+                                            <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px;">
+                                                <span style="color: rgb(var(--muted));">Ref:</span>
+                                                <span style="color: rgb(var(--foreground) / .85); font-weight: 500;"><?= esc($item['item_reference'] ?: '-') ?></span>
                                             </div>
                                         </div>
                                     </td>
@@ -191,39 +184,58 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: rgb(var(--muted));">
-                                            <div><strong style="color: rgb(var(--foreground) / .8);">Agendado:</strong> <?= esc($item['scheduled_at'] ? date('d/m/Y H:i:s', strtotime($item['scheduled_at'])) : '-') ?></div>
-                                            <div><strong style="color: rgb(var(--foreground) / .8);">Concluído:</strong> <?= esc($item['completed_at'] ? date('d/m/Y H:i:s', strtotime($item['completed_at'])) : '-') ?></div>
+                                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: rgb(var(--muted)); white-space: nowrap;">
+                                            <div><strong style="color: rgb(var(--foreground) / .8);">Agendado:</strong> <?= esc($item['scheduled_at'] ? date('d/m/Y H:i', strtotime($item['scheduled_at'])) : '-') ?></div>
+                                            <div><strong style="color: rgb(var(--foreground) / .8);">Concluído:</strong> <?= esc($item['completed_at'] ? date('d/m/Y H:i', strtotime($item['completed_at'])) : '-') ?></div>
                                         </div>
                                     </td>
                                     <td style="text-align: center;">
                                         <span style="display: inline-block; padding: 2px 8px; border-radius: 999px; background: rgb(var(--surface-secondary)); border: 1px solid rgb(var(--border)); font-size: 11px; font-weight: 700;"><?= esc($item['attempts']) ?></span>
                                     </td>
-                                    <td style="font-size: 12px;">
+                                    <td style="font-size: 12px; line-height: 1.4;">
                                         <?php if (!empty($item['error_message'])): ?>
                                             <?php if ($item['status'] === 'failed' || strpos(strtolower($item['error_message']), 'falha') !== false || strpos(strtolower($item['error_message']), 'erro') !== false): ?>
-                                                <span style="color: rgb(var(--danger)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes do erro" data-msg="<?= esc($item['error_message']) ?>" onclick="showJobResultModal(<?= esc($item['id']) ?>, this.getAttribute('data-msg'), 'failed')">
-                                                    <i class="ti ti-alert-circle"></i> Falha na execução <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i>
-                                                </span>
+                                                <div style="color: rgb(var(--danger)); display: flex; flex-direction: column; gap: 4px;">
+                                                    <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                                        <i class="ti ti-alert-circle"></i> Falha na execução
+                                                    </span>
+                                                    <span style="font-size: 11px; color: rgb(var(--muted)); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer;" title="Clique para ver detalhes do erro" data-msg="<?= esc($item['error_message']) ?>" onclick="showJobResultModal(<?= esc($item['id']) ?>, this.getAttribute('data-msg'), 'failed')">
+                                                        <?= esc($item['error_message']) ?>
+                                                    </span>
+                                                </div>
                                             <?php else: ?>
-                                                <span style="color: rgb(var(--success)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes do que foi feito" data-msg="<?= esc($item['error_message']) ?>" onclick="showJobResultModal(<?= esc($item['id']) ?>, this.getAttribute('data-msg'), 'completed')">
-                                                    <i class="ti ti-check"></i> Executado com sucesso <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i>
-                                                </span>
+                                                <div style="color: rgb(var(--success)); display: flex; flex-direction: column; gap: 4px;">
+                                                    <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600; cursor: pointer;" title="Clique para ver detalhes do que foi feito" data-msg="<?= esc($item['error_message']) ?>" onclick="showJobResultModal(<?= esc($item['id']) ?>, this.getAttribute('data-msg'), 'completed')">
+                                                        <i class="ti ti-check"></i> Executado com sucesso
+                                                    </span>
+                                                </div>
                                             <?php endif; ?>
                                         <?php elseif ($item['status'] === 'completed'): ?>
-                                            <span style="color: rgb(var(--success)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes" onclick="showJobResultModal(<?= esc($item['id']) ?>, 'Tarefa concluída com sucesso.', 'completed')">
-                                                <i class="ti ti-check"></i> Executado com sucesso <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i>
-                                            </span>
+                                            <div style="color: rgb(var(--success)); display: flex; flex-direction: column; gap: 4px;">
+                                                <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                                    <i class="ti ti-check"></i> Executado com sucesso
+                                                </span>
+                                                <span style="font-size: 11px; color: rgb(var(--muted)); cursor: pointer;" title="Clique para ver detalhes" onclick="showJobResultModal(<?= esc($item['id']) ?>, 'Tarefa concluída com sucesso.', 'completed')">
+                                                    Tarefa concluída com sucesso.
+                                                </span>
+                                            </div>
                                         <?php else: ?>
                                             <span style="color: rgb(var(--muted));">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td style="text-align: right;">
-                                        <?php if ($item['status'] !== 'completed' && \App\Libraries\UserPermissions::hasPermission('job_center', 'delete')): ?>
-                                            <button type="button" class="button danger" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Excluir Trabalho" onclick="deleteSingleJob('<?= esc($item['id']) ?>')">
-                                                <i class="ti ti-trash"></i>
-                                            </button>
-                                        <?php endif; ?>
+                                    <td style="text-align: right; padding-right: 24px;">
+                                        <div style="display: inline-flex; align-items: center; gap: 6px;">
+                                            <?php if ($item['status'] === 'pending' && \App\Libraries\UserPermissions::hasPermission('job_center', 'edit')): ?>
+                                                <button type="button" class="button primary" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Executar Agora" onclick="runSingleJob('<?= esc($item['id']) ?>')">
+                                                    <i class="ti ti-player-play"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                            <?php if ($item['status'] !== 'completed' && \App\Libraries\UserPermissions::hasPermission('job_center', 'delete')): ?>
+                                                <button type="button" class="button danger" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Excluir Trabalho" onclick="deleteSingleJob('<?= esc($item['id']) ?>')">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -406,12 +418,33 @@ function closeJobResultModal() {
 }
 
 function deleteSingleJob(id) {
-    if (!confirm('Tem certeza que deseja excluir este trabalho da fila?')) {
-        return;
+    const doSubmit = () => {
+        const form = document.getElementById('form-delete-single-job');
+        form.action = '<?= site_url('central-trabalho') ?>/' + id + '/excluir';
+        form.dataset.confirmAction = 'job-delete-single';
+        form.submit();
+    };
+
+    if (typeof window.triggerActionConfirm === 'function') {
+        window.triggerActionConfirm('job-delete-single', id, doSubmit);
+    } else if (confirm('Tem certeza que deseja excluir este trabalho da fila?')) {
+        doSubmit();
     }
-    const form = document.getElementById('form-delete-single-job');
-    form.action = '<?= site_url('central-trabalho') ?>/' + id + '/excluir';
-    form.submit();
+}
+
+function runSingleJob(id) {
+    const doSubmit = () => {
+        const form = document.getElementById('form-delete-single-job');
+        form.action = '<?= site_url('central-trabalho') ?>/' + id + '/executar';
+        form.dataset.confirmAction = 'job-run-single';
+        form.submit();
+    };
+
+    if (typeof window.triggerActionConfirm === 'function') {
+        window.triggerActionConfirm('job-run-single', id, doSubmit);
+    } else if (confirm('Deseja executar esta tarefa manualmente agora?')) {
+        doSubmit();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -458,6 +491,24 @@ document.addEventListener('DOMContentLoaded', function () {
         cb.addEventListener('change', updateBatchActions);
     });
 
+    const btnBatchDelete = document.getElementById('btn-batch-delete');
+    if (btnBatchDelete) {
+        btnBatchDelete.addEventListener('click', function() {
+            const checkedCount = document.querySelectorAll('.job-checkbox:checked').length;
+            if (checkedCount === 0) return;
+
+            const form = document.getElementById('form-delete-multiple-jobs');
+            form.dataset.confirmAction = 'job-delete-multiple';
+            if (typeof window.triggerActionConfirm === 'function') {
+                window.triggerActionConfirm('job-delete-multiple', checkedCount, () => {
+                    form.submit();
+                });
+            } else if (confirm(`Deseja realmente excluir as ${checkedCount} tarefas selecionadas que não estejam concluídas?`)) {
+                form.submit();
+            }
+        });
+    }
+
     filterPills.forEach(pill => {
         pill.addEventListener('click', function () {
             filterPills.forEach(p => p.classList.remove('active'));
@@ -495,26 +546,36 @@ document.addEventListener('DOMContentLoaded', function () {
         updateBatchActions();
     }
 
-    // Auto-atualização periódica a cada 5 segundos com barra de progresso suave
+    // Auto-atualização periódica a cada 30 segundos com barra de regressão suave
     const progressBar = document.getElementById('refresh-progress-bar');
-    const refreshInterval = 5000; // 5 segundos
-    const stepInterval = 50; // atualiza barra a cada 50ms
+    const countdownEl = document.getElementById('refresh-countdown');
+    const refreshInterval = 30000; // 30 segundos
+    const stepInterval = 100; // atualiza barra a cada 100ms
     let elapsed = 0;
     let progressTimer;
 
     function startProgress() {
         elapsed = 0;
-        if (progressBar) progressBar.style.width = '0%';
+        if (progressBar) progressBar.style.width = '100%';
+        if (countdownEl) countdownEl.innerText = '30s';
         
         clearInterval(progressTimer);
         progressTimer = setInterval(() => {
             elapsed += stepInterval;
-            const percentage = Math.min((elapsed / refreshInterval) * 100, 100);
+            const remaining = refreshInterval - elapsed;
+            const percentage = Math.max((remaining / refreshInterval) * 100, 0);
+            
             if (progressBar) progressBar.style.width = percentage + '%';
+            
+            if (countdownEl) {
+                const secondsLeft = Math.ceil(remaining / 1000);
+                countdownEl.innerText = secondsLeft + 's';
+            }
             
             if (elapsed >= refreshInterval) {
                 elapsed = 0;
-                if (progressBar) progressBar.style.width = '0%';
+                if (progressBar) progressBar.style.width = '100%';
+                if (countdownEl) countdownEl.innerText = '30s';
                 fetchFeed();
             }
         }, stepInterval);
@@ -579,38 +640,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 const safeErrorMsg = errorMsg.replace(/"/g, '&quot;');
                 const isError = item.status === 'failed' || errorMsg.toLowerCase().includes('falha') || errorMsg.toLowerCase().includes('erro');
                 if (isError) {
-                    resultHtml = `<span style="color: rgb(var(--danger)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes do erro" data-msg="${safeErrorMsg}" onclick="showJobResultModal(${item.id}, this.getAttribute('data-msg'), 'failed')"><i class="ti ti-alert-circle"></i> Falha na execução <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i></span>`;
+                    resultHtml = `
+                        <div style="color: rgb(var(--danger)); display: flex; flex-direction: column; gap: 4px;">
+                            <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+                                <i class="ti ti-alert-circle"></i> Falha na execução
+                            </span>
+                            <span style="font-size: 11px; color: rgb(var(--muted)); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer;" title="Clique para ver detalhes do erro" data-msg="${safeErrorMsg}" onclick="showJobResultModal(${item.id}, this.getAttribute('data-msg'), 'failed')">
+                                ${escapeHtml(errorMsg)}
+                            </span>
+                        </div>
+                    `;
                 } else {
-                    resultHtml = `<span style="color: rgb(var(--success)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes do que foi feito" data-msg="${safeErrorMsg}" onclick="showJobResultModal(${item.id}, this.getAttribute('data-msg'), 'completed')"><i class="ti ti-check"></i> Executado com sucesso <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i></span>`;
+                    resultHtml = `
+                        <div style="color: rgb(var(--success)); display: flex; flex-direction: column; gap: 4px;">
+                            <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600; cursor: pointer;" title="Clique para ver detalhes do que foi feito" data-msg="${safeErrorMsg}" onclick="showJobResultModal(${item.id}, this.getAttribute('data-msg'), 'completed')">
+                                <i class="ti ti-check"></i> Executado com sucesso
+                            </span>
+                        </div>
+                    `;
                 }
             } else if (item.status === 'completed') {
-                resultHtml = `<span style="color: rgb(var(--success)); display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="Clique para ver detalhes" onclick="showJobResultModal(${item.id}, 'Tarefa concluída com sucesso.', 'completed')"><i class="ti ti-check"></i> Executado com sucesso <i class="ti ti-chevron-right" style="font-size: 11px; opacity: 0.7;"></i></span>`;
+                resultHtml = `
+                    <div style="color: rgb(var(--success)); display: flex; flex-direction: column; gap: 4px;">
+                        <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600; cursor: pointer;" title="Clique para ver detalhes" onclick="showJobResultModal(${item.id}, 'Tarefa concluída com sucesso.', 'completed')">
+                            <i class="ti ti-check"></i> Executado com sucesso
+                        </span>
+                    </div>
+                `;
             }
 
             const checkboxHtml = item.status !== 'completed' 
                 ? `<input type="checkbox" name="ids[]" value="${item.id}" class="job-checkbox" style="cursor: pointer;">`
                 : `<span title="Concluídos não podem ser selecionados" style="color: rgb(var(--muted)); font-size: 11px;">-</span>`;
 
-            const actionHtml = (item.status !== 'completed')
-                ? `<button type="button" class="button danger" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Excluir Trabalho" onclick="deleteSingleJob('${item.id}')"><i class="ti ti-trash"></i></button>`
-                : '';
+            let actionHtml = '<div style="display: inline-flex; align-items: center; gap: 6px;">';
+            if (item.status === 'pending') {
+                actionHtml += `<button type="button" class="button primary" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Executar Agora" onclick="runSingleJob('${item.id}')"><i class="ti ti-player-play"></i></button>`;
+            }
+            if (item.status !== 'completed') {
+                actionHtml += `<button type="button" class="button danger" style="padding: 4px 8px; min-height: unset; font-size: 12px;" title="Excluir Trabalho" onclick="deleteSingleJob('${item.id}')"><i class="ti ti-trash"></i></button>`;
+            }
+            actionHtml += '</div>';
 
             html += `
                 <tr data-job-row data-search-text="${escapeHtml(searchText)}" data-status="${escapeHtml(item.status)}">
                     <td style="text-align: center;">${checkboxHtml}</td>
                     <td><span style="color: rgb(var(--muted)); font-weight: 600;">#${item.id}</span></td>
                     <td>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <strong style="color: rgb(var(--foreground)); font-size: 13px;">${jobTitle}</strong>
-                            <div style="display: inline-flex; align-items: center; gap: 6px;">
-                                <span style="font-size: 11px; color: rgb(var(--muted));">Ref:</span>
-                                <code style="background: rgb(var(--surface-secondary)); padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid rgb(var(--border)); font-weight: 600; color: rgb(var(--foreground));">${ref}</code>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <strong style="color: rgb(var(--foreground)); font-size: 12px; font-weight: 600;">${jobTitle}</strong>
+                            <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px;">
+                                <span style="color: rgb(var(--muted));">Ref:</span>
+                                <span style="color: rgb(var(--foreground) / .85); font-weight: 500;">${ref}</span>
                             </div>
                         </div>
                     </td>
                     <td>${renderBadge(item.status)}</td>
                     <td>
-                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: rgb(var(--muted));">
+                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: rgb(var(--muted)); white-space: nowrap;">
                             <div><strong style="color: rgb(var(--foreground) / .8);">Agendado:</strong> ${formatDate(item.scheduled_at)}</div>
                             <div><strong style="color: rgb(var(--foreground) / .8);">Concluído:</strong> ${formatDate(item.completed_at)}</div>
                         </div>
@@ -618,8 +705,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td style="text-align: center;">
                         <span style="display: inline-block; padding: 2px 8px; border-radius: 999px; background: rgb(var(--surface-secondary)); border: 1px solid rgb(var(--border)); font-size: 11px; font-weight: 700;">${item.attempts}</span>
                     </td>
-                    <td style="font-size: 12px;">${resultHtml}</td>
-                    <td style="text-align: right;">${actionHtml}</td>
+                    <td style="font-size: 12px; line-height: 1.4;">${resultHtml}</td>
+                    <td style="text-align: right; padding-right: 24px;">${actionHtml}</td>
                 </tr>
             `;
         });

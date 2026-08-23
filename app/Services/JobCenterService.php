@@ -109,6 +109,9 @@ class JobCenterService
      */
     public function processPendingQueue(int $limit = 50, ?callable $logger = null): array
     {
+        @ini_set('max_execution_time', '300');
+        @set_time_limit(300);
+
         $log = function (string $msg) use ($logger) {
             if ($logger) {
                 $logger($msg);
@@ -167,7 +170,8 @@ class JobCenterService
             return ['processed' => 0, 'failed' => 0];
         }
 
-        $log("Iniciando processamento de " . count($items) . " tarefas...");
+        $totalItems = count($items);
+        $log("Selecionado(s) {$totalItems} registro(s) para execução.");
 
         // Pré-marcar todos os itens selecionados como "processing" para evitar concorrência
         $itemIds = array_column($items, 'id');
@@ -176,10 +180,12 @@ class JobCenterService
             'started_at' => date('Y-m-d H:i:s'),
         ])->update();
 
+        $currentIndex = 0;
         foreach ($items as $item) {
+            $currentIndex++;
             $jobConfig = $jobsConfig[$item['job_key']] ?? null;
             if ($jobConfig && empty($jobConfig['is_active'])) {
-                $log("Job {$item['job_key']} está inativo. Pulando item #{$item['id']}.");
+                $log("[{$currentIndex}/{$totalItems}] Job {$item['job_key']} está inativo. Pulando item #{$item['id']}.");
                 // Retorna para pendente se o job estiver inativo
                 $this->queueModel->update($item['id'], ['status' => 'pending']);
                 continue;
@@ -192,7 +198,8 @@ class JobCenterService
                 'attempts' => $currentAttempts,
             ]);
 
-            $log("Processando tarefa #{$item['id']} ({$item['job_key']} - tentativa {$currentAttempts}/3 - ref: {$item['item_reference']})...");
+            $jobName = $jobConfig['name'] ?? $item['job_key'];
+            $log("[{$currentIndex}/{$totalItems}] Executando: {$jobName} - ref: {$item['item_reference']} (tentativa {$currentAttempts}/3)...");
 
             // Intervalo randomizado configurado
             $minDelay = (int) ($jobConfig['min_delay_seconds'] ?? 5);
@@ -203,7 +210,7 @@ class JobCenterService
 
             if ($minDelay > 0) {
                 $delay = random_int($minDelay, $maxDelay);
-                $log("Aguardando intervalo seguro randomizado de {$delay}s antes da execução...");
+                $log("[{$currentIndex}/{$totalItems}] Aguardando intervalo anti-bloqueio de {$delay}s...");
                 sleep($delay);
             }
 
@@ -230,8 +237,9 @@ class JobCenterService
                     'error_message' => $resultMsg,
                 ]);
                 $processed++;
-                $log("Tarefa #{$item['id']} concluída: " . ($resultMsg ?? 'Sucesso'));
+                $log("[{$currentIndex}/{$totalItems}] Resultado: SUCESSO - " . ($resultMsg ?? 'OK'));
             } else {
+                $errorDetail = $resultMsg ?? 'Erro desconhecido';
                 // Se falhar e ainda tiver menos de 3 tentativas, volta para pendente com retry agendado
                 if ($currentAttempts < 3) {
                     $retryDelay = random_int($minDelay, $maxDelay);
@@ -240,17 +248,17 @@ class JobCenterService
                     $this->queueModel->update($item['id'], [
                         'status'        => 'pending',
                         'scheduled_at'  => $nextSchedule,
-                        'error_message' => "Tentativa {$currentAttempts}/3 falhou: " . ($resultMsg ?? 'Erro desconhecido'),
+                        'error_message' => "Tentativa {$currentAttempts}/3 falhou: " . $errorDetail,
                     ]);
-                    $log("Tarefa #{$item['id']} falhou na tentativa {$currentAttempts}/3. Reagendada para {$nextSchedule} como pendente.");
+                    $log("[{$currentIndex}/{$totalItems}] Resultado: FALHA ({$currentAttempts}/3) - Motivo: {$errorDetail} -> Reagendado para {$nextSchedule}");
                 } else {
                     $this->queueModel->update($item['id'], [
                         'status'        => 'failed',
                         'completed_at'  => date('Y-m-d H:i:s'),
-                        'error_message' => "Falha definitiva após 3 tentativas: " . ($resultMsg ?? 'Erro desconhecido'),
+                        'error_message' => "Falha definitiva após 3 tentativas: " . $errorDetail,
                     ]);
                     $failed++;
-                    $log("Tarefa #{$item['id']} FALHOU definitivamente após 3 tentativas: " . ($resultMsg ?? 'Erro'));
+                    $log("[{$currentIndex}/{$totalItems}] Resultado: FALHA DEFINITIVA - Motivo: {$errorDetail}");
                 }
             }
         }
@@ -283,23 +291,55 @@ class JobCenterService
 
         $evolutionService = new EvolutionApiService();
         $settings = $evolutionService->getSettings();
-        $instanceName = trim((string) ($group['instance_name'] ?? $settings['default_instance_name'] ?? ''));
+        $defaultInstance = trim((string) ($settings['default_instance_name'] ?? ''));
 
-        if ($instanceName === '') {
+        // Se o grupo tem instância gravada, verificamos se ela é válida; caso contrário usamos a padrão ou conectada
+        $instanceName = trim((string) ($group['instance_name'] ?? ''));
+
+        // Valida se a instância especificada ainda existe / está acessível na Evolution API
+        $validInstance = false;
+        try {
             $instances = $evolutionService->fetchInstances();
+            $connectedInstance = '';
             foreach ($instances as $inst) {
-                if (!empty($inst['connected'])) {
-                    $instanceName = $inst['name'];
-                    break;
+                if ($instanceName !== '' && $inst['name'] === $instanceName) {
+                    $validInstance = true;
+                }
+                if (!empty($inst['connected']) && $connectedInstance === '') {
+                    $connectedInstance = $inst['name'];
                 }
             }
-            if ($instanceName === '' && !empty($instances[0]['name'])) {
-                $instanceName = $instances[0]['name'];
+
+            // Se a instância gravada no grupo não existe mais na Evolution API, faz fallback
+            if (!$validInstance) {
+                if ($defaultInstance !== '') {
+                    // Verifica se a padrão existe
+                    $defaultExists = false;
+                    foreach ($instances as $inst) {
+                        if ($inst['name'] === $defaultInstance) {
+                            $defaultExists = true;
+                            break;
+                        }
+                    }
+                    $instanceName = $defaultExists ? $defaultInstance : $connectedInstance;
+                } else {
+                    $instanceName = $connectedInstance !== '' ? $connectedInstance : ($instances[0]['name'] ?? '');
+                }
+
+                // Atualiza o grupo no banco com a instância válida corrigida
+                if ($instanceName !== '' && $instanceName !== ($group['instance_name'] ?? '')) {
+                    $groupModel->update($group['id'], ['instance_name' => $instanceName]);
+                }
+            }
+        } catch (\Throwable $e) {
+            // Em caso de erro na checagem, tenta usar a padrão se houver
+            if ($instanceName === '') {
+                $instanceName = $defaultInstance;
             }
         }
 
         if ($instanceName === '') {
-            return ['success' => false, 'message' => 'Nenhuma instância da Evolution API conectada ou informada.'];
+            return ['success' => false, 'message' => 'Nenhuma instância da Evolution API conectada ou encontrada.'];
         }
 
         $remoteGroups = $evolutionService->fetchAllGroups($instanceName, true);

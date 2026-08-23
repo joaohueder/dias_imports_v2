@@ -41,13 +41,13 @@
         ),
       ),
     ),
-    'Helpers/filesystem_helper' => 
+    'Config/Events.php' => 
     array (
       'php' => 
       array (
         1 => 
         array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\filesystem_helper.php',
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Events.php',
         ),
       ),
     ),
@@ -58,26 +58,6 @@
         1 => 
         array (
           0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\array_helper.php',
-        ),
-      ),
-    ),
-    'Config/Routes.php' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Routes.php',
-        ),
-      ),
-    ),
-    'Config/Events.php' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Events.php',
         ),
       ),
     ),
@@ -92,13 +72,13 @@
         ),
       ),
     ),
-    'Helpers/cookie_helper' => 
+    'Config/Routes.php' => 
     array (
       'php' => 
       array (
         1 => 
         array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\cookie_helper.php',
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Routes.php',
         ),
       ),
     ),
@@ -112,6 +92,16 @@
         ),
       ),
     ),
+    'Helpers/filesystem_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\filesystem_helper.php',
+        ),
+      ),
+    ),
     'Helpers/security_helper' => 
     array (
       'php' => 
@@ -119,26 +109,6 @@
         1 => 
         array (
           0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\security_helper.php',
-        ),
-      ),
-    ),
-    'Helpers/text_helper' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\text_helper.php',
-        ),
-      ),
-    ),
-    'Language/en/Security.php' => 
-    array (
-      'php' => 
-      array (
-        0 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Security.php',
         ),
       ),
     ),
@@ -162,23 +132,43 @@
         ),
       ),
     ),
-    'Language/en/HTTP.php' => 
+    'Helpers/text_helper' => 
     array (
       'php' => 
       array (
-        0 => 
+        1 => 
         array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\HTTP.php',
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\text_helper.php',
         ),
       ),
     ),
-    'Language/en/Errors.php' => 
+    'Helpers/cookie_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\cookie_helper.php',
+        ),
+      ),
+    ),
+    'Helpers/inflector_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\inflector_helper.php',
+        ),
+      ),
+    ),
+    'Language/en/CLI.php' => 
     array (
       'php' => 
       array (
         0 => 
         array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Errors.php',
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\CLI.php',
         ),
       ),
     ),
@@ -192,14 +182,13 @@
         ),
       ),
     ),
-    'Language/en/Validation.php' => 
+    'Language/en/Errors.php' => 
     array (
       'php' => 
       array (
         0 => 
         array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Validation.php',
-          1 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Language\\en\\Validation.php',
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Errors.php',
         ),
       ),
     ),
@@ -209,7 +198,6 @@
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Services.php' => 'Config\\Services',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ProcessJobs.php' => 'App\\Commands\\ProcessJobs',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ResetAdminPassword.php' => 'App\\Commands\\ResetAdminPassword',
-    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\TestLoginAuth.php' => 'App\\Commands\\TestLoginAuth',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\ClearCache.php' => 'CodeIgniter\\Commands\\Cache\\ClearCache',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\InfoCache.php' => 'CodeIgniter\\Commands\\Cache\\InfoCache',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\CreateDatabase.php' => 'CodeIgniter\\Commands\\Database\\CreateDatabase',
@@ -274,78 +262,6 @@
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerInstall.php' => 'CodeIgniter\\Commands\\Worker\\WorkerInstall',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerUninstall.php' => 'CodeIgniter\\Commands\\Worker\\WorkerUninstall',
   ),
-  'listFiles' => 
-  array (
-    'Commands/' => 
-    array (
-      0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ProcessJobs.php',
-      1 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ResetAdminPassword.php',
-      2 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\TestLoginAuth.php',
-      3 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\ClearCache.php',
-      4 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\InfoCache.php',
-      5 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\CreateDatabase.php',
-      6 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\Migrate.php',
-      7 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateRefresh.php',
-      8 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateRollback.php',
-      9 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateStatus.php',
-      10 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\Seed.php',
-      11 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\ShowTableInfo.php',
-      12 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Encryption\\GenerateKey.php',
-      13 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\CellGenerator.php',
-      14 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\CommandGenerator.php',
-      15 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ConfigGenerator.php',
-      16 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ControllerGenerator.php',
-      17 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\EntityGenerator.php',
-      18 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\FilterGenerator.php',
-      19 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\MigrationGenerator.php',
-      20 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ModelGenerator.php',
-      21 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ScaffoldGenerator.php',
-      22 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\SeederGenerator.php',
-      23 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\TestGenerator.php',
-      24 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\TransformerGenerator.php',
-      25 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ValidationGenerator.php',
-      26 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\cell.tpl.php',
-      27 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\cell_view.tpl.php',
-      28 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\command.tpl.php',
-      29 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\config.tpl.php',
-      30 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\controller.tpl.php',
-      31 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\entity.tpl.php',
-      32 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\filter.tpl.php',
-      33 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\migration.tpl.php',
-      34 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\model.tpl.php',
-      35 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\seeder.tpl.php',
-      36 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\test.tpl.php',
-      37 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\transformer.tpl.php',
-      38 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\validation.tpl.php',
-      39 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Help.php',
-      40 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Housekeeping\\ClearDebugbar.php',
-      41 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Housekeeping\\ClearLogs.php',
-      42 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\ListCommands.php',
-      43 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Server\\Serve.php',
-      44 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Translation\\LocalizationFinder.php',
-      45 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Translation\\LocalizationSync.php',
-      46 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\ConfigCheck.php',
-      47 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Environment.php',
-      48 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\FilterCheck.php',
-      49 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Namespaces.php',
-      50 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Optimize.php',
-      51 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\PhpIniCheck.php',
-      52 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Publish.php',
-      53 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes.php',
-      54 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouteCollector.php',
-      55 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouterImproved\\AutoRouteCollector.php',
-      56 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouterImproved\\ControllerMethodReader.php',
-      57 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\ControllerFinder.php',
-      58 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\ControllerMethodReader.php',
-      59 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\FilterCollector.php',
-      60 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\FilterFinder.php',
-      61 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\SampleURIGenerator.php',
-      62 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\Views\\Caddyfile.tpl',
-      63 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\Views\\frankenphp-worker.php.tpl',
-      64 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerInstall.php',
-      65 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerUninstall.php',
-    ),
-  ),
   'getClassname' => 
   array (
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Config\\Filters.php' => 'Config\\Filters',
@@ -365,6 +281,88 @@
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-141037_CreateWhatsappGroupsTable.php' => 'App\\Database\\Migrations\\CreateWhatsappGroupsTable',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-150000_CreateJobCenterTables.php' => 'App\\Database\\Migrations\\CreateJobCenterTables',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-221009_CreateProductsTable.php' => 'App\\Database\\Migrations\\CreateProductsTable',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-192524_AddFaqAndFeaturesToProducts.php' => 'App\\Database\\Migrations\\AddFaqAndFeaturesToProducts',
+  ),
+  'listFiles' => 
+  array (
+    'Commands/' => 
+    array (
+      0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ProcessJobs.php',
+      1 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Commands\\ResetAdminPassword.php',
+      2 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\ClearCache.php',
+      3 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Cache\\InfoCache.php',
+      4 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\CreateDatabase.php',
+      5 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\Migrate.php',
+      6 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateRefresh.php',
+      7 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateRollback.php',
+      8 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\MigrateStatus.php',
+      9 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\Seed.php',
+      10 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Database\\ShowTableInfo.php',
+      11 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Encryption\\GenerateKey.php',
+      12 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\CellGenerator.php',
+      13 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\CommandGenerator.php',
+      14 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ConfigGenerator.php',
+      15 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ControllerGenerator.php',
+      16 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\EntityGenerator.php',
+      17 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\FilterGenerator.php',
+      18 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\MigrationGenerator.php',
+      19 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ModelGenerator.php',
+      20 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ScaffoldGenerator.php',
+      21 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\SeederGenerator.php',
+      22 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\TestGenerator.php',
+      23 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\TransformerGenerator.php',
+      24 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\ValidationGenerator.php',
+      25 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\cell.tpl.php',
+      26 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\cell_view.tpl.php',
+      27 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\command.tpl.php',
+      28 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\config.tpl.php',
+      29 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\controller.tpl.php',
+      30 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\entity.tpl.php',
+      31 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\filter.tpl.php',
+      32 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\migration.tpl.php',
+      33 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\model.tpl.php',
+      34 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\seeder.tpl.php',
+      35 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\test.tpl.php',
+      36 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\transformer.tpl.php',
+      37 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Generators\\Views\\validation.tpl.php',
+      38 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Help.php',
+      39 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Housekeeping\\ClearDebugbar.php',
+      40 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Housekeeping\\ClearLogs.php',
+      41 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\ListCommands.php',
+      42 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Server\\Serve.php',
+      43 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Translation\\LocalizationFinder.php',
+      44 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Translation\\LocalizationSync.php',
+      45 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\ConfigCheck.php',
+      46 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Environment.php',
+      47 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\FilterCheck.php',
+      48 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Namespaces.php',
+      49 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Optimize.php',
+      50 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\PhpIniCheck.php',
+      51 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Publish.php',
+      52 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes.php',
+      53 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouteCollector.php',
+      54 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouterImproved\\AutoRouteCollector.php',
+      55 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\AutoRouterImproved\\ControllerMethodReader.php',
+      56 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\ControllerFinder.php',
+      57 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\ControllerMethodReader.php',
+      58 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\FilterCollector.php',
+      59 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\FilterFinder.php',
+      60 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Utilities\\Routes\\SampleURIGenerator.php',
+      61 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\Views\\Caddyfile.tpl',
+      62 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\Views\\frankenphp-worker.php.tpl',
+      63 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerInstall.php',
+      64 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerUninstall.php',
+    ),
+  ),
+  'locateFile' => 
+  array (
+    'CodeIgniter\\Commands\\Generators\\Views\\migration.tpl.php' => 
+    array (
+      'Views' => 
+      array (
+        'php' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\/Commands/Generators/Views/migration.tpl.php',
+      ),
+    ),
   ),
   'listNamespaceFiles' => 
   array (
@@ -387,6 +385,7 @@
         12 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-141037_CreateWhatsappGroupsTable.php',
         13 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-150000_CreateJobCenterTables.php',
         14 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-221009_CreateProductsTable.php',
+        15 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-192524_AddFaqAndFeaturesToProducts.php',
       ),
     ),
   ),

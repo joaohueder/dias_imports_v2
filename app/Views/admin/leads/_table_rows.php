@@ -98,7 +98,7 @@
                     <?php if (\App\Libraries\UserPermissions::hasPermission('vip_leads', 'delete')): ?>
                         <form action="<?= site_url('leads-vip/' . $lead['id'] . '/excluir') ?>" method="post" data-confirm-action="lead-delete" data-action-name="<?= esc($lead['name']) ?>" style="margin: 0;">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn-lead-action text-danger" title="Excluir contato">
+                            <button type="submit" class="btn-lead-action action-danger" title="Excluir contato">
                                 <i class="ti ti-trash" aria-hidden="true"></i>
                             </button>
                         </form>

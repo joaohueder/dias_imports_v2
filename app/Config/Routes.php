@@ -12,6 +12,9 @@ $routes->post('recarregar-permissoes', 'Auth::refreshPermissions', ['filter' => 
 $routes->get('leads', 'Landing::index');
 $routes->post('leads/capture', 'Landing::submitLead', ['filter' => 'csrf']);
 
+// Landing page pública do produto (slug)
+$routes->get('p/(:segment)', 'ProductLanding::show/$1');
+
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Home::index');
     $routes->get('health/status', 'Health::check');
@@ -52,6 +55,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('central-trabalho/reprocessar-falhas', 'JobCenter::retryFailed', ['filter' => ['permission:job_center,edit', 'csrf']]);
     $routes->post('central-trabalho/limpar-concluidas', 'JobCenter::clearCompleted', ['filter' => ['permission:job_center,delete', 'csrf']]);
     $routes->post('central-trabalho/executar-agora', 'JobCenter::runNow', ['filter' => ['permission:job_center,edit', 'csrf']]);
+    $routes->post('central-trabalho/(:num)/executar', 'JobCenter::runSingleJob/$1', ['filter' => ['permission:job_center,edit', 'csrf']]);
     $routes->post('central-trabalho/excluir-selecionados', 'JobCenter::deleteSelected', ['filter' => ['permission:job_center,delete', 'csrf']]);
     $routes->post('central-trabalho/(:num)/excluir', 'JobCenter::deleteJob/$1', ['filter' => ['permission:job_center,delete', 'csrf']]);
 
@@ -87,7 +91,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('configuracoes/modelos-mensagens', 'Home::saveMessageTemplate', ['filter' => ['permission:message_templates,create', 'csrf']]);
     $routes->post('configuracoes/modelos-mensagens/(:num)/status', 'Home::toggleMessageTemplate/$1', ['filter' => ['permission:message_templates,edit', 'csrf']]);
     $routes->post('configuracoes/modelos-mensagens/(:num)/excluir', 'Home::deleteMessageTemplate/$1', ['filter' => ['permission:message_templates,delete', 'csrf']]);
-    $routes->post('configuracoes/landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
+    $routes->get('landing-leads', 'Home::landingLeadsSettings', ['filter' => 'permission:landing_leads,view']);
+    $routes->post('landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
     $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
 });
 

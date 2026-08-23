@@ -453,7 +453,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnSyncGroups) {
-        btnSyncGroups.addEventListener('click', syncGroups);
+        btnSyncGroups.addEventListener('click', () => {
+            if (typeof window.triggerActionConfirm === 'function') {
+                window.triggerActionConfirm('group-sync-all', 'todos os grupos', () => {
+                    syncGroups();
+                });
+            } else {
+                syncGroups();
+            }
+        });
     }
 
     async function syncGroups() {

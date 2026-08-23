@@ -27,9 +27,19 @@ class ProductModel extends Model
         'headline',
         'subheadline',
         'button_text',
+        'cta_icon',
         'badge_text',
         'urgency_text',
         'benefits',
+        'shipping_info',
+        'payment_info',
+        'guarantee_info',
+        'about_title',
+        'about_content',
+        'about_cta_btn',
+        'faq',
+        'checkout_title',
+        'checkout_subtitle',
         'slug'
     ];
 
@@ -42,7 +52,8 @@ class ProductModel extends Model
         'promotional_price' => '?float',
         'active' => 'boolean',
         'meta_ads_active' => 'boolean',
-        'benefits' => '?json-array'
+        'benefits' => '?json-array',
+        'faq' => '?json-array'
     ];
 
     protected array $castHandlers = [];

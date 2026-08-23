@@ -56,6 +56,27 @@ class Health extends BaseController
             $evoMessage = $e->getMessage();
         }
 
+        $queueStats = [
+            'pending'    => 0,
+            'processing' => 0,
+            'failed'     => 0,
+            'completed'  => 0,
+            'total_active' => 0,
+        ];
+        try {
+            $queueModel = new \App\Models\SystemJobQueueModel();
+            $stats = $queueModel->getQueueStats();
+            $queueStats = [
+                'pending'      => (int) ($stats['pending'] ?? 0),
+                'processing'   => (int) ($stats['processing'] ?? 0),
+                'failed'       => (int) ($stats['failed'] ?? 0),
+                'completed'    => (int) ($stats['completed'] ?? 0),
+                'total_active' => ((int) ($stats['pending'] ?? 0)) + ((int) ($stats['processing'] ?? 0)) + ((int) ($stats['failed'] ?? 0)),
+            ];
+        } catch (Throwable $e) {
+            // Em caso de erro na tabela, mantém zerado
+        }
+
         $allOk = $dbStatus && ($evoConfigured ? $evoStatus : true);
 
         return $this->response
@@ -72,6 +93,7 @@ class Health extends BaseController
                     'message' => $evoMessage,
                     'default_instance_connected' => $defaultInstanceConnected,
                 ],
+                'queue' => $queueStats,
                 'timestamp' => time(),
             ]);
     }

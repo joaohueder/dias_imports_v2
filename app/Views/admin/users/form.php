@@ -185,7 +185,7 @@ $isActive = (bool) old('is_active', $user['is_active'] ?? 1);
                 <span>Revise as permissões e dados antes de salvar.</span>
             </p>
             <div class="save-actions">
-                <a href="<?= site_url('usuarios') ?>" class="button secondary">Cancelar</a>
+                <button type="button" class="button secondary" data-cancel-form>Cancelar</button>
                 <button class="button primary" type="submit">
                     <i class="ti ti-device-floppy" aria-hidden="true"></i>
                     <span>Salvar Alterações</span>

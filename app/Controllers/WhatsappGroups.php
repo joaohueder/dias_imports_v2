@@ -237,7 +237,7 @@ class WhatsappGroups extends BaseController
             return $this->response->setJSON([
                 'success' => true,
                 'message' => $result['message'],
-                'redirect' => site_url('central-trabalho'),
+                'redirect' => site_url('grupos-whatsapp'),
             ]);
         } catch (Throwable $e) {
             return $this->response->setJSON([

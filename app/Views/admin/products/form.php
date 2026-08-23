@@ -20,7 +20,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
         <?= csrf_field() ?>
 
         <!-- Tabs Navigation -->
-        <div class="settings-tabs">
+        <div class="settings-tabs" style="flex-direction: row; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; border-bottom: 1px solid rgb(var(--border)); margin-bottom: 16px;">
             <button type="button" class="settings-tab active" data-tab-target="tab-info">Informações do Produto</button>
             <button type="button" class="settings-tab" data-tab-target="tab-images">Imagens</button>
             <button type="button" class="settings-tab" data-tab-target="tab-destination">Destino</button>
@@ -162,158 +162,592 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
 
         <!-- Tab Content: Landing Page -->
         <div class="settings-tab-panel" id="tab-landing" hidden>
-            <div style="display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start;">
-                
-                <!-- Configurações da LP -->
-                <section class="form-card-section" aria-labelledby="landing-page-title" style="margin: 0;">
-                    <h2 id="landing-page-title" class="section-card-title">Estilo e Conteúdo da Landing Page</h2>
+            <div style="display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; padding: 12px 0;">
+                <!-- Formulário de Configurações da Landing Page -->
+                <div class="landing-config-col">
 
-                    <div class="form-grid-account">
-                        <!-- Layout -->
-                        <div class="form-group col-full">
-                            <label>Modelo de Layout</label>
-                            <div class="micro-cards-grid">
-                                <?php
-                                $layouts = [
-                                    'oferta_direta' => ['icon' => 'ti-layout-bottombar', 'label' => 'Oferta Direta']
-                                ];
-                                $currentLayout = old('layout', $product->layout ?? 'oferta_direta');
-                                foreach ($layouts as $val => $info):
-                                ?>
-                                <label class="micro-card <?= $currentLayout === $val ? 'active' : '' ?>">
-                                    <input type="radio" name="layout" value="<?= $val ?>" <?= $currentLayout === $val ? 'checked' : '' ?> data-lp-preview-trigger style="display: none;">
-                                    <i class="ti <?= $info['icon'] ?>"></i>
-                                    <span><?= $info['label'] ?></span>
-                                </label>
-                                <?php endforeach; ?>
+                    <!-- 01 - MODELO VISUAL -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(99, 91, 255, 0.15); color: #635bff;"><i class="ti ti-template"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">01 - Modelos da Landing Page (6 Opções)</h3>
+                                <p class="settings-section-subtitle">Selecione a estrutura e experiência de conversão do produto. O mockup ao lado atualiza em tempo real.</p>
                             </div>
                         </div>
 
-                        <!-- Paleta -->
-                        <div class="form-group col-full">
-                            <label>Paleta de Cores</label>
-                            <div class="micro-cards-grid">
-                                <?php
-                                $palettes = [
-                                    'brasa' => ['color' => '#e11d48', 'label' => 'Brasa'],
-                                    'menta' => ['color' => '#10b981', 'label' => 'Menta'],
-                                    'noturno' => ['color' => '#6366f1', 'label' => 'Noturno'],
-                                    'aurora' => ['color' => '#a855f7', 'label' => 'Aurora'],
-                                    'areia' => ['color' => '#f59e0b', 'label' => 'Areia'],
-                                    'jade' => ['color' => '#14b8a6', 'label' => 'Jade']
-                                ];
-                                $currentPalette = old('color_palette', $product->color_palette ?? 'brasa');
-                                foreach ($palettes as $val => $info):
-                                ?>
-                                <label class="micro-card <?= $currentPalette === $val ? 'active' : '' ?>">
-                                    <input type="radio" name="color_palette" value="<?= $val ?>" <?= $currentPalette === $val ? 'checked' : '' ?> data-lp-preview-trigger style="display: none;">
-                                    <span class="color-swatch" style="background-color: <?= $info['color'] ?>;"></span>
-                                    <span><?= $info['label'] ?></span>
+                        <div class="template-models-grid">
+                            <?php
+                            $modelsList = [
+                                ['id' => 'model-1', 'name' => 'Oferta Direta & Hero', 'desc' => 'Estrutura clássica de alta conversão focada no produto e checkout imediato.', 'icon' => 'ti-layout-topbar', 'available' => true],
+                                ['id' => 'model-2', 'name' => 'Benefits & Prova', 'desc' => 'Foco ampliado em benefícios, diferenciais e confiança antes da compra.', 'icon' => 'ti-layout-list', 'available' => false],
+                                ['id' => 'model-3', 'name' => 'Minimal Compact', 'desc' => 'Visual limpo e direto, otimizado para navegação ultra-rápida com 1 polegar.', 'icon' => 'ti-pill', 'available' => false],
+                                ['id' => 'model-4', 'name' => 'Bento Box Modern', 'desc' => 'Blocos visuais modulares e modernos com hierarquia de informações clara.', 'icon' => 'ti-layout-grid', 'available' => false],
+                                ['id' => 'model-5', 'name' => 'Cyber Tech Glow', 'desc' => 'Estilo vibrante de alto impacto visual com contrastes marcantes.', 'icon' => 'ti-bolt', 'available' => false],
+                                ['id' => 'model-6', 'name' => 'Editorial Luxury', 'desc' => 'Estilo premium e sofisticado perfeito para perfumes e itens de luxo.', 'icon' => 'ti-crown', 'available' => false],
+                            ];
+                            $currentModel = old('layout', $product->layout ?? 'model-1');
+                            ?>
+                            <?php foreach ($modelsList as $m): ?>
+                                <label class="template-model-card <?= $currentModel === $m['id'] ? 'active' : '' ?> <?= !$m['available'] ? 'disabled' : '' ?>" <?= !$m['available'] ? 'style="opacity: 0.5; cursor: not-allowed;" title="Em breve"' : '' ?>>
+                                    <input type="radio" name="layout" value="<?= esc($m['id']) ?>" <?= $currentModel === $m['id'] ? 'checked' : '' ?> <?= !$m['available'] ? 'disabled' : '' ?> data-lp-model-radio>
+                                    <div class="template-card-inner">
+                                        <div class="template-card-icon"><i class="ti <?= esc($m['icon']) ?>"></i></div>
+                                        <div class="template-card-info">
+                                            <strong><?= esc($m['name']) ?> <?= !$m['available'] ? '<span class="badge" style="background: rgba(100, 116, 139, 0.15); color: #64748b; font-size: 9px; padding: 2px 4px; margin-left: 4px;">Em breve</span>' : '' ?></strong>
+                                            <p><?= esc($m['desc']) ?></p>
+                                        </div>
+                                    </div>
                                 </label>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-
-                        <!-- Animação Background -->
-                        <div class="form-group col-full">
-                            <label>Animação do Background</label>
-                            <div class="micro-cards-grid">
-                                <?php
-                                $bgAnims = [
-                                    'none' => ['icon' => 'ti-ban', 'label' => 'Sem animação'],
-                                    'particles' => ['icon' => 'ti-sparkles', 'label' => 'Partículas'],
-                                    'waves' => ['icon' => 'ti-ripple', 'label' => 'Ondas'],
-                                    'gradient' => ['icon' => 'ti-palette', 'label' => 'Gradiente'],
-                                    'grid' => ['icon' => 'ti-grid-dots', 'label' => 'Grid'],
-                                    'stars' => ['icon' => 'ti-stars', 'label' => 'Estrelas']
-                                ];
-                                $currentBgAnim = old('bg_animation', $product->bg_animation ?? 'none');
-                                foreach ($bgAnims as $val => $info):
-                                ?>
-                                <label class="micro-card <?= $currentBgAnim === $val ? 'active' : '' ?>">
-                                    <input type="radio" name="bg_animation" value="<?= $val ?>" <?= $currentBgAnim === $val ? 'checked' : '' ?> data-lp-preview-trigger style="display: none;">
-                                    <i class="ti <?= $info['icon'] ?>"></i>
-                                    <span><?= $info['label'] ?></span>
-                                </label>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-
-                        <!-- Animação Botões -->
-                        <div class="form-group col-full">
-                            <label>Animação dos Botões</label>
-                            <div class="micro-cards-grid">
-                                <?php
-                                $btnAnims = [
-                                    'pulse' => ['icon' => 'ti-activity', 'label' => 'Pulsar'],
-                                    'shake' => ['icon' => 'ti-bell-ringing', 'label' => 'Tremer'],
-                                    'glow' => ['icon' => 'ti-bulb', 'label' => 'Brilho'],
-                                    'bounce' => ['icon' => 'ti-arrow-bounce', 'label' => 'Pular'],
-                                    'slide' => ['icon' => 'ti-chevrons-right', 'label' => 'Deslizar'],
-                                    'none' => ['icon' => 'ti-ban', 'label' => 'Estático']
-                                ];
-                                $currentBtnAnim = old('btn_animation', $product->btn_animation ?? 'pulse');
-                                foreach ($btnAnims as $val => $info):
-                                ?>
-                                <label class="micro-card <?= $currentBtnAnim === $val ? 'active' : '' ?>">
-                                    <input type="radio" name="btn_animation" value="<?= $val ?>" <?= $currentBtnAnim === $val ? 'checked' : '' ?> data-lp-preview-trigger style="display: none;">
-                                    <i class="ti <?= $info['icon'] ?>"></i>
-                                    <span><?= $info['label'] ?></span>
-                                </label>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-
-                        <!-- Headline -->
-                        <div class="form-group col-full">
-                            <label for="headline">Headline Principal (Título de Impacto)</label>
-                            <input type="text" id="headline" name="headline" class="form-control" value="<?= esc(old('headline', $product->headline ?? '')) ?>" placeholder="Ex: Sinta o poder de uma fragrância inesquecível" data-lp-preview-trigger>
-                        </div>
-
-                        <!-- Subheadline -->
-                        <div class="form-group col-full">
-                            <label for="subheadline">Subheadline (Subtítulo explicativo)</label>
-                            <input type="text" id="subheadline" name="subheadline" class="form-control" value="<?= esc(old('subheadline', $product->subheadline ?? '')) ?>" placeholder="Ex: Perfume 100% original importado com fixação de até 12 horas." data-lp-preview-trigger>
-                        </div>
-
-                        <!-- Botão CTA -->
-                        <div class="form-group col-full">
-                            <label for="button_text">Texto do Botão (CTA)</label>
-                            <input type="text" id="button_text" name="button_text" class="form-control" value="<?= esc(old('button_text', $product->button_text ?? 'Garantir meu exemplar no WhatsApp')) ?>" data-lp-preview-trigger>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                </section>
 
-                <!-- Preview Mobile -->
-                <div class="lp-mobile-preview-container" style="position: sticky; top: 24px;">
-                    <div class="mobile-device-frame" style="width: 320px; height: 640px; background: #000; border-radius: 36px; border: 8px solid #1e2235; overflow: hidden; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                        <!-- Notch -->
-                        <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 24px; background: #1e2235; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10;"></div>
-                        
-                        <!-- Iframe for preview -->
-                        <iframe id="lp-preview-frame" src="about:blank" style="width: 100%; height: 100%; border: none; background: #fff;"></iframe>
-                        
-                        <!-- Loading overlay -->
-                        <div id="lp-preview-loader" style="position: absolute; inset: 0; background: rgba(15, 18, 29, 0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; z-index: 5; backdrop-filter: blur(4px);">
-                            <i class="ti ti-loader" style="font-size: 32px; animation: spin 1s linear infinite; margin-bottom: 12px;"></i>
-                            <span style="font-size: 13px; font-weight: 600;">Atualizando preview...</span>
+                    <!-- 02 - PALETAS DE CORES -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i class="ti ti-palette"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">02 - Paletas de Cores (6 Opções)</h3>
+                                <p class="settings-section-subtitle">Alterne as tonalidades, contraste dos botões e identidade visual.</p>
+                            </div>
+                        </div>
+
+                        <div class="color-palettes-grid">
+                            <?php
+                            $palettesList = [
+                                ['id' => 'palette-aurora', 'name' => 'Rubi & Rose (Padrão)', 'colors' => ['#9d174d', '#be185d'], 'desc' => 'Elegância & Perfumaria'],
+                                ['id' => 'palette-emerald', 'name' => 'Emerald Tech', 'colors' => ['#10b981', '#059669'], 'desc' => 'Verde WhatsApp VIP'],
+                                ['id' => 'palette-amber', 'name' => 'Amber Gold', 'colors' => ['#f59e0b', '#d97706'], 'desc' => 'Ouro & Luxo'],
+                                ['id' => 'palette-ocean', 'name' => 'Ocean Royal', 'colors' => ['#2563eb', '#1d4ed8'], 'desc' => 'Azul Confiança'],
+                                ['id' => 'palette-crimson', 'name' => 'Crimson Urgência', 'colors' => ['#dc2626', '#b91c1c'], 'desc' => 'Vermelho Alta Pressão'],
+                                ['id' => 'palette-obsidian', 'name' => 'Obsidian Dark', 'colors' => ['#0f172a', '#334155'], 'desc' => 'Minimalista Preto'],
+                            ];
+                            $currentPalette = old('color_palette', $product->color_palette ?? 'palette-aurora');
+                            if ($currentPalette === 'brasa') $currentPalette = 'palette-aurora';
+                            ?>
+                            <?php foreach ($palettesList as $p): ?>
+                                <label class="color-palette-card <?= $currentPalette === $p['id'] ? 'active' : '' ?>">
+                                    <input type="radio" name="color_palette" value="<?= esc($p['id']) ?>" <?= $currentPalette === $p['id'] ? 'checked' : '' ?> data-lp-palette-radio>
+                                    <div class="palette-card-inner">
+                                        <div class="palette-preview-dots">
+                                            <span style="background: <?= esc($p['colors'][0]) ?>;"></span>
+                                            <span style="background: <?= esc($p['colors'][1]) ?>;"></span>
+                                        </div>
+                                        <div class="palette-info">
+                                            <strong><?= esc($p['name']) ?></strong>
+                                            <small><?= esc($p['desc']) ?></small>
+                                        </div>
+                                    </div>
+                                </label>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    <div style="text-align: center; margin-top: 12px; color: #64748b; font-size: 12px; font-weight: 600;">
-                        <i class="ti ti-device-mobile"></i> Preview em tempo real
+
+                    <!-- 03 - CONFIGURAÇÃO DA CTA (ÍCONE, TEXTO E 6 MODELOS DE ANIMAÇÃO) -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i class="ti ti-click"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">03 - Configuração da CTA (Botão de Ação)</h3>
+                                <p class="settings-section-subtitle">Defina o ícone, texto do botão e a animação de alta conversão.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-account">
+                            <!-- Texto do Botão CTA Principal -->
+                            <div class="form-group">
+                                <label for="button_text">Texto do Botão CTA Principal</label>
+                                <input type="text" id="button_text" name="button_text" class="form-control" data-lp-input="button-text" value="<?= esc(old('button_text', $product->button_text ?? 'Quero aproveitar agora')) ?>" placeholder="Ex: Quero aproveitar agora">
+                            </div>
+
+                            <!-- Ícone do Botão CTA -->
+                            <div class="form-group">
+                                <label for="cta_icon">Ícone do Botão CTA</label>
+                                <?php
+                                $currentCtaIcon = old('cta_icon', $product->cta_icon ?? 'ti-arrow-narrow-right');
+                                $ctaIcons = [
+                                    ['id' => 'ti-arrow-narrow-right', 'name' => 'Seta para Direita (Clássica)', 'icon' => 'ti-arrow-narrow-right'],
+                                    ['id' => 'ti-brand-whatsapp', 'name' => 'WhatsApp Oficial', 'icon' => 'ti-brand-whatsapp'],
+                                    ['id' => 'ti-shopping-bag', 'name' => 'Sacola de Compras', 'icon' => 'ti-shopping-bag'],
+                                    ['id' => 'ti-sparkles', 'name' => 'Brilho / Especial', 'icon' => 'ti-sparkles'],
+                                    ['id' => 'ti-check', 'name' => 'Check / Concluído', 'icon' => 'ti-check'],
+                                    ['id' => 'ti-bolt', 'name' => 'Raio / Imediato', 'icon' => 'ti-bolt'],
+                                ];
+                                ?>
+                                <select id="cta_icon" name="cta_icon" class="form-select" data-lp-input="cta-icon">
+                                    <?php foreach ($ctaIcons as $ci): ?>
+                                        <option value="<?= esc($ci['id']) ?>" <?= $currentCtaIcon === $ci['id'] ? 'selected' : '' ?>>
+                                            <?= esc($ci['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Texto de Segurança / Microcopy -->
+                            <div class="form-group col-full">
+                                <label for="urgency_text">Microcopy de Apoio abaixo do Botão</label>
+                                <input type="text" id="urgency_text" name="urgency_text" class="form-control" data-lp-input="urgency-text" value="<?= esc(old('urgency_text', $product->urgency_text ?? 'Compra sem cadastro. Você fala direto com a loja.')) ?>" placeholder="Ex: Compra sem cadastro. Você fala direto com a loja.">
+                            </div>
+
+                            <!-- 6 Modelos de Animação do Botão CTA -->
+                            <div class="form-group col-full" style="margin-top: 6px;">
+                                <label style="margin-bottom: 8px; display: block; font-weight: 700; color: rgb(var(--foreground));">Animação do Botão CTA (6 Opções de Impacto)</label>
+                                <div class="template-models-grid">
+                                    <?php
+                                    $btnAnimations = [
+                                        ['id' => 'btn-pulse', 'name' => '1. Pulso / Batimento VIP', 'desc' => 'Escala suave periódica atraindo atenção sutil.', 'icon' => 'ti-heartbeat'],
+                                        ['id' => 'btn-shimmer', 'name' => '2. Brilho Shimmer', 'desc' => 'Feixe de luz varrendo o botão ciclicamente.', 'icon' => 'ti-sun'],
+                                        ['id' => 'btn-shake', 'name' => '3. Vibração Shake', 'desc' => 'Tremidinha sutil de alta conversão a cada 4s.', 'icon' => 'ti-arrows-shuffle'],
+                                        ['id' => 'btn-bounce', 'name' => '4. Salto Bounce', 'desc' => 'Leve salto vertical enfatizando a chamada.', 'icon' => 'ti-arrow-up-circle'],
+                                        ['id' => 'btn-glow', 'name' => '5. Glow Neon Fluido', 'desc' => 'Aura de sombra colorida pulsando ao redor.', 'icon' => 'ti-ripple'],
+                                        ['id' => 'btn-static', 'name' => '6. Estático Sofisticado', 'desc' => 'Sem animação contínua, elegante e sóbrio.', 'icon' => 'ti-player-pause'],
+                                    ];
+                                    $currentBtnAnim = old('btn_animation', $product->btn_animation ?? 'btn-pulse');
+                                    ?>
+                                    <?php foreach ($btnAnimations as $ba): ?>
+                                        <label class="template-model-card <?= $currentBtnAnim === $ba['id'] ? 'active' : '' ?>">
+                                            <input type="radio" name="btn_animation" value="<?= esc($ba['id']) ?>" <?= $currentBtnAnim === $ba['id'] ? 'checked' : '' ?> data-lp-btnanim-radio>
+                                            <div class="template-card-inner">
+                                                <div class="template-card-icon"><i class="ti <?= esc($ba['icon']) ?>"></i></div>
+                                                <div class="template-card-info">
+                                                    <strong><?= esc($ba['name']) ?></strong>
+                                                    <p><?= esc($ba['desc']) ?></p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 04 - CABEÇALHO E OFERTA PRINCIPAL -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(14, 165, 233, 0.15); color: #0ea5e9;"><i class="ti ti-layout-navbar"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">04 - Cabeçalho e Oferta Principal</h3>
+                                <p class="settings-section-subtitle">Defina o destaque superior, título e subtítulo de impacto da oferta.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-account">
+                            <!-- Badge Superior -->
+                            <div class="form-group col-full">
+                                <label for="badge_text">Texto da Badge / Destaque Superior</label>
+                                <input type="text" id="badge_text" name="badge_text" class="form-control" data-lp-input="badge" value="<?= esc(old('badge_text', $product->badge_text ?? '🔥 OFERTA EXCLUSIVA • PRONTA ENTREGA')) ?>" placeholder="Ex: 🔥 OFERTA EXCLUSIVA • PRONTA ENTREGA">
+                                <small class="form-help-text">Destaque chamativo que aparece no topo da página acima do título.</small>
+                            </div>
+
+                            <!-- Headline Principal -->
+                            <div class="form-group col-full">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                    <label for="headline" style="margin-bottom: 0;">Título Principal (Headline)</label>
+                                    <button type="button" id="btn-sync-headline" class="button secondary small" style="padding: 2px 8px; font-size: 11px; height: 26px; min-height: 26px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Copiar nome do produto para a headline">
+                                        <i class="ti ti-copy"></i>
+                                        <span>Copiar do Nome</span>
+                                    </button>
+                                </div>
+                                <input type="text" id="headline" name="headline" class="form-control" data-lp-input="headline" value="<?= esc(old('headline', $product->headline ?? '')) ?>" placeholder="Deixe em branco para usar o nome do produto">
+                                <small class="form-help-text">Título de impacto da oferta. Se vazio, utiliza o nome do produto.</small>
+                            </div>
+
+                            <!-- Subheadline -->
+                            <div class="form-group col-full">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                                    <label for="subheadline" style="margin-bottom: 0;">Subtítulo / Linha de Apoio</label>
+                                    <button type="button" id="btn-sync-subheadline" class="button secondary small" style="padding: 2px 8px; font-size: 11px; height: 26px; min-height: 26px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Copiar descrição do produto para o subtítulo">
+                                        <i class="ti ti-copy"></i>
+                                        <span>Copiar da Descrição</span>
+                                    </button>
+                                </div>
+                                <textarea id="subheadline" name="subheadline" class="form-control" data-lp-input="subheadline" rows="4" placeholder="Deixe em branco para usar a descrição resumida"><?= esc(old('subheadline', $product->subheadline ?? '')) ?></textarea>
+                                <small class="form-help-text">Aparece logo abaixo do título explicando a proposta de valor.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 05 - GARANTIAS E VANTAGENS RÁPIDAS -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i class="ti ti-shield-check"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">05 - Garantias e Vantagens Rápidas (3 Pontos)</h3>
+                                <p class="settings-section-subtitle">Destaque os 3 principais pilares de confiança para o cliente.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-account">
+                            <!-- Entrega / Envio -->
+                            <div class="form-group col-full">
+                                <label for="shipping_info">Ponto 1 (Entrega / Envio)</label>
+                                <input type="text" id="shipping_info" name="shipping_info" class="form-control" data-lp-input="shipping-info" value="<?= esc(old('shipping_info', $product->shipping_info ?? 'Entrega rápida em Barretos e região')) ?>" placeholder="Ex: Entrega rápida em Barretos e região">
+                            </div>
+
+                            <!-- Pagamento -->
+                            <div class="form-group col-full">
+                                <label for="payment_info">Ponto 2 (Pagamento)</label>
+                                <input type="text" id="payment_info" name="payment_info" class="form-control" data-lp-input="payment-info" value="<?= esc(old('payment_info', $product->payment_info ?? 'Pagamento no PIX ou cartão')) ?>" placeholder="Ex: Pagamento no PIX ou cartão">
+                            </div>
+
+                            <!-- Garantia / Procedência -->
+                            <div class="form-group col-full">
+                                <label for="guarantee_info">Ponto 3 (Garantia / Procedência)</label>
+                                <input type="text" id="guarantee_info" name="guarantee_info" class="form-control" data-lp-input="guarantee-info" value="<?= esc(old('guarantee_info', $product->guarantee_info ?? 'Produto conferido antes do envio')) ?>" placeholder="Ex: Produto conferido antes do envio">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 06 - BLOCO INFORMATIVO / URGÊNCIA & CONVERSÃO -->
+                    <div class="settings-card-block" style="margin-bottom: 24px;">
+                        <div class="settings-card-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="display: flex; gap: 12px;">
+                                <div class="card-header-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;"><i class="ti ti-flame"></i></div>
+                                <div>
+                                    <h3 class="settings-section-title">06 - Bloco de Urgência & Conversão</h3>
+                                    <p class="settings-section-subtitle">Gatilhos mentais de escassez e urgência para acelerar a decisão de compra.</p>
+                                </div>
+                            </div>
+                            <span class="badge" style="background: rgba(157, 23, 77, 0.08); color: #9d174d; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">Alta Conversão (JH7 Marketing Master)</span>
+                        </div>
+
+                        <div class="form-grid-account">
+                            <!-- Selecionar Frase de Alta Conversão / Urgência -->
+                            <div class="form-group col-full">
+                                <label for="urgency_phrase_selector">
+                                    <i class="ti ti-bolt text-warning" style="margin-right: 4px;"></i> Sugestões de Alta Conversão (Copywriting & Urgência)
+                                </label>
+                                <select id="urgency_phrase_selector" class="form-control">
+                                    <option value="" style="color: #475569;">-- Selecione uma das 20 frases de alta conversão para preencher --</option>
+                                    <optgroup label="🔥 Escassez de Lote & Estoque Limitado" style="color: #0f172a;">
+                                        <option value="ÚLTIMAS UNIDADES EM ESTOQUE|Devido à alta demanda desta edição, restam pouquíssimos frascos disponíveis. Garanta o seu antes que o lote esgote definitivamente." style="color: #475569;">1. Últimas unidades em estoque (Esgotamento iminente)</option>
+                                        <option value="LOTE PROMOCIONAL EXCLUSIVO|Este valor com desconto especial é válido estritamente para as últimas unidades deste lote. Envio imediato para todo o Brasil." style="color: #475569;">2. Lote promocional exclusivo (Validade limitada)</option>
+                                        <option value="RESTAM APENAS 3 FRASCOS DESTE LOTE|Nosso estoque desta fragrância está quase no fim. Não perca a oportunidade de adquirir com valor de importação direta." style="color: #475569;">3. Restam pouquíssimos frascos (Escassez numérica)</option>
+                                        <option value="EDIÇÃO LIMITADA COM ALTA PROCURA|Fragrância disputada com matéria-prima importada. O próximo lote pode sofrer reajuste de tabela." style="color: #475569;">4. Edição limitada e disputada (Risco de reajuste)</option>
+                                    </optgroup>
+                                    <optgroup label="⚡ Urgência Temporal & Oferta Relâmpago" style="color: #0f172a;">
+                                        <option value="CONDIÇÃO ESPECIAL POR TEMPO LIMITADO|Aproveite o preço exclusivo de lançamento direto no WhatsApp antes do encerramento da campanha promocional." style="color: #475569;">5. Condição especial por tempo limitado</option>
+                                        <option value="GARANTA O SEU PEDIDO HOJE|Pedidos confirmados hoje ganham prioridade máxima na separação e despacho com código de rastreio expresso." style="color: #475569;">6. Prioridade de despacho imediato para hoje</option>
+                                        <option value="OFERTA RELÂMPAGO DIRETO DA IMPORTADORA|Economia inteligente sem abrir mão de alta fixação e projeção marcante. Clique e reserve o seu agora." style="color: #475569;">7. Oferta relâmpago direto da importadora</option>
+                                        <option value="PREÇO DE TABELA ANTIGA ATÉ O FIM DO ESTOQUE|Garantimos o valor anunciado apenas enquanto durarem os frascos deste lote atual." style="color: #475569;">8. Preço de tabela antiga (Proteção contra reajuste)</option>
+                                    </optgroup>
+                                    <optgroup label="💎 Proposta de Valor & Custo-Benefício Inteligente" style="color: #0f172a;">
+                                        <option value="POR QUE PAGAR CARO NA GRIFE?|Fixação marcante de 8h a 12h, alta projeção e mesma identidade olfativa pagando uma fração do valor." style="color: #475569;">9. Por que pagar caro na grife? (Ancoragem racional)</option>
+                                        <option value="O MESMO CHEIRO DE GRIFE, NO SEU BOLSO|Experimente a sofisticação das melhores fragrâncias internacionais com o melhor custo-benefício do Brasil." style="color: #475569;">10. O mesmo cheiro de grife, no seu bolso</option>
+                                        <option value="PERFUME DE PRESENÇA E ALTA FIXAÇÃO|Fragrância marcante e elogiada por onde você passar. Testado, conferido e aprovado antes do envio." style="color: #475569;">11. Perfume de presença e fixação marcante</option>
+                                        <option value="EXPERIÊNCIA OLFATIVA PREMIUM|Matérias-primas nobres com alta concentração de essência pura. Você perfumado o dia inteiro." style="color: #475569;">12. Experiência olfativa premium com alta essência</option>
+                                    </optgroup>
+                                    <optgroup label="🛡️ Risco Zero & Garantia de Satisfação" style="color: #0f172a;">
+                                        <option value="COMPRA 100% SEGURA E VERIFICADA|Atendimento personalizado e humanizado no WhatsApp. Você só fecha após tirar todas as suas dúvidas." style="color: #475569;">13. Compra 100% segura e humanizada</option>
+                                        <option value="SATISFAÇÃO E PROCEDÊNCIA GARANTIDA|Produto selecionado a dedo, conferido minuciosamente e embalado com proteção reforçada." style="color: #475569;">14. Satisfação e procedência garantida</option>
+                                        <option value="ATENDIMENTO VIP E RÁPIDO NO WHATSAPP|Fale direto com nossa equipe, veja fotos reais do produto e tire dúvidas antes de confirmar." style="color: #475569;">15. Atendimento VIP com fotos reais no WhatsApp</option>
+                                        <option value="TRANSPARÊNCIA E CONFIANÇA TOTAL|Milhares de clientes satisfeitos em todo o Brasil. Enviamos seu código de rastreamento com seguro." style="color: #475569;">16. Transparência, seguro e código de rastreio</option>
+                                    </optgroup>
+                                    <optgroup label="🚀 Ação Imediata & Chamada Forte (CTA)" style="color: #0f172a;">
+                                        <option value="CLIQUE E RECEBA O ATENDIMENTO EM 1 MINUTO|Não deixe para depois: clique no botão abaixo e garanta seu frasco com a melhor condição do dia." style="color: #475569;">17. Atendimento imediato em 1 minuto</option>
+                                        <option value="RESERVE O SEU ANTES QUE ACABE|Clique no WhatsApp para consultar a disponibilidade do seu frasco e fechar seu pedido sem burocracia." style="color: #475569;">18. Reserve seu frasco sem burocracia</option>
+                                        <option value="PEÇA AGORA E RECEBA COM RAPIDEZ|Enviamos para todo o Brasil com embalagem discreta e protegida. Aproveite a condição de hoje." style="color: #475569;">19. Peça agora e receba com rapidez</option>
+                                        <option value="SUA MARCA PESSOAL COMEÇA AQUI|Um perfume marcante transforma sua presença. Clique abaixo e garanta o seu com desconto exclusivo." style="color: #475569;">20. Sua marca pessoal começa aqui (Transformação)</option>
+                                    </optgroup>
+                                </select>
+                                <small class="form-help-text">Selecione uma copy persuasiva acima para preencher automaticamente o título e o texto com foco em conversão imediata.</small>
+                            </div>
+
+                            <!-- Título da Seção Sobre / Urgência -->
+                            <div class="form-group col-full">
+                                <label for="about_title">Título da Seção de Urgência</label>
+                                <input type="text" id="about_title" name="about_title" class="form-control" data-lp-input="about-title" value="<?= esc(old('about_title', $product->about_title ?? 'Últimas unidades em estoque')) ?>" placeholder="Ex: Últimas unidades em estoque">
+                            </div>
+
+                            <!-- Conteúdo Detalhado / Urgência -->
+                            <div class="form-group col-full">
+                                <label for="about_content">Texto de Urgência & Conversão</label>
+                                <textarea id="about_content" name="about_content" class="form-control" data-lp-input="about-content" rows="4" placeholder="Descreva a urgência, escassez ou benefício marcante da oferta"><?= esc(old('about_content', $product->about_content ?? '')) ?></textarea>
+                            </div>
+
+                            <!-- Botão CTA da Seção -->
+                            <div class="form-group col-full">
+                                <label for="about_cta_btn">Texto do Botão CTA (Seção de Urgência)</label>
+                                <input type="text" id="about_cta_btn" name="about_cta_btn" class="form-control" data-lp-input="about-cta-btn" value="<?= esc(old('about_cta_btn', $product->about_cta_btn ?? 'Garantir Meu Frasco no WhatsApp')) ?>" placeholder="Ex: Garantir Meu Frasco no WhatsApp">
+                                <small class="form-help-text">Botão de conversão com link direto para o WhatsApp posicionado logo abaixo do texto de urgência.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 07 - BLOCO DE FECHAMENTO (RODAPÉ DA LP) -->
+                    <div class="settings-card-block">
+                        <div class="settings-card-header">
+                            <div class="card-header-icon" style="background: rgba(100, 116, 139, 0.15); color: #64748b;"><i class="ti ti-layout-bottombar"></i></div>
+                            <div>
+                                <h3 class="settings-section-title">07 - Bloco de Fechamento (Rodapé da LP)</h3>
+                                <p class="settings-section-subtitle">Chamada final para tirar dúvidas ou finalizar compra no WhatsApp.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid-account">
+                            <!-- Título do Checkout -->
+                            <div class="form-group col-full">
+                                <label for="checkout_title">Título do Bloco Final</label>
+                                <input type="text" id="checkout_title" name="checkout_title" class="form-control" data-lp-input="checkout-title" value="<?= esc(old('checkout_title', $product->checkout_title ?? 'Fechar pedido pelo WhatsApp')) ?>" placeholder="Ex: Fechar pedido pelo WhatsApp">
+                            </div>
+
+                            <!-- Subtítulo / Instrução Final -->
+                            <div class="form-group col-full">
+                                <label for="checkout_subtitle">Texto de Instrução Final</label>
+                                <input type="text" id="checkout_subtitle" name="checkout_subtitle" class="form-control" data-lp-input="checkout-subtitle" value="<?= esc(old('checkout_subtitle', $product->checkout_subtitle ?? 'A conversa abre com o produto e o preço já escritos. Você só confirma.')) ?>" placeholder="Ex: A conversa abre com o produto e o preço já escritos. Você só confirma.">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mockup do Smartphone em Tempo Real Fiel -->
+                <?php
+                $lpPrice = isset($product->price) ? (float) $product->price : 0;
+                $lpPromoPrice = !empty($product->promotional_price) ? (float) $product->promotional_price : null;
+                $lpHasPromo = ($lpPromoPrice !== null && $lpPromoPrice > 0 && $lpPromoPrice < $lpPrice);
+                $lpCurrentPriceFormatted = number_format($lpHasPromo ? $lpPromoPrice : $lpPrice, 2, ',', '.');
+                $lpOldPriceFormatted = number_format($lpPrice, 2, ',', '.');
+                $lpSavings = $lpHasPromo ? ($lpPrice - $lpPromoPrice) : 0;
+                $lpSavingsFormatted = number_format($lpSavings, 2, ',', '.');
+                $lpDiscount = ($lpHasPromo && $lpPrice > 0) ? round((($lpPrice - $lpPromoPrice) / $lpPrice) * 100) : 0;
+
+                $lpBadge = old('badge_text', $product->badge_text ?? '🔥 OFERTA EXCLUSIVA • PRONTA ENTREGA');
+                $lpHeadline = old('headline', !empty($product->headline) ? $product->headline : ($product->name ?? 'NOME DO PRODUTO'));
+                $lpSubheadline = old('subheadline', !empty($product->subheadline) ? $product->subheadline : ($product->description ?? 'Descrição resumida do produto para o cliente.'));
+                $lpBtnText = old('button_text', $product->button_text ?? 'Quero aproveitar agora');
+                $lpUrgency = old('urgency_text', $product->urgency_text ?? 'Compra sem cadastro. Você fala direto com a loja.');
+                $lpShipping = old('shipping_info', $product->shipping_info ?? 'Entrega rápida em Barretos e região');
+                $lpPayment = old('payment_info', $product->payment_info ?? 'Pagamento no PIX ou cartão');
+                $lpGuarantee = old('guarantee_info', $product->guarantee_info ?? 'Produto conferido antes do envio');
+                $lpAboutTitle = old('about_title', $product->about_title ?? 'Últimas unidades em estoque');
+                $lpAboutContent = old('about_content', !empty($product->about_content) ? $product->about_content : 'Devido à alta demanda desta edição, restam pouquíssimos frascos disponíveis. Garanta o seu antes que o lote esgote definitivamente.');
+                $lpAboutCtaBtn = old('about_cta_btn', $product->about_cta_btn ?? 'Garantir Meu Frasco no WhatsApp');
+                $lpCheckoutTitle = old('checkout_title', $product->checkout_title ?? 'Fechar pedido pelo WhatsApp');
+                $lpCheckoutSubtitle = old('checkout_subtitle', $product->checkout_subtitle ?? 'A conversa abre com o produto e o preço já escritos. Você só confirma.');
+
+                $lpImages = $images ?? [];
+                $lpTotalImages = count($lpImages);
+                $lpMainImg = !empty($lpImages) ? base_url('uploads/products/' . $lpImages[0]->image_path) : '';
+                ?>
+                <div class="landing-preview-col" style="position: sticky; top: 80px;">
+                    <div class="preview-sticky-wrap">
+                        <div class="preview-device-header" style="background: #0f172a; color: white; padding: 10px 16px; border-radius: 14px 14px 0 0; display: flex; align-items: center; justify-content: space-between;">
+                            <div class="preview-device-title" style="display: flex; align-items: center; gap: 8px;">
+                                <span class="preview-live-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                                <strong style="font-size: 12px; letter-spacing: 0.3px;">Visualização Fiel do Modelo</strong>
+                            </div>
+                            <?php if (!empty($product->slug)): ?>
+                                <a href="<?= base_url('p/' . $product->slug) ?>" target="_blank" class="button secondary small" style="background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25); font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; border-radius: 6px; font-weight: 600;" title="Abrir Landing Page em nova aba">
+                                    <i class="ti ti-external-link"></i>
+                                    <span>Abrir Página</span>
+                                </a>
+                            <?php else: ?>
+                                <span style="font-size: 11px; opacity: 0.7;">Oferta Produto</span>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="mobile-mockup-frame" style="border: 10px solid #0f172a; border-top: none; border-radius: 0 0 36px 36px; background: #f8fafc; overflow: hidden; height: 680px; position: relative; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);">
+                            
+                            <!-- Conteúdo da Tela do Mockup -->
+                            <div class="mobile-screen-content" id="lp_live_preview_container" style="height: 100%; overflow-y: auto; padding: 18px 14px 80px 14px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e293b; background-color: #f8fafc;">
+                                <!-- Badge Superior -->
+                                <div style="display: <?= !empty($lpBadge) ? 'inline-flex' : 'none' ?>; align-items: center; gap: 6px; background: #fce7f3; color: #be185d; padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;" id="mockup_badge_wrap">
+                                    <span id="mockup_badge"><?= esc($lpBadge) ?></span>
+                                </div>
+
+                                <!-- Título e Subtítulo -->
+                                <h1 id="mockup_title" style="font-size: 20px; font-weight: 900; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.4px; color: #0f172a; margin-bottom: 8px;"><?= esc($lpHeadline) ?></h1>
+                                <p id="mockup_subheadline" style="font-size: 11.5px; color: #475569; line-height: 1.55; margin-bottom: 16px;"><?= esc($lpSubheadline) ?></p>
+
+                                <!-- Galeria / Foto Principal -->
+                                <div style="position: relative; width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
+                                    <div id="mockup_discount_tag" style="position: absolute; top: 12px; left: 12px; background: #9d174d; color: #ffffff; font-size: 10px; font-weight: 900; padding: 5px 9px; border-radius: 6px; text-transform: uppercase; z-index: 2; box-shadow: 0 4px 12px rgba(157, 23, 77, 0.3); display: <?= $lpHasPromo ? 'block' : 'none' ?>;">
+                                        -<?= $lpDiscount ?>% OFF
+                                    </div>
+                                    <img id="mockup_main_image" src="<?= esc($lpMainImg) ?>" alt="<?= esc($lpHeadline) ?>" style="width: 100%; height: 100%; object-fit: cover; display: <?= !empty($lpMainImg) ? 'block' : 'none' ?>;">
+                                    <div id="mockup_image_placeholder" style="width: 100%; height: 100%; display: <?= empty($lpMainImg) ? 'flex' : 'none' ?>; flex-direction: column; align-items: center; justify-content: center; background: #f1f5f9; color: #94a3b8; gap: 6px;">
+                                        <i class="ti ti-photo" style="font-size: 36px;"></i>
+                                        <span style="font-size: 10px; font-weight: 600;">Sem foto cadastrada</span>
+                                    </div>
+                                    <div id="mockup_gallery_counter" style="position: absolute; bottom: 10px; right: 10px; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); color: #ffffff; font-size: 9.5px; font-weight: 700; padding: 3px 9px; border-radius: 100px; display: <?= $lpTotalImages > 0 ? 'block' : 'none' ?>;">
+                                        <span id="mockup_current_img_index">1</span>/<span id="mockup_total_img_count"><?= $lpTotalImages ?></span>
+                                    </div>
+                                </div>
+
+                                <!-- Miniaturas do Mockup -->
+                                <div id="mockup_gallery_thumbs" style="display: <?= $lpTotalImages > 1 ? 'flex' : 'none' ?>; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none;">
+                                    <?php if ($lpTotalImages > 1): ?>
+                                        <?php foreach ($lpImages as $idx => $img): ?>
+                                            <button type="button" class="mockup-thumb-btn" data-thumb-src="<?= base_url('uploads/products/' . $img->image_path) ?>" data-thumb-idx="<?= $idx + 1 ?>" style="width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: <?= $idx === 0 ? '2px solid #9d174d' : '1px solid #e2e8f0' ?>; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: <?= $idx === 0 ? '1' : '0.65' ?>;">
+                                                <img src="<?= base_url('uploads/products/' . $img->image_path) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Thumb">
+                                            </button>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Card de Preço e CTA -->
+                                <div style="background: #ffffff; border-radius: 16px; padding: 16px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 14px; border: 1px solid #f1f5f9;">
+                                    <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;">
+                                        <span id="mockup_old_price" style="font-size: 12px; color: #94a3b8; text-decoration: line-through; font-weight: 600; display: <?= $lpHasPromo ? 'inline' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></span>
+                                        <span id="mockup_current_price" style="font-size: 24px; font-weight: 900; color: #9d174d; letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
+                                        <span id="mockup_savings_tag" style="background: #fdf2f8; color: #9d174d; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; margin-left: auto; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
+                                    </div>
+
+                                    <p id="mockup_savings_text" style="font-size: 10.5px; color: #475569; margin-bottom: 14px; display: <?= $lpHasPromo ? 'flex' : 'none' ?>; align-items: center; gap: 5px;">
+                                        <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #9d174d;"></span>
+                                        Você economiza R$ <?= $lpSavingsFormatted ?> neste preço
+                                    </p>
+
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #9d174d; color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 8px 20px -4px rgba(131, 24, 67, 0.4);">
+                                        <span id="mockup_button_text"><?= esc($lpBtnText) ?></span>
+                                        <i class="ti ti-arrow-narrow-right" style="font-size: 16px;"></i>
+                                    </div>
+
+                                    <div style="font-size: 10px; color: #64748b; text-align: center; margin-top: 9px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                                        <i class="ti ti-lock" style="font-size: 12px;"></i>
+                                        <span id="mockup_urgency_text"><?= esc($lpUrgency) ?></span>
+                                    </div>
+
+                                    <!-- 3 Pilares -->
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f1f5f9; text-align: center;">
+                                        <div>
+                                            <i class="ti ti-message-circle" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Atendimento humano</strong>
+                                            <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Você fala com a loja</small>
+                                        </div>
+                                        <div>
+                                            <i class="ti ti-notes" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Sem cadastro</strong>
+                                            <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Nenhum formulário</small>
+                                        </div>
+                                        <div>
+                                            <i class="ti ti-currency-dollar" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Preço fechado</strong>
+                                            <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Confirmado antes</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 3 Garantias -->
+                                <div style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 18px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 9px;">
+                                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
+                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <span id="mockup_shipping_info"><?= esc($lpShipping) ?></span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
+                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <span id="mockup_payment_info"><?= esc($lpPayment) ?></span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
+                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <span id="mockup_guarantee_info"><?= esc($lpGuarantee) ?></span>
+                                    </div>
+                                </div>
+
+                                <!-- Bloco de Urgência / Escassez e Ação com Botão CTA -->
+                                <div style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border: 1px solid #f1f5f9;">
+                                    <h2 id="mockup_about_title" style="font-size: 13.5px; font-weight: 900; color: #0f172a; margin-bottom: 8px;"><?= esc($lpAboutTitle) ?></h2>
+                                    <div id="mockup_about_content" style="font-size: 11px; color: #475569; line-height: 1.6; margin-bottom: 12px; white-space: pre-line;">
+                                        <?= nl2br(esc($lpAboutContent)) ?>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #0f172a; color: #ffffff; font-size: 11.5px; font-weight: 800; padding: 10px 14px; border-radius: 10px; text-decoration: none;">
+                                        <i class="ti ti-brand-whatsapp" style="font-size: 15px; color: #25d366;"></i>
+                                        <span id="mockup_about_cta_btn"><?= esc($lpAboutCtaBtn) ?></span>
+                                    </div>
+                                </div>
+
+                                <!-- FAQ (Antes de fechar) Accordion Interativo -->
+                                <h2 style="font-size: 14px; font-weight: 900; color: #0f172a; margin-bottom: 10px;">Antes de fechar</h2>
+                                <div class="mockup-faq-accordion" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;">
+                                    <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
+                                        <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                                            <span>Como eu compro?</span>
+                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                        </button>
+                                        <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
+                                            É só clicar no botão. Você vai direto para o WhatsApp com o produto selecionado. Nós confirmamos seu endereço, calculamos o envio e combinamos o pagamento na hora.
+                                        </div>
+                                    </div>
+                                    <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
+                                        <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                                            <span>O preço desta página é o que eu pago?</span>
+                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                        </button>
+                                        <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
+                                            Sim. O valor mostrado nesta página é garantido no atendimento pelo WhatsApp. Sem surpresas ou taxas escondidas.
+                                        </div>
+                                    </div>
+                                    <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
+                                        <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                                            <span>Com quem eu estou falando?</span>
+                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                        </button>
+                                        <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
+                                            Você fala diretamente com a equipe da Dias Imports. Atendimento humano, rápido e transparente.
+                                        </div>
+                                    </div>
+                                    <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
+                                        <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                                            <span>E se eu ficar com dúvida antes de decidir?</span>
+                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                        </button>
+                                        <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
+                                            Chame pelo WhatsApp mesmo assim. Tiramos fotos reais, respondemos sobre tamanho, aplicação e prazo antes de você fechar.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card de Fechamento -->
+                                <div style="background: #ffffff; border-radius: 16px; padding: 20px 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #f1f5f9; margin-bottom: 24px;">
+                                    <h2 id="mockup_checkout_title" style="font-size: 14px; font-weight: 900; color: #0f172a; margin-bottom: 12px;"><?= esc($lpCheckoutTitle) ?></h2>
+                                    
+                                    <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+                                        <span id="mockup_closing_old_price" style="font-size: 12px; color: #94a3b8; text-decoration: line-through; font-weight: 600; display: <?= $lpHasPromo ? 'inline' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></span>
+                                        <span id="mockup_closing_current_price" style="font-size: 24px; font-weight: 900; color: #9d174d; letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
+                                        <span id="mockup_closing_savings_tag" style="background: #fdf2f8; color: #9d174d; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #9d174d; color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; box-shadow: 0 8px 20px -4px rgba(131, 24, 67, 0.4);">
+                                        <span id="mockup_button_text_2"><?= esc($lpBtnText) ?></span>
+                                        <i class="ti ti-arrow-narrow-right" style="font-size: 16px;"></i>
+                                    </div>
+                                    <p id="mockup_checkout_subtitle" style="font-size: 10px; color: #64748b; margin-top: 10px; line-height: 1.45;"><?= esc($lpCheckoutSubtitle) ?></p>
+                                </div>
+
+                                <!-- Rodapé Mockup -->
+                                <div style="text-align: center; padding: 16px 0 10px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 9.5px; line-height: 1.6;">
+                                    <strong style="color: #64748b; font-weight: 800; display: block; font-size: 10.5px; margin-bottom: 2px;">Dias Imports</strong>
+                                    <span>Barretos - SP</span><br>
+                                    <span>Atendimento e pedidos pelo WhatsApp. Imagens meramente ilustrativas. Preço promocional válido para a compra feita por esta página.</span>
+                                </div>
+                            </div>
+
+                            <!-- Barra Fixa Inferior Fake no Preview -->
+                            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-top: 1px solid #e2e8f0; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; z-index: 10; box-shadow: 0 -4px 16px rgba(0,0,0,0.06);">
+                                <div style="display: flex; flex-direction: column; min-width: 65px;">
+                                    <small id="mockup_sticky_old_price" style="font-size: 9px; color: #94a3b8; text-decoration: line-through; line-height: 1; font-weight: 600; display: <?= $lpHasPromo ? 'block' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></small>
+                                    <strong id="mockup_sticky_price" style="font-size: 16px; font-weight: 900; color: #9d174d; display: block; line-height: 1.1; letter-spacing: -0.3px;">R$ <?= $lpCurrentPriceFormatted ?></strong>
+                                </div>
+                                <div style="background: #9d174d; color: #ffffff; font-size: 11px; font-weight: 800; padding: 9px 14px; border-radius: 9px; display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1; box-shadow: 0 4px 12px -2px rgba(131, 24, 67, 0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <span id="mockup_sticky_btn_text" style="overflow: hidden; text-overflow: ellipsis;"><?= esc($lpBtnText) ?></span>
+                                    <i class="ti ti-arrow-narrow-right" style="flex-shrink: 0; font-size: 14px;"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Floating save bar -->
-        <div class="save-bar" data-floating-save-bar hidden>
+        <div class="save-bar" data-form-save-bar hidden>
             <p>
                 <strong>Existem alterações não salvas</strong>
                 <span>Clique em salvar para aplicar as modificações no produto.</span>
             </p>
             <div class="save-actions">
-                <a href="<?= site_url('produtos') ?>" class="button secondary">Cancelar</a>
+                <button type="button" class="button secondary" data-cancel-form>Cancelar</button>
                 <button type="submit" class="button primary">
                     <i class="ti ti-device-floppy"></i>
                     <span>Salvar Produto</span>
@@ -378,7 +812,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('[data-dirty-form]');
-    const saveBar = document.querySelector('[data-floating-save-bar]');
+    const saveBar = document.querySelector('[data-form-save-bar]');
     const nameInput = document.getElementById('name');
     const slugInput = document.getElementById('slug');
 
@@ -406,424 +840,358 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Landing Page Live Preview Logic
-    const previewTriggers = document.querySelectorAll('[data-lp-preview-trigger], #name, #price, #promotional_price, #description');
-    const previewFrame = document.getElementById('lp-preview-frame');
-    const previewLoader = document.getElementById('lp-preview-loader');
+    const mockupScreen = document.getElementById('lp_live_preview_container');
+    const landingInputs = document.querySelectorAll('[data-lp-input]');
+    const modelRadios = document.querySelectorAll('[data-lp-model-radio]');
+    const paletteRadios = document.querySelectorAll('[data-lp-palette-radio]');
+    const btnAnimRadios = document.querySelectorAll('[data-lp-btnanim-radio]');
 
     function updateLpPreview() {
-        if (!previewFrame) return;
-        if (previewLoader) previewLoader.style.display = 'flex';
+        // Atualizar classes visuais dos cards de seleção
+        modelRadios.forEach(r => {
+            const card = r.closest('.template-model-card');
+            if (card) {
+                if (r.checked) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+                // Remove inline styles to let CSS handle the dark mode properly
+                card.style.borderColor = '';
+                card.style.background = '';
+            }
+        });
 
-        const name = document.getElementById('name')?.value || 'Nome do Produto';
-        const price = document.getElementById('price')?.value || '0.00';
-        const promoPrice = document.getElementById('promotional_price')?.value || '';
-        const headline = document.getElementById('headline')?.value || 'Sinta a exclusividade';
-        const subheadline = document.getElementById('subheadline')?.value || 'Fragrância marcante e duradoura.';
-        const btnText = document.getElementById('button_text')?.value || 'Comprar no WhatsApp';
-        const layout = document.querySelector('input[name="layout"]:checked')?.value || 'oferta_direta';
-        const palette = document.querySelector('input[name="color_palette"]:checked')?.value || 'brasa';
-        const bgAnim = document.querySelector('input[name="bg_animation"]:checked')?.value || 'none';
-        const btnAnim = document.querySelector('input[name="btn_animation"]:checked')?.value || 'pulse';
+        paletteRadios.forEach(p => {
+            const card = p.closest('.color-palette-card');
+            if (card) {
+                if (p.checked) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+                // Remove inline styles to let CSS handle the dark mode properly
+                card.style.borderColor = '';
+                card.style.background = '';
+            }
+        });
 
-        // Pega a imagem de capa (se houver)
-        const coverImgEl = document.querySelector('.image-preview-item .cover-badge')?.closest('.image-preview-item')?.querySelector('img');
-        const firstImgEl = document.querySelector('.image-preview-item img');
-        const imgUrl = coverImgEl ? coverImgEl.src : (firstImgEl ? firstImgEl.src : null);
-        const imgHtml = imgUrl ? `<img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;">` : `<i class="ti ti-photo" style="font-size: 32px;"></i>`;
+        btnAnimRadios.forEach(ba => {
+            const card = ba.closest('.btn-anim-card');
+            if (card) {
+                if (ba.checked) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+                // Remove inline styles to let CSS handle the dark mode properly
+                card.style.borderColor = '';
+                card.style.background = '';
+            }
+        });
 
-        // Cores de acordo com paleta
-        const palettes = {
-            brasa: { bg: '#0f0c0c', primary: '#e11d48', card: '#1c1516', text: '#fff' },
-            menta: { bg: '#0c1612', primary: '#10b981', card: '#13231d', text: '#fff' },
-            noturno: { bg: '#0b0f19', primary: '#6366f1', card: '#111827', text: '#fff' },
-            aurora: { bg: '#130c1e', primary: '#a855f7', card: '#1e1430', text: '#fff' },
-            areia: { bg: '#171411', primary: '#f59e0b', card: '#241f1a', text: '#fff' },
-            jade: { bg: '#091514', primary: '#14b8a6', card: '#0f2422', text: '#fff' }
-        };
+        // Atualizar textos e valores no preview
+        landingInputs.forEach((input) => {
+            const target = input.dataset.lpInput;
+            const value = input.value;
 
-        const currentPal = palettes[palette] || palettes.brasa;
+            if (target === 'badge') {
+                const badge = mockupScreen?.querySelector('#mockup_badge');
+                const badgeWrap = mockupScreen?.querySelector('#mockup_badge_wrap');
+                if (badge) badge.textContent = value || '🔥 OFERTA EXCLUSIVA • PRONTA ENTREGA';
+                if (badgeWrap) badgeWrap.style.display = value ? 'inline-flex' : 'none';
+            } else if (target === 'headline') {
+                const headline = mockupScreen?.querySelector('#mockup_title');
+                if (headline) headline.textContent = value || document.getElementById('name')?.value || 'NOME DO PRODUTO';
+            } else if (target === 'subheadline') {
+                const subheadline = mockupScreen?.querySelector('#mockup_subheadline');
+                if (subheadline) subheadline.textContent = value || document.getElementById('description')?.value || 'Descrição resumida do produto para o cliente.';
+            } else if (target === 'button-text') {
+                const btn = mockupScreen?.querySelector('#mockup_button_text');
+                const btn2 = mockupScreen?.querySelector('#mockup_button_text_2');
+                const btnSticky = mockupScreen?.querySelector('#mockup_sticky_btn_text');
+                if (btn) btn.textContent = value || 'Quero aproveitar agora';
+                if (btn2) btn2.textContent = value || 'Garantir meu exemplar no WhatsApp';
+                if (btnSticky) btnSticky.textContent = value || 'Garantir meu exemplar no WhatsApp';
+            } else if (target === 'urgency-text') {
+                const u = mockupScreen?.querySelector('#mockup_urgency_text');
+                if (u) u.textContent = value || 'Compra sem cadastro. Você fala direto com a loja.';
+            } else if (target === 'cta-icon') {
+                const iconClass = value || 'ti-arrow-narrow-right';
+                const mainBtnIcon = mockupScreen?.querySelector('#mockup_button_text')?.nextElementSibling;
+                const closeBtnIcon = mockupScreen?.querySelector('#mockup_button_text_2')?.nextElementSibling;
+                const stickyBtnIcon = mockupScreen?.querySelector('#mockup_sticky_btn_text')?.nextElementSibling;
+                if (mainBtnIcon) mainBtnIcon.className = 'ti ' + iconClass;
+                if (closeBtnIcon) closeBtnIcon.className = 'ti ' + iconClass;
+                if (stickyBtnIcon) stickyBtnIcon.className = 'ti ' + iconClass;
+            } else if (target === 'shipping-info') {
+                const s = mockupScreen?.querySelector('#mockup_shipping_info');
+                if (s) s.textContent = value || 'Entrega rápida em Barretos e região';
+            } else if (target === 'payment-info') {
+                const p = mockupScreen?.querySelector('#mockup_payment_info');
+                if (p) p.textContent = value || 'Pagamento no PIX ou cartão';
+            } else if (target === 'guarantee-info') {
+                const g = mockupScreen?.querySelector('#mockup_guarantee_info');
+                if (g) g.textContent = value || 'Produto conferido antes do envio';
+            } else if (target === 'about-title') {
+                const at = mockupScreen?.querySelector('#mockup_about_title');
+                if (at) at.textContent = value || 'Últimas unidades em estoque';
+            } else if (target === 'about-content') {
+                const ac = mockupScreen?.querySelector('#mockup_about_content');
+                if (ac) ac.textContent = value || 'Devido à alta demanda desta edição, restam pouquíssimos frascos disponíveis. Garanta o seu antes que o lote esgote definitivamente.';
+            } else if (target === 'about-cta-btn') {
+                const act = mockupScreen?.querySelector('#mockup_about_cta_btn');
+                if (act) act.textContent = value || 'Garantir Meu Frasco no WhatsApp';
+            } else if (target === 'checkout-title') {
+                const ct = mockupScreen?.querySelector('#mockup_checkout_title');
+                if (ct) ct.textContent = value || 'Fechar pedido pelo WhatsApp';
+            } else if (target === 'checkout-subtitle') {
+                const cs = mockupScreen?.querySelector('#mockup_checkout_subtitle');
+                if (cs) cs.textContent = value || 'A conversa abre com o produto e o preço já escritos. Você só confirma.';
+            }
+        });
 
-        // Layout specific styles
-        let layoutStyles = '';
-        let layoutHtml = '';
+        // Atualizar preço e imagem no preview
+        const priceInput = document.getElementById('price');
+        const promoInput = document.getElementById('promotional_price');
+        const priceVal = (priceInput ? priceInput.value : '').trim();
+        const promoVal = (promoInput ? promoInput.value : '').trim();
+        
+        const currentPriceDisplay = mockupScreen?.querySelector('#mockup_current_price');
+        const oldPriceDisplay = mockupScreen?.querySelector('#mockup_old_price');
+        const savingsTag = mockupScreen?.querySelector('#mockup_savings_tag');
+        const savingsText = mockupScreen?.querySelector('#mockup_savings_text');
+        const discountTag = mockupScreen?.querySelector('#mockup_discount_tag');
+        const stickyPrice = mockupScreen?.querySelector('#mockup_sticky_price');
+        const stickyOldPrice = mockupScreen?.querySelector('#mockup_sticky_old_price');
+        const closingPrice = mockupScreen?.querySelector('#mockup_closing_current_price');
+        const closingOldPrice = mockupScreen?.querySelector('#mockup_closing_old_price');
+        const closingSavingsTag = mockupScreen?.querySelector('#mockup_closing_savings_tag');
 
-        if (layout === 'oferta_direta') {
-            layoutStyles = `
-                body {
-                    background: #000;
-                    color: #fff;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                    padding: 20px 16px 32px 16px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                .hero {
-                    width: 100%;
-                    max-width: 400px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                }
-                .top-badge {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    background: transparent;
-                    border: 1px solid rgba(255, 255, 255, 0.25);
-                    border-radius: 100px;
-                    padding: 6px 16px;
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: #fff;
-                    margin-bottom: 20px;
-                }
-                .product-title {
-                    font-size: 32px;
-                    font-weight: 800;
-                    line-height: 1.15;
-                    letter-spacing: -0.5px;
-                    margin-bottom: 12px;
-                    color: #fff;
-                }
-                .product-title span {
-                    color: \${currentPal.primary};
-                }
-                .product-desc {
-                    font-size: 15px;
-                    line-height: 1.5;
-                    color: #94a3b8;
-                    margin-bottom: 24px;
-                    padding: 0 8px;
-                }
-                .product-image-container {
-                    width: 100%;
-                    max-width: 320px;
-                    aspect-ratio: 1;
-                    margin-bottom: 24px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .product-image-container img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.8));
-                }
-                .features-grid {
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    gap: 8px;
-                    width: 100%;
-                    margin-bottom: 20px;
-                }
-                .feature-card {
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    border-radius: 16px;
-                    padding: 12px 6px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 6px;
-                }
-                .feature-card i {
-                    font-size: 22px;
-                    color: \${currentPal.primary};
-                }
-                .feature-card span {
-                    font-size: 11px;
-                    font-weight: 500;
-                    color: #e2e8f0;
-                    line-height: 1.2;
-                }
-                .price-card {
-                    background: #0a0e17;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 20px;
-                    padding: 24px 16px;
-                    width: 100%;
-                    margin-bottom: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-                .installment-text {
-                    font-size: 14px;
-                    font-weight: 700;
-                    color: \${currentPal.primary};
-                    margin-bottom: 4px;
-                }
-                .installment-value {
-                    display: flex;
-                    align-items: baseline;
-                    gap: 4px;
-                    margin-bottom: 8px;
-                }
-                .currency {
-                    font-size: 24px;
-                    font-weight: 800;
-                    color: \${currentPal.primary};
-                }
-                .amount {
-                    font-size: 52px;
-                    font-weight: 900;
-                    color: #fff;
-                    letter-spacing: -2px;
-                    line-height: 1;
-                }
-                .cash-price {
-                    font-size: 14px;
-                    color: #94a3b8;
-                }
-                .cash-price strong {
-                    color: \${currentPal.primary};
-                }
-                .cta-button {
-                    background: \${currentPal.primary};
-                    color: #000;
-                    font-weight: 800;
-                    font-size: 16px;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                    border-radius: 14px;
-                    padding: 18px 24px;
-                    width: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    text-decoration: none;
-                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-                    transition: transform 0.2s ease;
-                }
-                .cta-left {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    margin: 0 auto;
-                }
-                .cta-left i {
-                    font-size: 20px;
-                }
-                .trust-badges {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 16px;
-                    margin-top: 24px;
-                    font-size: 12px;
-                    color: #94a3b8;
-                    font-weight: 500;
-                }
-                .trust-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                }
-                .trust-dot {
-                    width: 4px;
-                    height: 4px;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.2);
-                }
-            `;
-
-            let displayPrice = promoPrice || price;
-            let numPrice = parseFloat(displayPrice.replace(/\./g, '').replace(',', '.')) || 0;
-            let installmentVal = (numPrice / 12).toFixed(2).replace('.', ',');
-
-            layoutHtml = `
-                <div class="hero">
-                    <div class="top-badge">
-                        <i class="ti ti-truck-delivery"></i>
-                        <span>Frete grátis hoje</span>
-                    </div>
-
-                    <h1 class="product-title">${headline}</h1>
-                    <p class="product-desc">${subheadline}</p>
-
-                    <div class="product-image-container">
-                        ${imgHtml}
-                    </div>
-
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <i class="ti ti-heart-rate-monitor"></i>
-                            <span>Monitor<br>cardíaco</span>
-                        </div>
-                        <div class="feature-card">
-                            <i class="ti ti-battery-4"></i>
-                            <span>Bateria<br>longa</span>
-                        </div>
-                        <div class="feature-card">
-                            <i class="ti ti-droplet"></i>
-                            <span>Resistente<br>à água</span>
-                        </div>
-                    </div>
-
-                    <div class="price-card">
-                        <div class="installment-text">12x de</div>
-                        <div class="installment-value">
-                            <span class="currency">R$</span>
-                            <span class="amount">${installmentVal}</span>
-                        </div>
-                        <div class="cash-price">
-                            ou <strong>R$ ${displayPrice}</strong> à vista
-                        </div>
-                    </div>
-
-                    <a href="#" class="cta-button anim-${btnAnim}">
-                        <div class="cta-left">
-                            <i class="ti ti-shopping-bag"></i>
-                            <span>${btnText}</span>
-                        </div>
-                        <i class="ti ti-chevron-right"></i>
-                    </a>
-
-                    <div class="trust-badges">
-                        <div class="trust-item">
-                            <i class="ti ti-lock"></i>
-                            <span>Pagamento seguro</span>
-                        </div>
-                        <div class="trust-dot"></div>
-                        <div class="trust-item">
-                            <i class="ti ti-truck"></i>
-                            <span>Envio para todo Brasil</span>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // Valores numéricos reais
+        let pNum = 0;
+        let prNum = 0;
+        if (priceVal) {
+            pNum = parseFloat(priceVal.replace(/\./g, '').replace(',', '.'));
+        }
+        if (promoVal) {
+            prNum = parseFloat(promoVal.replace(/\./g, '').replace(',', '.'));
         }
 
-        const html = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-                <style>
-                    * { box-sizing: border-box; margin: 0; padding: 0; }
-                    body { 
-                        font-family: system-ui, -apple-system, sans-serif; 
-                        background: \${currentPal.bg}; 
-                        color: \${currentPal.text};
-                        min-height: 100vh;
-                        display: flex;
-                        flex-direction: column;
-                        padding: 16px;
-                    }
-                    .hero {
-                        display: flex;
-                        flex-direction: column;
-                        width: 100%;
-                        max-width: 400px;
-                        margin: 0 auto;
-                    }
-                    .badge {
-                        display: inline-block;
-                        padding: 4px 12px;
-                        background: \${currentPal.primary}20;
-                        color: \${currentPal.primary};
-                        border-radius: 100px;
-                        font-size: 12px;
-                        font-weight: 600;
-                        margin-bottom: 16px;
-                        align-self: flex-start;
-                    }
-                    .product-img {
-                        background: \${currentPal.card};
-                        border-radius: 16px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: \${currentPal.text}40;
-                        border: 1px solid rgba(255,255,255,0.05);
-                    }
-                    h1 {
-                        font-size: 24px;
-                        font-weight: 700;
-                        line-height: 1.2;
-                        margin-bottom: 8px;
-                    }
-                    .sub {
-                        font-size: 15px;
-                        color: \${currentPal.text}99;
-                        line-height: 1.5;
-                    }
-                    .price-box {
-                        display: flex;
-                        align-items: baseline;
-                        gap: 8px;
-                        margin: 24px 0;
-                    }
-                    .old-price {
-                        font-size: 14px;
-                        color: \${currentPal.text}60;
-                        text-decoration: line-through;
-                    }
-                    .cur-price {
-                        font-size: 24px;
-                        font-weight: 700;
-                        color: \${currentPal.primary};
-                    }
-                    .btn-cta {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        gap: 8px;
-                        background: \${currentPal.primary};
-                        color: #fff;
-                        text-decoration: none;
-                        padding: 16px 24px;
-                        border-radius: 12px;
-                        font-weight: 600;
-                        font-size: 16px;
-                        width: 100%;
-                        transition: all 0.3s ease;
-                    }
-                    
-                    /* Animações do botão */
-                    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-                    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-                    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-                    
-                    .anim-pulse { animation: pulse 2s infinite; }
-                    .anim-shake { animation: shake 3s infinite; }
-                    .anim-bounce { animation: bounce 2s infinite; }
-                    
-                    ${layoutStyles}
-                </style>
-            </head>
-            <body>
-                ${layoutHtml}
-            </body>
-            </html>
-        `;
-        previewFrame.srcdoc = html;
-        setTimeout(() => {
-            if (previewLoader) previewLoader.style.display = 'none';
-        }, 200);
-    }
+        const hasPromo = !isNaN(prNum) && prNum > 0 && !isNaN(pNum) && pNum > prNum;
+        const mainDisplayPrice = hasPromo ? promoVal : (priceVal || '0,00');
 
-    let previewTimer;
-    previewTriggers.forEach(el => {
-        el.addEventListener('input', function() {
-            clearTimeout(previewTimer);
-            previewTimer = setTimeout(updateLpPreview, 300);
-        });
-        el.addEventListener('change', function() {
-            if (this.type === 'radio') {
-                // Atualiza a classe active no micro-card
-                const group = this.closest('.micro-cards-grid');
-                if (group) {
-                    group.querySelectorAll('.micro-card').forEach(card => card.classList.remove('active'));
-                    this.closest('.micro-card').classList.add('active');
+        if (currentPriceDisplay) {
+            currentPriceDisplay.textContent = 'R$ ' + mainDisplayPrice;
+        }
+        if (closingPrice) {
+            closingPrice.textContent = 'R$ ' + mainDisplayPrice;
+        }
+        if (stickyPrice) {
+            stickyPrice.textContent = 'R$ ' + mainDisplayPrice;
+        }
+
+        if (hasPromo) {
+            if (oldPriceDisplay) {
+                oldPriceDisplay.textContent = 'R$ ' + priceVal;
+                oldPriceDisplay.style.display = 'inline';
+            }
+            if (closingOldPrice) {
+                closingOldPrice.textContent = 'R$ ' + priceVal;
+                closingOldPrice.style.display = 'inline';
+            }
+            if (stickyOldPrice) {
+                stickyOldPrice.textContent = 'R$ ' + priceVal;
+                stickyOldPrice.style.display = 'block';
+            }
+            
+            // Calcular economia
+            const savings = pNum - prNum;
+            const savingsStr = savings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const discount = Math.round(((pNum - prNum) / pNum) * 100);
+            
+            if (savingsTag) {
+                savingsTag.textContent = 'economize R$ ' + savingsStr;
+                savingsTag.style.display = 'inline-block';
+            }
+            if (closingSavingsTag) {
+                closingSavingsTag.textContent = 'economize R$ ' + savingsStr;
+                closingSavingsTag.style.display = 'inline-block';
+            }
+            if (savingsText) {
+                savingsText.innerHTML = `<span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #9d174d;"></span> Você economiza R$ ${savingsStr} neste preço`;
+                savingsText.style.display = 'flex';
+            }
+            if (discountTag) {
+                discountTag.textContent = '-' + discount + '% OFF';
+                discountTag.style.display = 'block';
+            }
+        } else {
+            if (oldPriceDisplay) oldPriceDisplay.style.display = 'none';
+            if (closingOldPrice) closingOldPrice.style.display = 'none';
+            if (stickyOldPrice) stickyOldPrice.style.display = 'none';
+            if (savingsTag) savingsTag.style.display = 'none';
+            if (closingSavingsTag) closingSavingsTag.style.display = 'none';
+            if (savingsText) savingsText.style.display = 'none';
+            if (discountTag) discountTag.style.display = 'none';
+        }
+
+        const allImgEls = Array.from(document.querySelectorAll('.image-preview-item img'));
+        const previewImg = mockupScreen?.querySelector('#mockup_main_image');
+        const placeholderImg = mockupScreen?.querySelector('#mockup_image_placeholder');
+        const galleryCounter = mockupScreen?.querySelector('#mockup_gallery_counter');
+        const currentIndexEl = mockupScreen?.querySelector('#mockup_current_img_index');
+        const totalCountEl = mockupScreen?.querySelector('#mockup_total_img_count');
+        const thumbsContainer = mockupScreen?.querySelector('#mockup_gallery_thumbs');
+
+        if (allImgEls.length > 0) {
+            const coverItem = document.querySelector('.image-preview-item .cover-badge')?.closest('.image-preview-item');
+            const coverImgEl = coverItem?.querySelector('img') || allImgEls[0];
+            
+            if (previewImg && placeholderImg) {
+                previewImg.src = previewImg.dataset.activeSrc || coverImgEl.src;
+                previewImg.style.display = 'block';
+                placeholderImg.style.display = 'none';
+            }
+
+            if (galleryCounter && currentIndexEl && totalCountEl) {
+                if (allImgEls.length > 1) {
+                    galleryCounter.style.display = 'block';
+                    totalCountEl.textContent = allImgEls.length;
+                    
+                    // Descobrir index atual
+                    const currentSrc = previewImg?.src || '';
+                    const foundIndex = allImgEls.findIndex(img => img.src === currentSrc);
+                    currentIndexEl.textContent = foundIndex >= 0 ? (foundIndex + 1) : 1;
+                } else {
+                    galleryCounter.style.display = 'none';
                 }
             }
-            updateLpPreview();
+
+            // Renderizar miniaturas no mockup se houver mais de 1 imagem
+            if (thumbsContainer) {
+                if (allImgEls.length > 1) {
+                    thumbsContainer.style.display = 'flex';
+                    thumbsContainer.innerHTML = '';
+                    
+                    allImgEls.forEach((img, idx) => {
+                        const thumb = document.createElement('button');
+                        thumb.type = 'button';
+                        const isActive = (previewImg?.src === img.src) || (!previewImg?.dataset.activeSrc && idx === 0);
+                        thumb.style.cssText = `width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: ${isActive ? '2px solid #9d174d' : '1px solid #e2e8f0'}; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: ${isActive ? '1' : '0.65'};`;
+                        
+                        const thumbImg = document.createElement('img');
+                        thumbImg.src = img.src;
+                        thumbImg.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
+                        thumb.appendChild(thumbImg);
+
+                        thumb.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (previewImg) {
+                                previewImg.src = img.src;
+                                previewImg.dataset.activeSrc = img.src;
+                            }
+                            if (currentIndexEl) currentIndexEl.textContent = idx + 1;
+                            
+                            // Atualizar borda ativa dos thumbs
+                            thumbsContainer.querySelectorAll('button').forEach((b, bIdx) => {
+                                if (bIdx === idx) {
+                                    b.style.border = '2px solid #9d174d';
+                                    b.style.opacity = '1';
+                                } else {
+                                    b.style.border = '1px solid #e2e8f0';
+                                    b.style.opacity = '0.65';
+                                }
+                            });
+                        });
+
+                        thumbsContainer.appendChild(thumb);
+                    });
+                } else {
+                    thumbsContainer.style.display = 'none';
+                    thumbsContainer.innerHTML = '';
+                }
+            }
+        } else {
+            if (previewImg && placeholderImg) {
+                previewImg.removeAttribute('data-active-src');
+                previewImg.style.display = 'none';
+                placeholderImg.style.display = 'flex';
+            }
+            if (galleryCounter) galleryCounter.style.display = 'none';
+            if (thumbsContainer) {
+                thumbsContainer.style.display = 'none';
+                thumbsContainer.innerHTML = '';
+            }
+        }
+    }
+
+    landingInputs.forEach(input => {
+        input.addEventListener('input', updateLpPreview);
+        input.addEventListener('change', updateLpPreview);
+    });
+    modelRadios.forEach(r => r.addEventListener('change', updateLpPreview));
+    paletteRadios.forEach(p => p.addEventListener('change', updateLpPreview));
+    btnAnimRadios.forEach(ba => ba.addEventListener('change', updateLpPreview));
+
+    document.getElementById('price')?.addEventListener('input', updateLpPreview);
+    document.getElementById('promotional_price')?.addEventListener('input', updateLpPreview);
+    document.getElementById('name')?.addEventListener('input', updateLpPreview);
+    document.getElementById('description')?.addEventListener('input', updateLpPreview);
+
+    // Inicializar preview no carregamento da página e em intervalos curtos para máscaras
+    updateLpPreview();
+    setTimeout(updateLpPreview, 50);
+    setTimeout(updateLpPreview, 250);
+
+    // FAQ Accordion Interativo no Mockup
+    document.querySelectorAll('.mockup-faq-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.mockup-faq-card');
+            const ans = card?.querySelector('.mockup-faq-ans');
+            const icon = this.querySelector('i');
+            const isOpen = ans && ans.style.display === 'block';
+
+            // Fechar outros
+            document.querySelectorAll('.mockup-faq-card').forEach(c => {
+                const a = c.querySelector('.mockup-faq-ans');
+                const ic = c.querySelector('.mockup-faq-btn i');
+                if (a) a.style.display = 'none';
+                if (ic) ic.style.transform = 'rotate(0deg)';
+            });
+
+            if (!isOpen && ans) {
+                ans.style.display = 'block';
+                if (icon) icon.style.transform = 'rotate(45deg)';
+            }
+        });
+    });
+
+    // Thumbs existentes no PHP
+    document.querySelectorAll('.mockup-thumb-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const src = this.dataset.thumbSrc;
+            const idx = this.dataset.thumbIdx;
+            const previewImg = document.getElementById('mockup_main_image');
+            const currentIndexEl = document.getElementById('mockup_current_img_index');
+
+            if (previewImg && src) {
+                previewImg.src = src;
+                previewImg.dataset.activeSrc = src;
+            }
+            if (currentIndexEl && idx) {
+                currentIndexEl.textContent = idx;
+            }
+
+            document.querySelectorAll('.mockup-thumb-btn').forEach(b => {
+                b.style.border = '1px solid #e2e8f0';
+                b.style.opacity = '0.65';
+            });
+            this.style.border = '2px solid #9d174d';
+            this.style.opacity = '1';
         });
     });
 
@@ -843,7 +1211,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Auto slug generator if typing name (both create and edit)
+    // Auto slug & Auto Headline/Subheadline logic
+    const isNewProduct = <?= $isEdit ? 'false' : 'true' ?>;
+    const headlineInput = document.getElementById('headline');
+    const subheadlineInput = document.getElementById('subheadline');
+    const descInput = document.getElementById('description');
+    const btnSyncHeadline = document.getElementById('btn-sync-headline');
+    const btnSyncSubheadline = document.getElementById('btn-sync-subheadline');
+    const urgencySelector = document.getElementById('urgency_phrase_selector');
+    const aboutTitleInput = document.getElementById('about_title');
+    const aboutContentInput = document.getElementById('about_content');
+
+    urgencySelector?.addEventListener('change', function() {
+        if (!this.value) return;
+        const parts = this.value.split('|');
+        if (parts.length === 2) {
+            if (aboutTitleInput) {
+                aboutTitleInput.value = parts[0];
+                aboutTitleInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            if (aboutContentInput) {
+                aboutContentInput.value = parts[1];
+                aboutContentInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            updateLpPreview();
+        }
+    });
+
+    let headlineCustomized = !isNewProduct && !!(headlineInput && headlineInput.value);
+    let subheadlineCustomized = !isNewProduct && !!(subheadlineInput && subheadlineInput.value);
+
+    headlineInput?.addEventListener('input', function() {
+        headlineCustomized = true;
+    });
+
+    subheadlineInput?.addEventListener('input', function() {
+        subheadlineCustomized = true;
+    });
+
+    btnSyncHeadline?.addEventListener('click', function() {
+        if (nameInput && headlineInput) {
+            headlineInput.value = nameInput.value;
+            headlineInput.dispatchEvent(new Event('input', { bubbles: true }));
+            updateLpPreview();
+        }
+    });
+
+    btnSyncSubheadline?.addEventListener('click', function() {
+        if (descInput && subheadlineInput) {
+            subheadlineInput.value = descInput.value;
+            subheadlineInput.dispatchEvent(new Event('input', { bubbles: true }));
+            updateLpPreview();
+        }
+    });
+
     if (nameInput && slugInput) {
         // Extract existing 6-digit random code if available, or generate a new one
         let existingRandom = '';
@@ -867,39 +1288,57 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 slugInput.value = '';
             }
+
+            if (isNewProduct && !headlineCustomized && headlineInput) {
+                headlineInput.value = nameInput.value;
+                updateLpPreview();
+            }
+        });
+    }
+
+    if (descInput && subheadlineInput) {
+        descInput.addEventListener('input', function() {
+            if (isNewProduct && !subheadlineCustomized) {
+                subheadlineInput.value = descInput.value;
+                updateLpPreview();
+            }
         });
     }
 
     // Dirty state management
     if (form && saveBar) {
-        let isDirty = false;
-        const initialData = new FormData(form);
-        const initialEntries = Array.from(initialData.entries());
+        const getFormSnapshot = () => {
+            const data = {};
+            Array.from(form.elements).forEach(el => {
+                if (!el.name || el.type === 'file' || el.type === 'button' || el.type === 'submit') return;
+                if (el.type === 'checkbox') {
+                    data[el.name] = el.checked ? (el.value || '1') : '';
+                } else if (el.type === 'radio') {
+                    if (el.checked) data[el.name] = el.value;
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+            return JSON.stringify(data);
+        };
+
+        const initialState = getFormSnapshot();
 
         function checkDirty() {
-            const currentData = new FormData(form);
-            const currentEntries = Array.from(currentData.entries());
-
-            let dirty = false;
-            if (currentEntries.length !== initialEntries.length) {
-                dirty = true;
-            } else {
-                for (let i = 0; i < currentEntries.length; i++) {
-                    if (currentEntries[i][0] !== initialEntries[i][0] || currentEntries[i][1] !== initialEntries[i][1]) {
-                        dirty = true;
-                        break;
-                    }
-                }
-            }
-
-            if (dirty !== isDirty) {
-                isDirty = dirty;
-                saveBar.hidden = !isDirty;
-            }
+            const currentState = getFormSnapshot();
+            const isDirty = (currentState !== initialState);
+            saveBar.hidden = !isDirty;
         }
 
         form.addEventListener('input', checkDirty);
         form.addEventListener('change', checkDirty);
+
+        const cancelBtn = form.querySelector('[data-cancel-form]');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                window.location.reload();
+            });
+        }
     }
 
     // Image Upload Logic

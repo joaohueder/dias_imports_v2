@@ -3,7 +3,6 @@
 <?= $this->section('content') ?>
 <?php
 $presets = [
-    '1000' => ['label' => 'Compacto', 'value' => '1000px', 'class' => 'compact'],
     '1200' => ['label' => 'Padrão', 'value' => '1200px', 'class' => 'standard'],
     '1400' => ['label' => 'Largo', 'value' => '1400px', 'class' => 'wide'],
     'fluid' => ['label' => 'Fluido', 'value' => '100%', 'class' => 'fluid'],
@@ -12,31 +11,50 @@ $isFluid = $layoutMaxWidth === 'fluid';
 $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 ?>
 <section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>">
-    <div class="settings-tabs" role="tablist" aria-label="Categorias de configurações">
-        <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'layout' ? 'active' : '' ?>" type="button" role="tab" id="layout-tab" aria-selected="<?= $activeSettingsTab === 'layout' ? 'true' : 'false' ?>" aria-controls="layout-panel" data-settings-tab="layout">Layout</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'empresa' ? 'active' : '' ?>" type="button" role="tab" id="company-tab" aria-selected="<?= $activeSettingsTab === 'empresa' ? 'true' : 'false' ?>" aria-controls="company-panel" data-settings-tab="empresa">Empresa</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'evolution' ? 'active' : '' ?>" type="button" role="tab" id="evolution-tab" aria-selected="<?= $activeSettingsTab === 'evolution' ? 'true' : 'false' ?>" aria-controls="evolution-panel" data-settings-tab="evolution">Evolution API</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('meta_ads', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'meta-ads' ? 'active' : '' ?>" type="button" role="tab" id="meta-ads-tab" aria-selected="<?= $activeSettingsTab === 'meta-ads' ? 'true' : 'false' ?>" aria-controls="meta-ads-panel" data-settings-tab="meta-ads">Meta Ads</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'modelos-mensagens' ? 'active' : '' ?>" type="button" role="tab" id="templates-tab" aria-selected="<?= $activeSettingsTab === 'modelos-mensagens' ? 'true' : 'false' ?>" aria-controls="templates-panel" data-settings-tab="modelos-mensagens">Modelos de Mensagens</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'landing-leads' ? 'active' : '' ?>" type="button" role="tab" id="landing-leads-tab" aria-selected="<?= $activeSettingsTab === 'landing-leads' ? 'true' : 'false' ?>" aria-controls="landing-leads-panel" data-settings-tab="landing-leads">Landing Page de Leads</button>
-        <?php endif; ?>
-        <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view')): ?>
-            <button class="settings-tab <?= $activeSettingsTab === 'central-trabalho' ? 'active' : '' ?>" type="button" role="tab" id="central-trabalho-tab" aria-selected="<?= $activeSettingsTab === 'central-trabalho' ? 'true' : 'false' ?>" aria-controls="central-trabalho-panel" data-settings-tab="central-trabalho">Central de Trabalho</button>
-        <?php endif; ?>
-    </div>
+    <div class="settings-layout">
+        <aside class="settings-sidebar">
+            <nav class="settings-tabs" role="tablist" aria-label="Categorias de configurações">
+                <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'layout' ? 'active' : '' ?>" type="button" role="tab" id="layout-tab" aria-selected="<?= $activeSettingsTab === 'layout' ? 'true' : 'false' ?>" aria-controls="layout-panel" data-settings-tab="layout">
+                        <i class="ti ti-layout-dashboard" aria-hidden="true"></i>
+                        <span>Layout</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'empresa' ? 'active' : '' ?>" type="button" role="tab" id="company-tab" aria-selected="<?= $activeSettingsTab === 'empresa' ? 'true' : 'false' ?>" aria-controls="company-panel" data-settings-tab="empresa">
+                        <i class="ti ti-building-store" aria-hidden="true"></i>
+                        <span>Empresa</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'evolution' ? 'active' : '' ?>" type="button" role="tab" id="evolution-tab" aria-selected="<?= $activeSettingsTab === 'evolution' ? 'true' : 'false' ?>" aria-controls="evolution-panel" data-settings-tab="evolution">
+                        <i class="ti ti-brand-whatsapp" aria-hidden="true"></i>
+                        <span>Evolution API</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('meta_ads', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'meta-ads' ? 'active' : '' ?>" type="button" role="tab" id="meta-ads-tab" aria-selected="<?= $activeSettingsTab === 'meta-ads' ? 'true' : 'false' ?>" aria-controls="meta-ads-panel" data-settings-tab="meta-ads">
+                        <i class="ti ti-brand-meta" aria-hidden="true"></i>
+                        <span>Meta Ads</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'modelos-mensagens' ? 'active' : '' ?>" type="button" role="tab" id="templates-tab" aria-selected="<?= $activeSettingsTab === 'modelos-mensagens' ? 'true' : 'false' ?>" aria-controls="templates-panel" data-settings-tab="modelos-mensagens">
+                        <i class="ti ti-message-2" aria-hidden="true"></i>
+                        <span>Modelos de Mensagens</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'central-trabalho' ? 'active' : '' ?>" type="button" role="tab" id="central-trabalho-tab" aria-selected="<?= $activeSettingsTab === 'central-trabalho' ? 'true' : 'false' ?>" aria-controls="central-trabalho-panel" data-settings-tab="central-trabalho">
+                        <i class="ti ti-briefcase" aria-hidden="true"></i>
+                        <span>Central de Trabalho</span>
+                    </button>
+                <?php endif; ?>
+            </nav>
+        </aside>
 
-    <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
+        <div class="settings-content">
+            <?php if (\App\Libraries\UserPermissions::hasPermission('layout', 'view')): ?>
     <form action="<?= site_url('configuracoes/layout') ?>" method="post" data-layout-form>
         <?= csrf_field() ?>
         <input type="hidden" name="layout_max_width" value="<?= esc($layoutMaxWidth) ?>" data-width-input>
@@ -63,8 +81,8 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <label for="layout-width-range">Ajuste Personalizado</label>
                     <output for="layout-width-range" data-width-output><?= $isFluid ? '100%' : esc($layoutMaxWidth) . 'px' ?></output>
                 </div>
-                <input id="layout-width-range" type="range" min="900" max="1800" step="10" value="<?= esc((string) $sliderValue) ?>" data-width-range aria-describedby="width-range-hint">
-                <span class="sr-only" id="width-range-hint">A largura pode variar entre 900 e 1800 pixels.</span>
+                <input id="layout-width-range" type="range" min="1200" max="1800" step="10" value="<?= esc((string) $sliderValue) ?>" data-width-range aria-describedby="width-range-hint">
+                <span class="sr-only" id="width-range-hint">A largura pode variar entre 1200 e 1800 pixels.</span>
             </div>
         </div>
 
@@ -96,7 +114,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <label class="form-field field-district"><span>Bairro</span><input type="text" name="district" maxlength="100" required value="<?= esc(old('district', $companyProfile['district'] ?? '')) ?>"></label>
                 <label class="form-field field-city"><span>Cidade</span><input type="text" name="city" maxlength="100" required autocomplete="address-level2" value="<?= esc(old('city', $companyProfile['city'] ?? '')) ?>"></label>
                 <label class="form-field field-state"><span>UF</span><select name="state" required autocomplete="address-level1"><option value="">Selecione</option><?php $selectedState = old('state', $companyProfile['state'] ?? ''); foreach ($brazilianStates as $state): ?><option value="<?= esc($state) ?>" <?= $selectedState === $state ? 'selected' : '' ?>><?= esc($state) ?></option><?php endforeach; ?></select></label>
-                <label class="form-field field-public-url"><span>Endereço público do site</span><input type="url" name="public_url" maxlength="255" required inputmode="url" placeholder="https://diasimports.com.br" value="<?= esc(old('public_url', $companyProfile['public_url'] ?? '')) ?>"><small>Base dos links das landing pages e do catálogo da Meta. Deve começar com https:// e ser um domínio público.</small></label>
+                <label class="form-field field-public-url"><span>Endereço público do site</span><input type="url" name="public_url" maxlength="255" required inputmode="url" placeholder="https://diasimports.com.br" value="<?= esc(old('public_url', $companyProfile['public_url'] ?? '')) ?>"><small>Base dos links das landing pages e do catálogo da Meta. Deve ser um domínio público.</small></label>
             </div>
 
             <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit')): ?>
@@ -204,12 +222,14 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <?php else: foreach ($evolutionInstances as $instance): ?>
                     <?php $isDefaultInstance = ($evolutionSettings['default_instance_name'] ?? null) === $instance['name']; ?>
                     <article class="instance-card" data-instance-card="<?= esc($instance['name']) ?>">
-                        <div class="instance-heading">
-                            <span class="instance-avatar"><?php if ($instance['profile_picture'] !== ''): ?><img src="<?= esc($instance['profile_picture']) ?>" alt=""><?php else: ?><i class="ti ti-brand-whatsapp" aria-hidden="true"></i><?php endif; ?></span>
-                            <span><strong><?= esc($instance['profile_name']) ?></strong><small><?= esc($instance['name']) ?></small></span>
-                            <?php if ($isDefaultInstance): ?><span class="default-badge">Padrão</span><?php endif; ?>
+                        <div class="instance-main">
+                            <div class="instance-heading">
+                                <span class="instance-avatar"><?php if ($instance['profile_picture'] !== ''): ?><img src="<?= esc($instance['profile_picture']) ?>" alt=""><?php else: ?><i class="ti ti-brand-whatsapp" aria-hidden="true"></i><?php endif; ?></span>
+                                <span><strong><?= esc($instance['profile_name']) ?></strong><small><?= esc($instance['name']) ?></small></span>
+                                <?php if ($isDefaultInstance): ?><span class="default-badge">Padrão</span><?php endif; ?>
+                            </div>
+                            <dl class="instance-data"><div><dt>Status</dt><dd class="connection-status <?= $instance['connected'] ? 'connected' : 'disconnected' ?>" data-instance-status aria-live="polite"><i class="ti <?= $instance['connected'] ? 'ti-circle-check-filled' : 'ti-circle-x-filled' ?>" aria-hidden="true"></i><span><?= $instance['connected'] ? 'Conectada' : esc(ucfirst($instance['state'])) ?></span></dd></div><?php if ($instance['number'] !== ''): ?><div><dt>Número</dt><dd><?= esc($instance['number']) ?></dd></div><?php endif; ?></dl>
                         </div>
-                        <dl class="instance-data"><div><dt>Status</dt><dd class="connection-status <?= $instance['connected'] ? 'connected' : 'disconnected' ?>" data-instance-status aria-live="polite"><i class="ti <?= $instance['connected'] ? 'ti-circle-check-filled' : 'ti-circle-x-filled' ?>" aria-hidden="true"></i><span><?= $instance['connected'] ? 'Conectada' : esc(ucfirst($instance['state'])) ?></span></dd></div><?php if ($instance['number'] !== ''): ?><div><dt>Número</dt><dd><?= esc($instance['number']) ?></dd></div><?php endif; ?></dl>
                         <div class="instance-actions">
                             <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit') && ! $isDefaultInstance): ?><form action="<?= site_url('configuracoes/evolution/instancias/padrao') ?>" method="post" data-confirm-action="evolution-default" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit"><i class="ti ti-star"></i>Tornar padrão</button></form><?php endif; ?>
                             <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit')): ?>
@@ -351,7 +371,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 
     <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'view')): ?>
     <div class="settings-tab-panel templates-panel" id="templates-panel" role="tabpanel" aria-labelledby="templates-tab" data-settings-panel="modelos-mensagens" <?= $activeSettingsTab !== 'modelos-mensagens' ? 'hidden' : '' ?>>
-        <div class="section-title-row">
+        <div class="section-title-row" style="flex-direction: column; align-items: stretch;">
             <div class="setting-intro">
                 <h2>Modelos de Mensagens</h2>
                 <p>Modelos reutilizáveis para divulgar produtos. As tags são trocadas pelos dados reais no momento do envio.</p>
@@ -389,7 +409,17 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         </div>
 
                         <div class="template-content-preview">
-                            <pre><?= esc($tpl['content']) ?></pre>
+                            <?php
+                                $sampleContent = strtr($tpl['content'], [
+                                    '{{nome}}' => 'iPhone 15 Pro Max 256GB',
+                                    '{{descricao}}' => 'Titânio Natural, tela Super Retina XDR e chip A17 Pro.',
+                                    '{{preco}}' => 'R$ 7.890,00',
+                                    '{{preco_promocional}}' => 'R$ 6.990,00',
+                                    '{{desconto}}' => '12% OFF',
+                                    '{{link}}' => 'https://diasimports.com.br/p/iphone-15',
+                                ]);
+                            ?>
+                            <pre><?= esc($sampleContent) ?></pre>
                         </div>
 
                         <div class="template-card-footer">
@@ -434,628 +464,6 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
     </div>
     <?php endif; ?>
 
-    <!-- Aba Landing Page de Leads -->
-    <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'view')): ?>
-    <div class="settings-tab-panel" id="landing-leads-panel" role="tabpanel" aria-labelledby="landing-leads-tab" data-settings-panel="landing-leads" <?= $activeSettingsTab !== 'landing-leads' ? 'hidden' : '' ?>>
-        <div class="setting-intro">
-            <div class="setting-intro-header">
-                <div>
-                    <span class="setting-intro-badge"><i class="ti ti-device-mobile"></i> Mobile First & Conversão</span>
-                    <h2>Landing Page de Leads</h2>
-                    <p>Personalize todos os textos, promessas, benefícios e links da página de captura de clientes para o Grupo VIP no WhatsApp. Acompanhe o resultado em tempo real no mockup ao lado.</p>
-                </div>
-                <div class="setting-intro-actions">
-                    <a href="<?= site_url('leads') ?>" target="_blank" class="button outline" style="text-decoration:none;"><i class="ti ti-external-link" aria-hidden="true"></i>Ver Página Pública</a>
-                </div>
-            </div>
-        </div>
-
-        <?php
-        $lp = $landingLeadSetting ?? [
-            'template_model' => 'model-1',
-            'color_palette' => 'palette-aurora',
-            'bg_animation' => 'bg-particles',
-            'btn_animation' => 'btn-pulse',
-            'seo_title' => 'Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos',
-            'seo_description' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
-            'headline' => 'Garanta Descontos Secretos e Ofertas VIP no WhatsApp',
-            'subheadline' => 'Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão, com preços que não publicamos abertamente.',
-            'badge_text' => '🔥 GRUPO VIP EXCLUSIVO • VAGAS LIMITADAS',
-            'button_text' => 'QUERO MEU ACESSO VIP AGORA',
-            'button_subtext' => '🔒 Acesso 100% gratuito e sem spam',
-            'whatsapp_group_link' => 'https://chat.whatsapp.com/',
-            'card1_icon' => 'ti-discount-check',
-            'card1_title' => 'Até 50% de Desconto Real',
-            'card1_desc' => 'Preços exclusivos de atacado e varejo direto para membros do grupo.',
-            'card2_icon' => 'ti-flame',
-            'card2_title' => 'Ofertas Relâmpago e Primeira Mão',
-            'card2_desc' => 'Novidades e lançamentos liberados no grupo antes de todo mundo.',
-            'card3_icon' => 'ti-shield-lock',
-            'card3_title' => '100% Original e com Garantia',
-            'card3_desc' => 'Importados com nota fiscal, procedência garantida e suporte humanizado.',
-            'modal_title' => '🎉 Parabéns! Seu Acesso VIP Está Liberado',
-            'modal_desc' => 'Seu cadastro foi realizado com sucesso. Clique no botão abaixo para entrar agora no Grupo VIP Oficial no WhatsApp e não perder nenhuma oportunidade.',
-            'modal_button_text' => 'ENTRAR NO GRUPO VIP DO WHATSAPP',
-        ];
-        ?>
-
-        <form action="<?= site_url('configuracoes/landing-leads') ?>" method="post" data-landing-form>
-            <?= csrf_field() ?>
-            <div class="landing-split-layout">
-                <!-- Coluna da Esquerda: Configurações -->
-                <div class="landing-config-col">
-                    <!-- SELETOR DE MODELO VISUAL (6 MODELOS) -->
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(99, 91, 255, 0.15); color: #635bff;"><i class="ti ti-template"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Modelo Visual da Landing Page (6 Opções)</h3>
-                                <p class="settings-section-subtitle">Selecione a estrutura e experiência visual da página. O mockup ao lado atualiza em tempo real.</p>
-                            </div>
-                        </div>
-
-                        <div class="template-models-grid">
-                            <?php
-                            $modelsList = [
-                                ['id' => 'model-1', 'name' => 'Hero Direct & Glass', 'desc' => 'Form no topo com glassmorphism e foco total na conversão imediata.', 'icon' => 'ti-layout-topbar'],
-                                ['id' => 'model-2', 'name' => 'Benefits First', 'desc' => 'Benefícios e prova de valor antes do form para gerar mais desejo.', 'icon' => 'ti-layout-list'],
-                                ['id' => 'model-3', 'name' => 'Minimal Compact', 'desc' => 'Pílulas arredondadas, direto ao ponto e otimizado para 1 polegar.', 'icon' => 'ti-pill'],
-                                ['id' => 'model-4', 'name' => 'Bento Grid', 'desc' => 'Layout moderno em blocos assimétricos estilo Bento Box.', 'icon' => 'ti-layout-grid'],
-                                ['id' => 'model-5', 'name' => 'Cyber Tech Neon', 'desc' => 'Bordas tracejadas neon, visual escuro e tipografia futurista.', 'icon' => 'ti-bolt'],
-                                ['id' => 'model-6', 'name' => 'Editorial Luxury', 'desc' => 'Estilo premium e sofisticado para produtos de alto padrão.', 'icon' => 'ti-crown'],
-                            ];
-                            $currentModel = $lp['template_model'] ?? 'model-1';
-                            ?>
-                            <?php foreach ($modelsList as $m): ?>
-                                <label class="template-model-card <?= $currentModel === $m['id'] ? 'active' : '' ?>">
-                                    <input type="radio" name="template_model" value="<?= esc($m['id']) ?>" <?= $currentModel === $m['id'] ? 'checked' : '' ?> data-lp-model-radio>
-                                    <div class="template-card-inner">
-                                        <div class="template-card-icon"><i class="ti <?= esc($m['icon']) ?>"></i></div>
-                                        <div class="template-card-info">
-                                            <strong><?= esc($m['name']) ?></strong>
-                                            <p><?= esc($m['desc']) ?></p>
-                                        </div>
-                                    </div>
-                                </label>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- SELETOR DE PALETA DE CORES (6 PALETAS) -->
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i class="ti ti-palette"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Paleta de Cores & Efeitos (6 Opções)</h3>
-                                <p class="settings-section-subtitle">Alterne as cores e vibração de contraste da página de captura instantaneamente.</p>
-                            </div>
-                        </div>
-
-                        <div class="color-palettes-grid">
-                            <?php
-                            $palettesList = [
-                                ['id' => 'palette-aurora', 'name' => 'Aurora Neon', 'colors' => ['#635bff', '#ec4899'], 'desc' => 'Violeta & Rosa'],
-                                ['id' => 'palette-emerald', 'name' => 'Emerald Tech', 'colors' => ['#10b981', '#059669'], 'desc' => 'Verde WhatsApp VIP'],
-                                ['id' => 'palette-amber', 'name' => 'Amber Gold', 'colors' => ['#f59e0b', '#ea580c'], 'desc' => 'Ouro & Luxo'],
-                                ['id' => 'palette-ocean', 'name' => 'Ocean Cyan', 'colors' => ['#0ea5e9', '#2563eb'], 'desc' => 'Azul & Ciano Tech'],
-                                ['id' => 'palette-crimson', 'name' => 'Crimson Ruby', 'colors' => ['#f43f5e', '#be123c'], 'desc' => 'Vermelho Urgência'],
-                                ['id' => 'palette-obsidian', 'name' => 'Obsidian Minimal', 'colors' => ['#ffffff', '#71717a'], 'desc' => 'Preto Puro & Titânio'],
-                            ];
-                            $currentPalette = $lp['color_palette'] ?? 'palette-aurora';
-                            ?>
-                            <?php foreach ($palettesList as $p): ?>
-                                <label class="color-palette-card <?= $currentPalette === $p['id'] ? 'active' : '' ?>">
-                                    <input type="radio" name="color_palette" value="<?= esc($p['id']) ?>" <?= $currentPalette === $p['id'] ? 'checked' : '' ?> data-lp-palette-radio>
-                                    <div class="palette-card-inner">
-                                        <div class="palette-preview-dots">
-                                            <span style="background: <?= esc($p['colors'][0]) ?>;"></span>
-                                            <span style="background: <?= esc($p['colors'][1]) ?>;"></span>
-                                        </div>
-                                        <div class="palette-info">
-                                            <strong><?= esc($p['name']) ?></strong>
-                                            <small><?= esc($p['desc']) ?></small>
-                                        </div>
-                                    </div>
-                                </label>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- SELETOR DE ANIMAÇÃO DO BACKGROUND (6 MODELOS) -->
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(14, 165, 233, 0.15); color: #0ea5e9;"><i class="ti ti-sparkles"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Animação de Fundo (6 Modelos de Background)</h3>
-                                <p class="settings-section-subtitle">Escolha o efeito dinâmico de partículas, luzes e fluidos do background.</p>
-                            </div>
-                        </div>
-
-                        <div class="template-models-grid">
-                            <?php
-                            $bgAnimationsList = [
-                                ['id' => 'bg-particles', 'name' => 'Partículas & Orbes', 'desc' => 'Orbes e luzes suaves flutuando harmonicamente no fundo.', 'icon' => 'ti-flare'],
-                                ['id' => 'bg-mesh-gradient', 'name' => 'Gradiente Líquido Mesh', 'desc' => 'Fluxo fluido de gradiente que se move continuamente.', 'icon' => 'ti-ripple'],
-                                ['id' => 'bg-cyber-grid', 'name' => 'Grid Tech Futurista', 'desc' => 'Grade tecnológica em perspectiva com linhas luminosas.', 'icon' => 'ti-grid-dots'],
-                                ['id' => 'bg-radial-pulse', 'name' => 'Pulso Radial Concêntrico', 'desc' => 'Ondas circulares pulsando a partir do centro da tela.', 'icon' => 'ti-circle-dashed'],
-                                ['id' => 'bg-floating-shapes', 'name' => 'Geometrias Flutuantes', 'desc' => 'Formas geométricas translúcidas com rotação suave.', 'icon' => 'ti-polygon'],
-                                ['id' => 'bg-minimal-static', 'name' => 'Estático Minimalista', 'desc' => 'Sem animação de fundo, foco total no conteúdo e conversão.', 'icon' => 'ti-app-window'],
-                            ];
-                            $currentBgAnimation = $lp['bg_animation'] ?? 'bg-particles';
-                            ?>
-                            <?php foreach ($bgAnimationsList as $b): ?>
-                                <label class="template-model-card <?= $currentBgAnimation === $b['id'] ? 'active' : '' ?>">
-                                    <input type="radio" name="bg_animation" value="<?= esc($b['id']) ?>" <?= $currentBgAnimation === $b['id'] ? 'checked' : '' ?> data-lp-bganim-radio>
-                                    <div class="template-card-inner">
-                                        <div class="template-card-icon" style="background: rgba(14, 165, 233, 0.12); color: #0ea5e9;"><i class="ti <?= esc($b['icon']) ?>"></i></div>
-                                        <div class="template-card-info">
-                                            <strong><?= esc($b['name']) ?></strong>
-                                            <p><?= esc($b['desc']) ?></p>
-                                        </div>
-                                    </div>
-                                </label>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- SEO & METADADOS DE COMPARTILHAMENTO (OPEN GRAPH / WHATSAPP / REDES SOCIAIS) -->
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(52, 211, 153, 0.15); color: #34d399;"><i class="ti ti-share"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">SEO & Compartilhamento Social</h3>
-                                <p class="settings-section-subtitle">Título, descrição e prévia exibidos no Google, WhatsApp, Facebook e Instagram ao enviar o link.</p>
-                            </div>
-                        </div>
-
-                        <div class="form-grid single">
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Título da Página e de Compartilhamento (SEO Title / OG Title)</span>
-                                    <small class="field-hint">Aparece na aba do navegador e no título do card no WhatsApp</small>
-                                </span>
-                                <input type="text" name="seo_title" value="<?= esc($lp['seo_title'] ?? '') ?>" placeholder="Ex: Grupo VIP Dias Imports | Ofertas e Descontos Exclusivos" maxlength="255" data-lp-input="seo-title">
-                            </label>
-
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Descrição da Página e Compartilhamento (Meta Description / OG Description)</span>
-                                    <small class="field-hint">Resumo chamativo que aparece abaixo do título no compartilhamento</small>
-                                </span>
-                                <textarea name="seo_description" rows="3" placeholder="Ex: Participe do nosso grupo restrito de clientes e receba oportunidades imperdíveis de importados em primeira mão." data-lp-input="seo-desc"><?= esc($lp['seo_description'] ?? '') ?></textarea>
-                            </label>
-
-                            <!-- UPLOAD E RECORTE DE IMAGEM SOCIAL / WHATSAPP -->
-                            <div class="form-field">
-                                <span class="field-label-row">
-                                    <span>Imagem de Compartilhamento (Open Graph / WhatsApp)</span>
-                                    <small class="field-hint">Tamanho ideal: <strong>600x600 px</strong> (quadrada 1:1) ou <strong>1200x630 px</strong> (máx. 2MB)</small>
-                                </span>
-
-                                <div class="og-uploader-wrap">
-                                    <div class="og-thumb-container">
-                                        <?php 
-                                        $currentSeoImg = !empty($lp['seo_image']) ? base_url($lp['seo_image']) : base_url('og-image.png');
-                                        $hasCustomImg = !empty($lp['seo_image']);
-                                        ?>
-                                        <img src="<?= $currentSeoImg ?>" alt="Imagem de Compartilhamento" id="seo_preview_img" class="og-thumb-preview" data-default-src="<?= base_url('og-image.png') ?>">
-                                        <span class="og-thumb-label" id="og_thumb_label"><?= $hasCustomImg ? 'Personalizada' : 'Padrão (DI)' ?></span>
-                                    </div>
-
-                                    <div class="og-uploader-actions">
-                                        <input type="file" id="seo_image_input" accept="image/png, image/jpeg, image/webp" hidden>
-                                        <input type="hidden" name="seo_image_base64" id="seo_image_base64" value="">
-                                        <input type="hidden" name="seo_image_action" id="seo_image_action" value="">
-
-                                        <button type="button" class="button secondary" id="btn_upload_seo_image">
-                                            <i class="ti ti-upload"></i>
-                                            <span>Enviar nova imagem</span>
-                                        </button>
-
-                                        <button type="button" class="button danger-light" id="btn_remove_seo_image" style="<?= $hasCustomImg ? '' : 'display: none;' ?>">
-                                            <i class="ti ti-trash"></i>
-                                            <span>Restaurar padrão "DI"</span>
-                                        </button>
-                                        
-                                        <div class="og-upload-info">
-                                            <i class="ti ti-info-circle"></i>
-                                            <span>Formatos aceitos: JPG, PNG, WEBP. Você poderá recortar e enquadrar a imagem antes de salvar.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card de Prévia de Compartilhamento no WhatsApp -->
-                            <div class="share-preview-box">
-                                <span class="share-preview-badge"><i class="ti ti-brand-whatsapp"></i> Prévia em tempo real no WhatsApp</span>
-                                <div class="share-preview-card">
-                                    <div class="share-preview-thumb">
-                                        <img src="<?= $currentSeoImg ?>" alt="Prévia WhatsApp" id="whatsapp_preview_img">
-                                    </div>
-                                    <div class="share-preview-content">
-                                        <span class="share-preview-domain"><?= parse_url(base_url(), PHP_URL_HOST) ?: 'diasimports.com.br' ?></span>
-                                        <strong class="share-preview-title" data-share-preview-title><?= esc(!empty($lp['seo_title']) ? $lp['seo_title'] : ($lp['headline'] ?? 'Grupo VIP Dias Imports')) ?></strong>
-                                        <p class="share-preview-desc" data-share-preview-desc><?= esc(!empty($lp['seo_description']) ? $lp['seo_description'] : ($lp['subheadline'] ?? 'Receba oportunidades imperdíveis de importados em primeira mão.')) ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon"><i class="ti ti-flame"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Dobra Principal & Promessa Irresistível</h3>
-                                <p class="settings-section-subtitle">Textos que causam o primeiro impacto visual e prendem a atenção do visitante no celular.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-grid single">
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Badge de Urgência / Escassez (Topo)</span>
-                                    <small class="field-hint">Ex: 🔥 Vagas Limitadas</small>
-                                </span>
-                                <input type="text" name="badge_text" value="<?= esc($lp['badge_text']) ?>" required maxlength="100" data-lp-input="badge">
-                            </label>
-
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Headline Principal (Promessa Forte de Ganho/Desconto)</span>
-                                    <small class="field-hint">Destaque o valor principal</small>
-                                </span>
-                                <input type="text" name="headline" value="<?= esc($lp['headline']) ?>" required maxlength="255" data-lp-input="headline">
-                            </label>
-
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Subheadline (Texto de Apoio Persuasivo)</span>
-                                    <small class="field-hint">Explique como funciona o grupo exclusivo</small>
-                                </span>
-                                <textarea name="subheadline" rows="3" data-lp-input="subheadline"><?= esc($lp['subheadline']) ?></textarea>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(37, 211, 102, 0.15); color: #25d366;"><i class="ti ti-brand-whatsapp"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Chamada para Ação (CTA) e Grupo VIP</h3>
-                                <p class="settings-section-subtitle">Configurações do botão de envio, animação atrativa e link oficial do grupo no WhatsApp.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-grid single">
-                            <label class="form-field">
-                                <span class="field-label-row">
-                                    <span>Link de Convite do Grupo VIP no WhatsApp</span>
-                                    <small class="field-hint">https://chat.whatsapp.com/...</small>
-                                </span>
-                                <input type="url" name="whatsapp_group_link" value="<?= esc($lp['whatsapp_group_link']) ?>" required placeholder="https://chat.whatsapp.com/..." data-lp-input="group-link">
-                            </label>
-
-                            <div class="form-grid">
-                                <label class="form-field">
-                                    <span>Texto do Botão CTA (Captura)</span>
-                                    <input type="text" name="button_text" value="<?= esc($lp['button_text']) ?>" required maxlength="100" data-lp-input="button-text">
-                                </label>
-
-                                <label class="form-field">
-                                    <span>Microtexto de Segurança (Abaixo do Botão)</span>
-                                    <input type="text" name="button_subtext" value="<?= esc($lp['button_subtext']) ?>" maxlength="150" data-lp-input="button-subtext">
-                                </label>
-                            </div>
-
-                            <!-- SELETOR DE ANIMAÇÕES DO BOTÃO CTA (6 OPÇÕES) -->
-                            <div class="cta-animation-group" style="margin-top: 10px;">
-                                <span class="field-label-row" style="margin-bottom: 8px;">
-                                    <span style="font-weight: 700; font-size: 13px; color: var(--text-heading);">Animação do Botão CTA (6 Opções)</span>
-                                    <small class="field-hint">Efeito de movimento para atrair o clique</small>
-                                </span>
-                                <div class="template-models-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                                    <?php
-                                    $btnAnimationsList = [
-                                        ['id' => 'btn-pulse', 'name' => 'Pulso Rítmico', 'desc' => 'Respiração contínua com halo de luz e escala.', 'icon' => 'ti-heart-rate-monitor'],
-                                        ['id' => 'btn-shimmer', 'name' => 'Feixe de Luz (Shimmer)', 'desc' => 'Reflexo metálico brilhante passando pelo botão.', 'icon' => 'ti-sparkles'],
-                                        ['id' => 'btn-shake', 'name' => 'Microvibração (Shake)', 'desc' => 'Vibração atrativa em intervalos regulares.', 'icon' => 'ti-device-mobile-vibration'],
-                                        ['id' => 'btn-bounce', 'name' => 'Salto Suave (Bounce)', 'desc' => 'Pequeno pulo vertical periódico chamando atenção.', 'icon' => 'ti-arrow-autofit-up'],
-                                        ['id' => 'btn-glow-expand', 'name' => 'Onda Expansiva (Ripple)', 'desc' => 'Onda luminosa circular que se propaga continuamente.', 'icon' => 'ti-ripple'],
-                                        ['id' => 'btn-none', 'name' => 'Estático (Sem Efeito)', 'desc' => 'Sem animação contínua, efeito apenas ao passar o mouse.', 'icon' => 'ti-hand-finger'],
-                                    ];
-                                    $currentBtnAnimation = $lp['btn_animation'] ?? 'btn-pulse';
-                                    ?>
-                                    <?php foreach ($btnAnimationsList as $btn): ?>
-                                        <label class="template-model-card <?= $currentBtnAnimation === $btn['id'] ? 'active' : '' ?>">
-                                            <input type="radio" name="btn_animation" value="<?= esc($btn['id']) ?>" <?= $currentBtnAnimation === $btn['id'] ? 'checked' : '' ?> data-lp-btnanim-radio>
-                                            <div class="template-card-inner">
-                                                <div class="template-card-icon" style="background: rgba(37, 211, 102, 0.12); color: #25d366;"><i class="ti <?= esc($btn['icon']) ?>"></i></div>
-                                                <div class="template-card-info">
-                                                    <strong><?= esc($btn['name']) ?></strong>
-                                                    <p><?= esc($btn['desc']) ?></p>
-                                                </div>
-                                            </div>
-                                        </label>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;"><i class="ti ti-star"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Cartões de Vantagens e Benefícios</h3>
-                                <p class="settings-section-subtitle">3 pilares persuasivos para eliminar objeções e aumentar a taxa de conversão.</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Benefício 1 -->
-                        <div class="benefit-config-card">
-                            <div class="benefit-card-header">
-                                <span class="benefit-pill">Benefício 01</span>
-                                <div class="benefit-card-actions">
-                                    <input type="hidden" name="card1_icon" id="card1_icon" value="<?= esc($lp['card1_icon']) ?>" data-lp-input="card1-icon">
-                                    <button type="button" class="icon-picker-trigger-btn" data-open-icon-picker="1" title="Clique para escolher o ícone">
-                                        <span class="icon-trigger-preview"><i class="ti <?= esc($lp['card1_icon']) ?>" data-benefit-icon-preview="1"></i></span>
-                                        <span>Escolher Ícone</span>
-                                        <i class="ti ti-chevron-down icon-trigger-arrow" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-grid single">
-                                <label class="form-field">
-                                    <span>Título do Benefício</span>
-                                    <input type="text" name="card1_title" value="<?= esc($lp['card1_title']) ?>" required maxlength="100" data-lp-input="card1-title">
-                                </label>
-                                <label class="form-field">
-                                    <span>Descrição Detalhada</span>
-                                    <input type="text" name="card1_desc" value="<?= esc($lp['card1_desc']) ?>" required maxlength="255" data-lp-input="card1-desc">
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Benefício 2 -->
-                        <div class="benefit-config-card" style="margin-top:16px;">
-                            <div class="benefit-card-header">
-                                <span class="benefit-pill">Benefício 02</span>
-                                <div class="benefit-card-actions">
-                                    <input type="hidden" name="card2_icon" id="card2_icon" value="<?= esc($lp['card2_icon']) ?>" data-lp-input="card2-icon">
-                                    <button type="button" class="icon-picker-trigger-btn" data-open-icon-picker="2" title="Clique para escolher o ícone">
-                                        <span class="icon-trigger-preview"><i class="ti <?= esc($lp['card2_icon']) ?>" data-benefit-icon-preview="2"></i></span>
-                                        <span>Escolher Ícone</span>
-                                        <i class="ti ti-chevron-down icon-trigger-arrow" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-grid single">
-                                <label class="form-field">
-                                    <span>Título do Benefício</span>
-                                    <input type="text" name="card2_title" value="<?= esc($lp['card2_title']) ?>" required maxlength="100" data-lp-input="card2-title">
-                                </label>
-                                <label class="form-field">
-                                    <span>Descrição Detalhada</span>
-                                    <input type="text" name="card2_desc" value="<?= esc($lp['card2_desc']) ?>" required maxlength="255" data-lp-input="card2-desc">
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Benefício 3 -->
-                        <div class="benefit-config-card" style="margin-top:16px;">
-                            <div class="benefit-card-header">
-                                <span class="benefit-pill">Benefício 03</span>
-                                <div class="benefit-card-actions">
-                                    <input type="hidden" name="card3_icon" id="card3_icon" value="<?= esc($lp['card3_icon']) ?>" data-lp-input="card3-icon">
-                                    <button type="button" class="icon-picker-trigger-btn" data-open-icon-picker="3" title="Clique para escolher o ícone">
-                                        <span class="icon-trigger-preview"><i class="ti <?= esc($lp['card3_icon']) ?>" data-benefit-icon-preview="3"></i></span>
-                                        <span>Escolher Ícone</span>
-                                        <i class="ti ti-chevron-down icon-trigger-arrow" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-grid single">
-                                <label class="form-field">
-                                    <span>Título do Benefício</span>
-                                    <input type="text" name="card3_title" value="<?= esc($lp['card3_title']) ?>" required maxlength="100" data-lp-input="card3-title">
-                                </label>
-                                <label class="form-field">
-                                    <span>Descrição Detalhada</span>
-                                    <input type="text" name="card3_desc" value="<?= esc($lp['card3_desc']) ?>" required maxlength="255" data-lp-input="card3-desc">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-card-block">
-                        <div class="settings-card-header">
-                            <div class="card-header-icon" style="background: rgba(124, 105, 255, 0.15); color: #a855f7;"><i class="ti ti-circle-check"></i></div>
-                            <div>
-                                <h3 class="settings-section-title">Modal de Confirmação & Acesso VIP</h3>
-                                <p class="settings-section-subtitle">Exibido imediatamente após o lead preencher o formulário para conduzi-lo ao WhatsApp.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-grid single">
-                            <label class="form-field">
-                                <span>Título de Celebração do Modal</span>
-                                <input type="text" name="modal_title" value="<?= esc($lp['modal_title']) ?>" required maxlength="150" data-lp-input="modal-title">
-                            </label>
-
-                            <label class="form-field">
-                                <span>Mensagem de Instrução / Próximo Passo</span>
-                                <textarea name="modal_desc" rows="3" data-lp-input="modal-desc"><?= esc($lp['modal_desc']) ?></textarea>
-                            </label>
-
-                            <label class="form-field">
-                                <span>Texto do Botão Final (Direcionar para o WhatsApp)</span>
-                                <input type="text" name="modal_button_text" value="<?= esc($lp['modal_button_text']) ?>" required maxlength="100" data-lp-input="modal-button-text">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Coluna da Direita: Preview Mobile Interativo e Fiel -->
-                <div class="landing-preview-col">
-                    <div class="preview-sticky-wrap">
-                        <div class="preview-device-header">
-                            <div class="preview-device-title">
-                                <span class="preview-live-indicator"></span>
-                                <strong>Preview Mobile</strong>
-                            </div>
-                            <!-- Switcher de visualização: Página vs Modal -->
-                            <div class="preview-mode-switch" role="tablist">
-                                <button type="button" class="preview-mode-btn active" data-preview-mode="page"><i class="ti ti-layout"></i> Página</button>
-                                <button type="button" class="preview-mode-btn" data-preview-mode="modal"><i class="ti ti-app-window"></i> Modal VIP</button>
-                            </div>
-                        </div>
-                        
-                        <div class="mobile-mockup-frame">
-                            <!-- Dynamic Island / Topo do Celular -->
-                            <div class="mobile-dynamic-island">
-                                <div class="island-camera"></div>
-                                <div class="island-sensor"></div>
-                            </div>
-                            
-                            <!-- Barra de Status do Sistema -->
-                            <div class="mobile-mockup-status-bar">
-                                <span class="status-time">9:41</span>
-                                <div class="status-icons">
-                                    <i class="ti ti-antenna-bars-5"></i>
-                                    <i class="ti ti-wifi"></i>
-                                    <i class="ti ti-battery-4"></i>
-                                </div>
-                            </div>
-                            
-                            <div class="mobile-screen-content" data-mockup-screen data-mockup-model="<?= esc($lp['template_model'] ?? 'model-1') ?>" data-mockup-palette="<?= esc($lp['color_palette'] ?? 'palette-aurora') ?>" data-mockup-bganim="<?= esc($lp['bg_animation'] ?? 'bg-particles') ?>" data-mockup-btnanim="<?= esc($lp['btn_animation'] ?? 'btn-pulse') ?>">
-                                <!-- Camada de Efeitos Dinâmicos de Fundo no Mockup -->
-                                <div class="bg-fx-layer" aria-hidden="true">
-                                    <div class="bg-particles-wrap">
-                                        <div class="particle-orb"></div>
-                                        <div class="particle-orb"></div>
-                                        <div class="particle-orb"></div>
-                                    </div>
-                                    <div class="bg-mesh-wrap"></div>
-                                    <div class="bg-grid-wrap"><div class="bg-grid-plane"></div></div>
-                                    <div class="bg-pulse-wrap">
-                                        <div class="pulse-ring"></div>
-                                        <div class="pulse-ring"></div>
-                                        <div class="pulse-ring"></div>
-                                    </div>
-                                    <div class="bg-shapes-wrap">
-                                        <div class="shape-item"></div>
-                                        <div class="shape-item"></div>
-                                        <div class="shape-item"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Modo 1: Página de Captura -->
-                                <div class="lp-preview-body" data-preview-screen="page" style="position: relative; z-index: 1;">
-                                    <div class="lp-preview-brand">
-                                        <div class="lp-preview-logo">DI</div>
-                                        <span class="lp-preview-brandname"><?= esc($companyProfile['name'] ?? 'Dias Imports') ?></span>
-                                    </div>
-
-                                    <div class="lp-preview-badge" data-preview="badge">
-                                        <span class="lp-preview-dot"></span>
-                                        <span><?= esc($lp['badge_text']) ?></span>
-                                    </div>
-
-                                    <h4 class="lp-preview-title" data-preview="headline"><?= esc($lp['headline']) ?></h4>
-                                    <p class="lp-preview-sub" data-preview="subheadline"><?= esc($lp['subheadline']) ?></p>
-
-                                    <div class="lp-preview-form-card">
-                                        <div class="lp-preview-card-header">
-                                            <div class="lp-card-tag"><i class="ti ti-lock"></i> Acesso Restrito</div>
-                                            <strong>Liberar Convite Exclusivo</strong>
-                                            <small>Preencha para receber o link direto</small>
-                                        </div>
-                                        <div class="lp-mock-input"><i class="ti ti-user"></i> <span>Seu Nome Completo</span></div>
-                                        <div class="lp-mock-input"><i class="ti ti-brand-whatsapp"></i> <span>(00) 00000-0000</span></div>
-                                        <div class="lp-preview-btn">
-                                            <i class="ti ti-arrow-narrow-right"></i>
-                                            <span data-preview="button-text"><?= esc($lp['button_text']) ?></span>
-                                        </div>
-                                        <small class="lp-preview-btn-sub" data-preview="button-subtext"><?= esc($lp['button_subtext']) ?></small>
-                                    </div>
-
-                                    <div class="lp-preview-benefits">
-                                        <div class="lp-preview-bcard">
-                                            <div class="lp-preview-bicon"><i class="ti <?= esc($lp['card1_icon']) ?>" data-preview="card1-icon"></i></div>
-                                            <div class="lp-preview-binfo">
-                                                <strong data-preview="card1-title"><?= esc($lp['card1_title']) ?></strong>
-                                                <p data-preview="card1-desc"><?= esc($lp['card1_desc']) ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="lp-preview-bcard">
-                                            <div class="lp-preview-bicon"><i class="ti <?= esc($lp['card2_icon']) ?>" data-preview="card2-icon"></i></div>
-                                            <div class="lp-preview-binfo">
-                                                <strong data-preview="card2-title"><?= esc($lp['card2_title']) ?></strong>
-                                                <p data-preview="card2-desc"><?= esc($lp['card2_desc']) ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="lp-preview-bcard">
-                                            <div class="lp-preview-bicon"><i class="ti <?= esc($lp['card3_icon']) ?>" data-preview="card3-icon"></i></div>
-                                            <div class="lp-preview-binfo">
-                                                <strong data-preview="card3-title"><?= esc($lp['card3_title']) ?></strong>
-                                                <p data-preview="card3-desc"><?= esc($lp['card3_desc']) ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="lp-preview-footer">
-                                        <div class="lp-preview-trust">
-                                            <span><i class="ti ti-shield-check"></i> Seguro</span>
-                                            <span><i class="ti ti-discount-check"></i> Oficial</span>
-                                            <span><i class="ti ti-bolt"></i> Instantâneo</span>
-                                        </div>
-                                        <small>© <?= esc($companyProfile['name'] ?? 'Dias Imports') ?> • Todos os direitos reservados</small>
-                                    </div>
-                                </div>
-
-                                <!-- Modo 2: Preview do Modal VIP -->
-                                <div class="lp-preview-modal-view" data-preview-screen="modal" hidden>
-                                    <div class="lp-modal-preview-box">
-                                        <div class="lp-modal-preview-icon"><i class="ti ti-circle-check-filled"></i></div>
-                                        <h4 class="lp-modal-preview-title" data-preview="modal-title"><?= esc($lp['modal_title']) ?></h4>
-                                        <p class="lp-modal-preview-desc" data-preview="modal-desc"><?= esc($lp['modal_desc']) ?></p>
-                                        <div class="lp-modal-preview-btn">
-                                            <i class="ti ti-brand-whatsapp"></i>
-                                            <span data-preview="modal-button-text"><?= esc($lp['modal_button_text']) ?></span>
-                                        </div>
-                                        <div class="lp-modal-preview-tip">
-                                            <i class="ti ti-info-circle"></i>
-                                            <span>Você será redirecionado para o WhatsApp</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Barra Home Indicator do iOS -->
-                            <div class="mobile-home-indicator"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Barra Flutuante Salvar/Cancelar -->
-            <?php if (\App\Libraries\UserPermissions::hasPermission('landing_leads', 'edit')): ?>
-            <div class="save-bar" data-landing-save-bar hidden aria-hidden="true">
-                <p>
-                    <strong>Alterações não salvas na Landing Page</strong>
-                    <span>Salve para publicar as alterações na página pública de leads.</span>
-                </p>
-                <div class="save-actions">
-                    <button class="button secondary" type="button" data-cancel-landing>Cancelar</button>
-                    <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
-                </div>
-            </div>
-            <?php endif; ?>
-        </form>
-    </div>
-    <?php endif; ?>
-
     <?php if (\App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view')): ?>
     <div class="settings-tab-panel central-trabalho-panel" id="central-trabalho-panel" role="tabpanel" aria-labelledby="central-trabalho-tab" data-settings-panel="central-trabalho" <?= $activeSettingsTab !== 'central-trabalho' ? 'hidden' : '' ?>>
         <div class="setting-intro">
@@ -1064,51 +472,50 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         </div>
 
         <!-- Endpoints de Execução e Limpeza (Webcron / URLs de Automação) -->
-        <div class="job-settings-card" style="margin-bottom: 24px;">
-            <div class="job-card-header">
-                <div class="job-card-title">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="ti ti-link" style="font-size: 20px; color: var(--primary, #6366f1);"></i>
-                        <h3 style="margin: 0;">URLs de Execução e Manutenção (Webcron)</h3>
-                    </div>
-                    <p style="margin-top: 4px;">Utilize estas URLs em serviços de Cron externo (como EasyCron, cron-job.org) ou requisições agendadas.</p>
+        <div class="webcron-card">
+            <div class="webcron-header">
+                <div class="webcron-icon"><i class="ti ti-link"></i></div>
+                <div class="webcron-title-group">
+                    <h3>URLs de Execução e Manutenção (Webcron)</h3>
+                    <p>Utilize estas URLs em serviços de Cron externo (como EasyCron, cron-job.org) ou requisições agendadas.</p>
                 </div>
             </div>
-            <div class="job-card-body" style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="form-field">
-                    <label style="display: flex; align-items: center; gap: 6px;">
-                        <span>URL de Execução da Fila (cron-runner)</span>
-                        <span class="badge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary, #6366f1); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">A cada 1 minuto</span>
-                    </label>
-                    <div style="display: flex; gap: 8px; margin-top: 4px;">
-                        <input type="text" class="input" readonly id="setting-cron-runner-url" value="<?= base_url('cron-runner.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" style="background: rgb(var(--surface-secondary)); font-family: monospace; font-size: 13px; flex: 1;">
-                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-runner-url').value); alert('URL cron-runner copiada!');" style="white-space: nowrap;">
+            
+            <div class="webcron-items-grid">
+                <div class="webcron-item">
+                    <div class="webcron-item-header">
+                        <span class="webcron-item-label">URL de Execução da Fila (cron-runner)</span>
+                        <span class="webcron-badge runner"><i class="ti ti-clock"></i> A cada 5 minutos</span>
+                    </div>
+                    <div class="webcron-input-group">
+                        <div class="webcron-url-text" id="setting-cron-runner-url"><?= base_url('cron-runner.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>&limit=50</div>
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-runner-url').textContent); alert('URL cron-runner copiada!');">
                             <i class="ti ti-copy" aria-hidden="true"></i>
                             <span>Copiar</span>
                         </button>
                     </div>
-                    <span style="font-size: 12px; color: rgb(var(--muted)); margin-top: 6px; display: block;">
-                        <i class="ti ti-info-circle" style="vertical-align: middle; margin-right: 4px;"></i>
-                        Processa o lote de tarefas pendentes na fila. Configure seu agendador para chamar esta URL <strong>a cada 1 minuto</strong>.
-                    </span>
+                    <p class="webcron-hint">
+                        <i class="ti ti-info-circle"></i>
+                        Processa o lote de tarefas pendentes na fila. Configure seu agendador para chamar esta URL <strong>a cada 5 minutos</strong>.
+                    </p>
                 </div>
 
-                <div class="form-field">
-                    <label style="display: flex; align-items: center; gap: 6px;">
-                        <span>URL de Limpeza de Fila Travada (cron-clean)</span>
-                        <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">A cada 5 minutos</span>
-                    </label>
-                    <div style="display: flex; gap: 8px; margin-top: 4px;">
-                        <input type="text" class="input" readonly id="setting-cron-clean-url" value="<?= base_url('cron-clean.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" style="background: rgb(var(--surface-secondary)); font-family: monospace; font-size: 13px; flex: 1;">
-                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-clean-url').value); alert('URL cron-clean copiada!');" style="white-space: nowrap;">
+                <div class="webcron-item">
+                    <div class="webcron-item-header">
+                        <span class="webcron-item-label">URL de Limpeza de Fila Travada (cron-clean)</span>
+                        <span class="webcron-badge clean"><i class="ti ti-clock"></i> A cada 10 minutos</span>
+                    </div>
+                    <div class="webcron-input-group">
+                        <div class="webcron-url-text" id="setting-cron-clean-url"><?= base_url('cron-clean.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?></div>
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-clean-url').textContent); alert('URL cron-clean copiada!');">
                             <i class="ti ti-copy" aria-hidden="true"></i>
                             <span>Copiar</span>
                         </button>
                     </div>
-                    <span style="font-size: 12px; color: rgb(var(--muted)); margin-top: 6px; display: block;">
-                        <i class="ti ti-info-circle" style="vertical-align: middle; margin-right: 4px;"></i>
-                        Redefine automaticamente tarefas com status "Processando" de volta para "Pendente" e limpa travas de cache. Configure seu agendador para chamar esta URL <strong>a cada 5 minutos</strong>.
-                    </span>
+                    <p class="webcron-hint">
+                        <i class="ti ti-info-circle"></i>
+                        Redefine automaticamente tarefas com status "Processando" de volta para "Pendente" e limpa travas de cache. Configure seu agendador para chamar esta URL <strong>a cada 10 minutos</strong>.
+                    </p>
                 </div>
             </div>
         </div>
@@ -1171,8 +578,8 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         <?php endif; ?>
     </div>
     <?php endif; ?>
-
-    <!-- Modal de Recorte de Imagem (Cropper) -->
+    </div>
+</section>
     <div class="template-dialog" id="cropper_modal" hidden aria-hidden="true">
         <section class="template-dialog-card cropper-dialog-card" role="dialog" aria-modal="true">
             <button class="template-dialog-close" type="button" id="btn_close_cropper" aria-label="Fechar modal"><i class="ti ti-x" aria-hidden="true"></i></button>
@@ -1290,6 +697,9 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         <div class="chat-bubble-container">
                             <div class="chat-bubble">
                                 <span class="bubble-sender"><?= esc($company['name'] ?? 'Dias Imports') ?></span>
+                                <div class="bubble-image-preview" style="display: none; margin-bottom: 8px; border-radius: 8px; overflow: hidden;">
+                                    <img src="" alt="Produto" style="width: 100%; height: auto; display: block;">
+                                </div>
                                 <div class="bubble-content" data-template-bubble-text>
                                     Olá! Confira as novidades imperdíveis da nossa loja.
                                 </div>

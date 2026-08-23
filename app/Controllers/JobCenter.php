@@ -151,9 +151,44 @@ class JobCenter extends BaseController
 
     public function runNow(): RedirectResponse
     {
+        @ini_set('max_execution_time', '300');
+        @set_time_limit(300);
+
         $res = $this->jobCenterService->processPendingQueue(10);
         return redirect()->to(site_url('central-trabalho'))
             ->with('success', "Ciclo de execução processado: {$res['processed']} sucesso(s), {$res['failed']} falha(s).");
+    }
+
+    public function runSingleJob(int $id): RedirectResponse
+    {
+        @ini_set('max_execution_time', '180');
+        @set_time_limit(180);
+
+        $job = $this->queueModel->find($id);
+        if (!$job) {
+            return redirect()->to(site_url('central-trabalho'))
+                ->with('error', 'Trabalho não encontrado na fila.');
+        }
+
+        if ($job['status'] !== 'pending') {
+            return redirect()->to(site_url('central-trabalho'))
+                ->with('error', 'Apenas tarefas com status "Pendente" podem ser executadas manualmente.');
+        }
+
+        // Força a data agendada para agora caso esteja no futuro e executa limit 1
+        $this->queueModel->update($id, ['scheduled_at' => date('Y-m-d H:i:s')]);
+        
+        $res = $this->jobCenterService->processPendingQueue(1);
+        
+        $updatedJob = $this->queueModel->find($id);
+        if ($updatedJob && $updatedJob['status'] === 'completed') {
+            return redirect()->to(site_url('central-trabalho'))
+                ->with('success', "Tarefa #{$id} executada com sucesso.");
+        }
+
+        $errMsg = !empty($updatedJob['error_message']) ? ': ' . $updatedJob['error_message'] : '.';
+        return redirect()->to(site_url('central-trabalho'))
+            ->with('error', "Falha ao executar tarefa #{$id}{$errMsg}");
     }
 
     public function saveJobSettings(): RedirectResponse

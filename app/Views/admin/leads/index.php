@@ -3,13 +3,13 @@
 <?= $this->section('content') ?>
 <div class="leads-module-wrap" data-leads-module>
 
-    <!-- Barra de regressão / atualização automática 10s no topo do painel -->
+    <!-- Barra de regressão / atualização automática 30s no topo do painel -->
     <div class="leads-auto-refresh-bar" data-refresh-bar-container>
         <div class="refresh-bar-content">
             <div class="refresh-status-badge">
                 <span class="status-pulse-dot" aria-hidden="true"></span>
                 <span>Sincronização em tempo real</span>
-                <span class="refresh-timer-info">(atualiza em <strong data-refresh-countdown>10s</strong>)</span>
+                <span class="refresh-timer-info">(atualiza em <strong data-refresh-countdown>30s</strong>)</span>
             </div>
             <button type="button" class="btn-refresh-manual" data-refresh-now title="Atualizar agora">
                 <i class="ti ti-refresh" aria-hidden="true"></i>

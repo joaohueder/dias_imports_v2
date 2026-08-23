@@ -43,48 +43,76 @@ CronRunnerBoot::init($paths);
 // Aumenta o tempo limite de execução para evitar timeout durante o processamento da fila
 set_time_limit(300);
 
-header('Content-Type: application/json; charset=utf-8');
+// Desabilita o buffer de saída para permitir streaming em tempo real
+while (ob_get_level() > 0) {
+    ob_end_flush();
+}
+ob_implicit_flush(true);
+
+header('Content-Type: text/plain; charset=utf-8');
+header('Cache-Control: no-cache, must-revalidate');
+header('X-Content-Type-Options: nosniff');
 
 $envToken = env('app.cronToken') ?: env('app_cronToken') ?: 'dias_imports_cron_secret_2026';
 $providedToken = (string) ($_GET['token'] ?? $_POST['token'] ?? ($_SERVER['HTTP_X_CRON_TOKEN'] ?? ''));
 
 if ($providedToken === '' || !hash_equals($envToken, $providedToken)) {
     http_response_code(403);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Acesso negado: token inválido ou ausente.',
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    echo "Acesso negado: token inválido ou ausente.\n";
     exit;
 }
+
+echo "==================================================\n";
+echo " INICIANDO CRON RUNNER - " . date('Y-m-d H:i:s') . "\n";
+echo "==================================================\n\n";
 
 try {
     $limit = max(1, min(100, (int) ($_GET['limit'] ?? $_POST['limit'] ?? 50)));
     $service = new \App\Services\JobCenterService();
-    $results = $service->processPendingQueue($limit);
+    
+    // Passa um callback de logger para imprimir em tempo real
+    $results = $service->processPendingQueue($limit, function($msg) {
+        echo "[".date('H:i:s')."] " . $msg . "\n";
+        flush();
+    });
 
     if (!empty($results['skipped'])) {
-        echo json_encode([
-            'success'   => true,
-            'skipped'   => true,
-            'message'   => $results['message'] ?? 'Já existe uma execução ativa em andamento. Chamada ignorada.',
-            'processed' => 0,
-            'failed'    => 0,
-            'timestamp' => date('Y-m-d H:i:s'),
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
+        echo "\n" . ($results['message'] ?? 'Já existe uma execução ativa em andamento. Chamada ignorada.') . "\n";
+    } else {
+        echo "\n==================================================\n";
+        echo " RESUMO DA EXECUÇÃO\n";
+        echo "==================================================\n";
+        echo "Processados com sucesso: " . $results['processed'] . "\n";
+        echo "Falhas definitivas: " . $results['failed'] . "\n";
     }
 
-    echo json_encode([
-        'success'   => true,
-        'message'   => 'Fila da Central de Trabalho processada com sucesso.',
-        'processed' => $results['processed'],
-        'failed'    => $results['failed'],
-        'timestamp' => date('Y-m-d H:i:s'),
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    echo "\n[".date('H:i:s')."] Executando rotina de limpeza (cron-clean)...\n";
+    
+    // Executa a limpeza de fila travada (cron-clean) internamente
+    $db = \Config\Database::connect();
+    $builder = $db->table('system_job_queue');
+    $countProcessing = $builder->where('status', 'processing')->countAllResults(false);
+    
+    if ($countProcessing > 0) {
+        $builder->where('status', 'processing')->update([
+            'status'        => 'pending',
+            'error_message' => null,
+            'updated_at'    => date('Y-m-d H:i:s'),
+        ]);
+        echo "[".date('H:i:s')."] Limpeza concluída: {$countProcessing} tarefa(s) travada(s) redefinida(s) para 'pending'.\n";
+    } else {
+        echo "[".date('H:i:s')."] Limpeza concluída: Nenhuma tarefa travada encontrada.\n";
+    }
+    
+    $cache = \Config\Services::cache();
+    $cache->delete('job_center_running_lock');
+    
+    echo "\n==================================================\n";
+    echo " CRON RUNNER FINALIZADO - " . date('Y-m-d H:i:s') . "\n";
+    echo "==================================================\n";
+
 } catch (\Throwable $e) {
     http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Erro durante o processamento: ' . $e->getMessage(),
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    echo "\n[ERRO FATAL] " . $e->getMessage() . "\n";
+    echo $e->getTraceAsString() . "\n";
 }
