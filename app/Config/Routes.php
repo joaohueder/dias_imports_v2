@@ -28,17 +28,17 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('grupos-whatsapp/(:num)/excluir', 'WhatsappGroups::delete/$1', ['filter' => ['permission:whatsapp_groups,delete', 'csrf']]);
 
     // Produtos
-    $routes->get('produtos', 'Products::index', ['filter' => 'permission:products,view']);
-    $routes->get('produtos/novo', 'Products::create', ['filter' => 'permission:products,create']);
-    $routes->post('produtos/novo', 'Products::store', ['filter' => ['permission:products,create', 'csrf']]);
-    $routes->get('produtos/(:num)/editar', 'Products::edit/$1', ['filter' => 'permission:products,edit']);
-    $routes->post('produtos/(:num)/editar', 'Products::update/$1', ['filter' => ['permission:products,edit', 'csrf']]);
-    $routes->post('produtos/(:num)/status', 'Products::toggleStatus/$1', ['filter' => ['permission:products,edit', 'csrf']]);
-    $routes->post('produtos/(:num)/excluir', 'Products::delete/$1', ['filter' => ['permission:products,delete', 'csrf']]);
-    $routes->post('produtos/upload-imagem', 'Products::uploadImage', ['filter' => ['permission:products,edit', 'csrf']]);
-    $routes->post('produtos/excluir-imagem', 'Products::deleteImage', ['filter' => ['permission:products,edit', 'csrf']]);
-    $routes->post('produtos/ordenar-imagens', 'Products::reorderImages', ['filter' => ['permission:products,edit', 'csrf']]);
-    $routes->post('produtos/capa-imagem', 'Products::setCoverImage', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->get('produtos', 'Admin\Products::index', ['filter' => 'permission:products,view']);
+    $routes->get('produtos/novo', 'Admin\Products::create', ['filter' => 'permission:products,create']);
+    $routes->post('produtos/novo', 'Admin\Products::store', ['filter' => ['permission:products,create', 'csrf']]);
+    $routes->get('produtos/(:num)/editar', 'Admin\Products::edit/$1', ['filter' => 'permission:products,edit']);
+    $routes->post('produtos/(:num)/editar', 'Admin\Products::update/$1', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/(:num)/status', 'Admin\Products::toggleStatus/$1', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/(:num)/excluir', 'Admin\Products::delete/$1', ['filter' => ['permission:products,delete', 'csrf']]);
+    $routes->post('produtos/upload-imagem', 'Admin\Products::uploadImage', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/excluir-imagem', 'Admin\Products::deleteImage', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/ordenar-imagens', 'Admin\Products::reorderImages', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/capa-imagem', 'Admin\Products::setCoverImage', ['filter' => ['permission:products,edit', 'csrf']]);
 
     // Leads VIP
     $routes->get('leads-vip', 'VipLeads::index', ['filter' => 'permission:vip_leads,view']);

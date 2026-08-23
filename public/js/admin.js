@@ -270,6 +270,7 @@
             'group-status-ativar': { title: 'Ativar este grupo?', message: (name) => `O grupo “${name}” voltará a ficar ativo no sistema.`, label: 'Sim, ativar', icon: 'ti-circle-check', buttonIcon: 'ti-check', variant: 'success' },
             'group-status-inativar': { title: 'Inativar este grupo?', message: (name) => `O grupo “${name}” ficará inativo no sistema até ser ativado novamente.`, label: 'Sim, inativar', icon: 'ti-plug-off', buttonIcon: 'ti-power', variant: 'warning' },
             'group-delete': { title: 'Excluir este grupo?', message: (name) => `O grupo “${name}” será removido do sistema. (Não será excluído do WhatsApp).`, label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
+            'image-delete': { title: 'Excluir imagem?', message: () => 'A imagem será removida do produto permanentemente. Essa ação não pode ser desfeita.', label: 'Sim, excluir', icon: 'ti-trash', buttonIcon: 'ti-trash', variant: 'danger' },
             logout: { title: 'Deseja realmente sair?', message: () => 'Sua sessão atual será encerrada no navegador com segurança.', label: 'Sim, sair agora', icon: 'ti-logout', buttonIcon: 'ti-logout', variant: 'danger' },
         };
         const closeActionDialog = () => {

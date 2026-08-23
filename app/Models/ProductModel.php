@@ -22,6 +22,8 @@ class ProductModel extends Model
         'meta_ads_active',
         'layout',
         'color_palette',
+        'bg_animation',
+        'btn_animation',
         'headline',
         'subheadline',
         'button_text',
@@ -37,10 +39,10 @@ class ProductModel extends Model
     protected array $casts = [
         'id' => 'int',
         'price' => 'float',
-        'promotional_price' => 'float',
+        'promotional_price' => '?float',
         'active' => 'boolean',
         'meta_ads_active' => 'boolean',
-        'benefits' => 'json-array'
+        'benefits' => '?json-array'
     ];
 
     protected array $castHandlers = [];
