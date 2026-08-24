@@ -110,6 +110,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('configuracoes/tempo-real', 'Home::saveRealtimeSettings', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/iniciar', 'Home::startRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/parar', 'Home::stopRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
+    $routes->post('configuracoes/tempo-real/forcar-parar', 'Home::killRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/(:num)/status', 'Home::toggleRealtimeScreen/$1', ['filter' => ['permission:realtime,edit', 'csrf']]);
 });
 

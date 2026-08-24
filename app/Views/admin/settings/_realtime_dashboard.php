@@ -58,17 +58,23 @@
                 <p>Diagnóstico em tempo real da saúde dos snapshots e ciclos</p>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
             <?php if ($isOnline): ?>
                 <span class="webcron-badge" style="background: rgb(var(--success) / .14); color: rgb(var(--success)); border: 1px solid rgb(var(--success) / .28); font-size: 12px; padding: 6px 14px;">
                     <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--success)); box-shadow: 0 0 8px rgb(var(--success));"></span>
                     ONLINE (Ciclo ativo há <?= $secondsAgo !== null ? $secondsAgo . 's' : '0s' ?>)
                 </span>
                 <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'edit')): ?>
-                    <form action="<?= site_url('configuracoes/tempo-real/parar') ?>" method="post" onsubmit="return confirm('Deseja realmente enviar o sinal para parar o Worker Realtime? Ele será finalizado com segurança no próximo ciclo.');" style="margin: 0;">
+                    <form action="<?= site_url('configuracoes/tempo-real/parar') ?>" method="post" onsubmit="return confirm('Deseja enviar o sinal para parar o Worker Realtime no próximo ciclo?');" style="margin: 0;">
                         <?= csrf_field() ?>
-                        <button type="submit" class="button secondary" style="padding: 6px 12px; font-size: 12px; color: rgb(var(--danger)); border-color: rgb(var(--danger) / .3); background: rgb(var(--danger) / .08);">
-                            <i class="ti ti-player-stop" aria-hidden="true"></i> Parar Worker
+                        <button type="submit" class="button secondary" style="padding: 6px 12px; font-size: 12px; color: rgb(var(--foreground)); border-color: rgb(var(--border)); background: rgb(var(--card));" title="Para no próximo ciclo de 5 segundos">
+                            <i class="ti ti-player-pause" aria-hidden="true"></i> Parar
+                        </button>
+                    </form>
+                    <form action="<?= site_url('configuracoes/tempo-real/forcar-parar') ?>" method="post" onsubmit="return confirm('ATENÇÃO: Deseja forçar o encerramento imediato (Kill Process) do worker no servidor e liberar todas as travas?');" style="margin: 0;">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="button secondary" style="padding: 6px 12px; font-size: 12px; color: rgb(var(--danger)); border-color: rgb(var(--danger) / .3); background: rgb(var(--danger) / .08);" title="Mata o processo imediatamente via SO e remove arquivos lock">
+                            <i class="ti ti-flame" aria-hidden="true"></i> Forçar Fechamento (Kill)
                         </button>
                     </form>
                 <?php endif; ?>
@@ -82,6 +88,12 @@
                         <?= csrf_field() ?>
                         <button type="submit" class="button primary" style="padding: 6px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
                             <i class="ti ti-player-play" aria-hidden="true"></i> Ativar Worker no Servidor
+                        </button>
+                    </form>
+                    <form action="<?= site_url('configuracoes/tempo-real/forcar-parar') ?>" method="post" onsubmit="return confirm('Deseja limpar travas e garantir que qualquer processo residual do cron-realtime seja finalizado?');" style="margin: 0;">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="button secondary" style="padding: 6px 12px; font-size: 12px; color: rgb(var(--muted)); border-color: rgb(var(--border)); background: transparent;" title="Garante que não há nenhum processo residual em execução e remove travas de lock">
+                            <i class="ti ti-trash" aria-hidden="true"></i> Limpar Travas/Kill
                         </button>
                     </form>
                 <?php endif; ?>

@@ -439,6 +439,18 @@ class Home extends BaseController
         return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Sinal de parada enviado com sucesso ao worker realtime. Ele será encerrado no próximo ciclo de verificação.');
     }
 
+    public function killRealtimeWorker(): RedirectResponse
+    {
+        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
+            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para forçar o encerramento do worker em tempo real.');
+        }
+
+        $service = new \App\Services\RealtimeSnapshotService();
+        $service->forceKillWorker();
+
+        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Processo do cron-realtime forçado a encerrar e locks liberados no servidor.');
+    }
+
     public function landingLeadsSettings(): string
     {
         $settingsModel = new \App\Models\LandingLeadSettingModel();

@@ -93,6 +93,78 @@ class RealtimeSnapshotService
     }
 
     /**
+     * Força o encerramento imediato (kill) do processo do worker cron-realtime no sistema operacional.
+     */
+    public function forceKillWorker(): bool
+    {
+        $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
+        $realtimeDir = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime';
+        $pidFile = $realtimeDir . DIRECTORY_SEPARATOR . 'worker.pid';
+        $lockFile = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.lock';
+        $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';
+        $stopSignalFile = $realtimeDir . DIRECTORY_SEPARATOR . 'stop.signal';
+
+        $isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $killed = false;
+
+        if (file_exists($pidFile)) {
+            $pid = (int) trim((string) @file_get_contents($pidFile));
+            if ($pid > 0) {
+                if ($isWindows) {
+                    if (function_exists('exec')) {
+                        \exec("taskkill /F /T /PID {$pid} 2>&1");
+                    } elseif (function_exists('shell_exec')) {
+                        @shell_exec("taskkill /F /T /PID {$pid} 2>&1");
+                    }
+                } else {
+                    if (function_exists('posix_kill')) {
+                        @posix_kill($pid, SIGKILL);
+                    }
+                    if (function_exists('exec')) {
+                        \exec("kill -9 {$pid} 2>&1");
+                    } elseif (function_exists('shell_exec')) {
+                        @shell_exec("kill -9 {$pid} 2>&1");
+                    }
+                }
+                $killed = true;
+            }
+            @unlink($pidFile);
+        }
+
+        // Se estiver no Windows ou Linux e o PID não for suficiente, tenta matar processos ativos do cron-realtime.php
+        if ($isWindows) {
+            if (function_exists('exec')) {
+                \exec('wmic process where "commandline like \'%cron-realtime.php%\'" call terminate 2>&1');
+            } elseif (function_exists('shell_exec')) {
+                @shell_exec('wmic process where "commandline like \'%cron-realtime.php%\'" call terminate 2>&1');
+            }
+        } else {
+            if (function_exists('exec')) {
+                \exec('pkill -9 -f cron-realtime.php 2>&1');
+            } elseif (function_exists('shell_exec')) {
+                @shell_exec('pkill -9 -f cron-realtime.php 2>&1');
+            }
+        }
+
+        if (file_exists($heartbeatFile)) {
+            @unlink($heartbeatFile);
+        }
+        if (file_exists($stopSignalFile)) {
+            @unlink($stopSignalFile);
+        }
+        if (file_exists($lockFile)) {
+            @unlink($lockFile);
+        }
+
+        $this->updateWorkerStatus([
+            'last_error' => null,
+            'last_message' => 'Processo do worker forçado a encerrar pelo usuário.',
+        ]);
+
+        return true;
+    }
+
+    /**
      * Inicia o worker cron-realtime em segundo plano no servidor (Background CLI).
      */
     public function startWorkerInBackground(): bool

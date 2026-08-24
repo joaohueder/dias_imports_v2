@@ -28,7 +28,11 @@ if (! is_dir($realtimeDir)) {
 $lockFile      = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.lock';
 $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';
 $stopSignalFile = $realtimeDir . DIRECTORY_SEPARATOR . 'stop.signal';
+$pidFile       = $realtimeDir . DIRECTORY_SEPARATOR . 'worker.pid';
 $logFile       = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.log';
+
+// Grava o PID do processo atual para possibilitar encerramento forçado se necessário
+@file_put_contents($pidFile, (string) getmypid(), LOCK_EX);
 
 // Remove sinal de parada anterior ao iniciar nova execução
 if (file_exists($stopSignalFile)) {
@@ -246,6 +250,10 @@ try {
             fclose($lockHandle);
         } catch (\Throwable) {
         }
+    }
+
+    if (isset($pidFile) && file_exists($pidFile)) {
+        @unlink($pidFile);
     }
 }
 
