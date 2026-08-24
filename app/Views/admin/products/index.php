@@ -16,6 +16,20 @@ $counts = [
             <input type="text" id="products-search-input" class="users-search-input" placeholder="Filtrar por nome..." aria-label="Filtrar produtos por nome" data-products-filter-input>
         </div>
 
+        <div class="products-sort-box" style="display: flex; align-items: center; gap: 8px;">
+            <label for="products-sort-select" style="font-size: 12px; font-weight: 600; color: rgb(var(--muted)); display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                <i class="ti ti-arrows-sort"></i> Ordenar:
+            </label>
+            <select id="products-sort-select" data-products-sort-select style="min-height: 38px; padding: 6px 12px; border: 1px solid rgb(var(--border)); border-radius: 10px; background: rgb(var(--surface-secondary) / .5); color: rgb(var(--foreground)); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; outline: none;">
+                <option value="created_desc">Data de cadastro (Mais recentes)</option>
+                <option value="created_asc">Data de cadastro (Mais antigos)</option>
+                <option value="sends_desc">Mais envios</option>
+                <option value="sends_asc">Menos envios</option>
+                <option value="name_asc">Nome (A - Z)</option>
+                <option value="name_desc">Nome (Z - A)</option>
+            </select>
+        </div>
+
         <div class="users-filter-pills" role="tablist" aria-label="Filtros de status de produtos">
             <button type="button" class="filter-pill active" data-filter="all" role="tab" aria-selected="true">
                 Todos <span class="pill-badge"><?= $counts['total'] ?></span>
@@ -244,18 +258,44 @@ const messageTemplatesRaw = <?= json_encode($messageTemplates, JSON_HEX_TAG | JS
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('[data-products-filter-input]');
+    const sortSelect = document.querySelector('[data-products-sort-select]');
     const filterPills = document.querySelectorAll('.filter-pill');
     const productCards = document.querySelectorAll('[data-product-card]');
+    const productsGrid = document.querySelector('[data-products-grid]');
     const emptyState = document.querySelector('[data-products-empty]');
     const clearFiltersBtn = document.querySelector('[data-clear-filters]');
     
     let currentFilter = 'all';
     let currentSearch = '';
+    let currentSort = 'created_desc';
 
     function applyFilters() {
         let visibleCount = 0;
+        let cardsArray = Array.from(productCards);
         
-        productCards.forEach(card => {
+        // Ordenação
+        cardsArray.sort((a, b) => {
+            if (currentSort === 'created_desc') {
+                return (b.dataset.created || '').localeCompare(a.dataset.created || '');
+            } else if (currentSort === 'created_asc') {
+                return (a.dataset.created || '').localeCompare(b.dataset.created || '');
+            } else if (currentSort === 'sends_desc') {
+                return parseInt(b.dataset.sends || 0) - parseInt(a.dataset.sends || 0);
+            } else if (currentSort === 'sends_asc') {
+                return parseInt(a.dataset.sends || 0) - parseInt(b.dataset.sends || 0);
+            } else if (currentSort === 'name_asc') {
+                return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+            } else if (currentSort === 'name_desc') {
+                return (b.dataset.name || '').localeCompare(a.dataset.name || '');
+            }
+            return 0;
+        });
+
+        // Reanexar na ordem correta
+        cardsArray.forEach(card => productsGrid.appendChild(card));
+        
+        // Filtragem
+        cardsArray.forEach(card => {
             const name = card.dataset.name || '';
             const status = card.dataset.status || '';
             
@@ -282,6 +322,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            applyFilters();
+        });
+    }
+
     filterPills.forEach(pill => {
         pill.addEventListener('click', () => {
             filterPills.forEach(p => {
@@ -298,7 +345,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
             if (searchInput) searchInput.value = '';
+            if (sortSelect) sortSelect.value = 'created_desc';
             currentSearch = '';
+            currentSort = 'created_desc';
             
             const allPill = document.querySelector('.filter-pill[data-filter="all"]');
             if (allPill) {

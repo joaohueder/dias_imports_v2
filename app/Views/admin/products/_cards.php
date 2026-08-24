@@ -34,7 +34,9 @@ $helperInitials = static function(string $name): string {
              data-product-card
              data-id="<?= esc($product->id) ?>"
              data-name="<?= esc(mb_strtolower($product->name)) ?>"
-             data-status="<?= $isActive ? 'active' : 'inactive' ?>">
+             data-status="<?= $isActive ? 'active' : 'inactive' ?>"
+             data-created="<?= esc($product->created_at ?? '') ?>"
+             data-sends="<?= (int) $enviosCount ?>">
 
         <!-- Capa do Produto -->
         <div class="product-card-banner">
@@ -97,12 +99,14 @@ $helperInitials = static function(string $name): string {
                 <?php if ($hasPromo): ?>
                     <span class="product-chip chip-promo">Em promoção</span>
                 <?php endif; ?>
-
-                <span class="product-chip chip-sends"><?= $enviosCount ?> envios</span>
             </div>
 
             <!-- Métricas -->
             <div class="product-card-metrics">
+                <div class="product-metric-item">
+                    <span class="product-metric-val"><i class="ti ti-send"></i> <?= $enviosCount ?></span>
+                    <span class="product-metric-label">envios</span>
+                </div>
                 <div class="product-metric-item">
                     <span class="product-metric-val"><i class="ti ti-eye"></i> <?= $accessCount ?></span>
                     <span class="product-metric-label">acessos</span>

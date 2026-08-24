@@ -153,7 +153,7 @@ class Home extends BaseController
             'district' => trim((string) $this->request->getPost('district')),
             'city' => trim((string) $this->request->getPost('city')),
             'state' => mb_strtoupper(trim((string) $this->request->getPost('state'))),
-            'public_url' => trim((string) $this->request->getPost('public_url')),
+            'public_url' => base_url(),
         ];
         $rules = [
             'name' => 'required|max_length[120]',

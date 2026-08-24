@@ -4075,14 +4075,14 @@ body.processing-locked { overflow: hidden; }
     border-color: rgba(99, 102, 241, 0.2);
 }
 
-/* Métricas (Acessos, Cliques, Conversão) */
+/* Métricas (Acessos, Envios, Cliques, Conversão) */
 .product-card-metrics {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     background: #141724;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    padding: 6px 8px;
+    padding: 6px 4px;
     text-align: center;
     gap: 2px;
 }
