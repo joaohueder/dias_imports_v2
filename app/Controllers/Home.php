@@ -415,6 +415,18 @@ class Home extends BaseController
         return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Configurações de tempo real e intervalo do worker atualizados com sucesso.');
     }
 
+    public function startRealtimeWorker(): RedirectResponse
+    {
+        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
+            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para iniciar o worker em tempo real.');
+        }
+
+        $service = new \App\Services\RealtimeSnapshotService();
+        $service->startWorkerInBackground();
+
+        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Worker realtime acionado com sucesso no servidor em segundo plano.');
+    }
+
     public function stopRealtimeWorker(): RedirectResponse
     {
         if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {

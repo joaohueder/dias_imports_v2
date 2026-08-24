@@ -1,0 +1,8 @@
+==================================================
+ INICIANDO WORKER REALTIME - 2026-08-24 20:40:05
+==================================================
+
+[20:40:05] Conexão única MySQL estabelecida. Iniciando ciclo contínuo de 5s (sleep configurado)...
+------------------------------------------------------------
+[20:40:06] Ciclo #1 (568.9ms | uptime 1s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+[20:40:11] Ciclo #2 (490.1ms | uptime 6s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)

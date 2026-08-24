@@ -93,6 +93,48 @@ class RealtimeSnapshotService
     }
 
     /**
+     * Inicia o worker cron-realtime em segundo plano no servidor (Background CLI).
+     */
+    public function startWorkerInBackground(): bool
+    {
+        $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
+        $realtimeDir = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime';
+        if (!is_dir($realtimeDir)) {
+            @mkdir($realtimeDir, 0755, true);
+        }
+
+        $stopSignalFile = $realtimeDir . DIRECTORY_SEPARATOR . 'stop.signal';
+        if (file_exists($stopSignalFile)) {
+            @unlink($stopSignalFile);
+        }
+
+        $cronScript = realpath(FCPATH . 'cron-realtime.php') ?: (rtrim(FCPATH, '/\\') . DIRECTORY_SEPARATOR . 'cron-realtime.php');
+        if (!file_exists($cronScript)) {
+            $cronScript = realpath(__DIR__ . '/../../public/cron-realtime.php') ?: (__DIR__ . '/../../public/cron-realtime.php');
+        }
+
+        $phpBinary = PHP_BINARY;
+        if (empty($phpBinary) || !@is_executable($phpBinary)) {
+            $phpBinary = 'php';
+        }
+
+        $isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $logFile = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.log';
+
+        if ($isWindows) {
+            // Windows background execution via WScript/cmd start /B
+            $cmd = sprintf('start /B "" "%s" "%s" > "%s" 2>&1', $phpBinary, $cronScript, $logFile);
+            @pclose(@popen($cmd, 'r'));
+        } else {
+            // Linux / Unix background execution
+            $cmd = sprintf('nohup "%s" "%s" > "%s" 2>&1 &', $phpBinary, $cronScript, $logFile);
+            @exec($cmd);
+        }
+
+        return true;
+    }
+
+    /**
      * Retorna informações de diagnóstico e status do Worker Realtime.
      */
     public function getWorkerStatus(): array

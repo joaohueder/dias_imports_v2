@@ -77,9 +77,14 @@
                     <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--danger));"></span>
                     OFFLINE / PARADO
                 </span>
-                <a href="<?= base_url('cron-realtime.php') . '?token=' . esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" target="_blank" rel="noopener noreferrer" class="button primary" style="padding: 6px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
-                    <i class="ti ti-player-play" aria-hidden="true"></i> Ativar / Executar Worker
-                </a>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'edit')): ?>
+                    <form action="<?= site_url('configuracoes/tempo-real/iniciar') ?>" method="post" style="margin: 0;">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="button primary" style="padding: 6px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="ti ti-player-play" aria-hidden="true"></i> Ativar Worker no Servidor
+                        </button>
+                    </form>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

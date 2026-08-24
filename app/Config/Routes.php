@@ -108,6 +108,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
     $routes->get('configuracoes/tempo-real/feed', 'Home::realtimeFeed', ['filter' => 'permission:realtime,view']);
     $routes->post('configuracoes/tempo-real', 'Home::saveRealtimeSettings', ['filter' => ['permission:realtime,edit', 'csrf']]);
+    $routes->post('configuracoes/tempo-real/iniciar', 'Home::startRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/parar', 'Home::stopRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/(:num)/status', 'Home::toggleRealtimeScreen/$1', ['filter' => ['permission:realtime,edit', 'csrf']]);
 });
