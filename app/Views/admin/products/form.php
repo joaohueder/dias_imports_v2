@@ -25,6 +25,11 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
             <button type="button" class="settings-tab" data-tab-target="tab-images">Imagens</button>
             <button type="button" class="settings-tab" data-tab-target="tab-destination">Destino</button>
             <button type="button" class="settings-tab" data-tab-target="tab-landing">Landing Page</button>
+            <?php if ($isEdit): ?>
+            <button type="button" class="settings-tab" data-tab-target="tab-stats">
+                <i class="ti ti-chart-bar" style="margin-right: 4px;"></i> Estatísticas
+            </button>
+            <?php endif; ?>
         </div>
 
         <!-- Tab Content: Informações do Produto -->
@@ -522,7 +527,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                 $lpTotalImages = count($lpImages);
                 $lpMainImg = !empty($lpImages) ? base_url('uploads/products/' . $lpImages[0]->image_path) : '';
                 ?>
-                <div class="landing-preview-col" style="position: sticky; top: 80px;">
+                <div class="landing-preview-col" style="position: sticky; top: 12px; z-index: 10;">
                     <div class="preview-sticky-wrap">
                         <div class="preview-device-header" style="background: #0f172a; color: white; padding: 10px 16px; border-radius: 14px 14px 0 0; display: flex; align-items: center; justify-content: space-between;">
                             <div class="preview-device-title" style="display: flex; align-items: center; gap: 8px;">
@@ -539,7 +544,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                             <?php endif; ?>
                         </div>
 
-                        <div class="mobile-mockup-frame" id="lp_mockup_frame" data-palette="<?= esc($product->color_palette ?? 'palette-aurora') ?>" data-model="<?= esc($product->template_model ?? 'model-1') ?>" data-btn-animation="<?= esc($product->btn_animation ?? 'btn-pulse') ?>" style="border: 10px solid #0f172a; border-top: none; border-radius: 0 0 36px 36px; background: #f8fafc; overflow: hidden; height: 680px; position: relative; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);">
+                        <div class="mobile-mockup-frame" id="lp_mockup_frame" data-palette="<?= esc($product->color_palette ?? 'palette-aurora') ?>" data-model="<?= esc($product->template_model ?? 'model-1') ?>" data-btn-animation="<?= esc($product->btn_animation ?? 'btn-pulse') ?>" style="border: 10px solid #0f172a; border-top: none; border-radius: 0 0 36px 36px; background: #f8fafc; overflow: hidden; height: calc(100vh - 220px); min-height: 440px; max-height: 560px; position: relative; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);">
                             
                             <!-- Conteúdo da Tela do Mockup -->
                             <div class="mobile-screen-content" id="lp_live_preview_container" data-palette="<?= esc($product->color_palette ?? 'palette-aurora') ?>" data-model="<?= esc($product->template_model ?? 'model-1') ?>" data-btn-animation="<?= esc($product->btn_animation ?? 'btn-pulse') ?>" style="height: 100%; overflow-y: auto; padding: 18px 14px 80px 14px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e293b; background-color: #f8fafc;">
@@ -734,6 +739,264 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
             </div>
         </div>
 
+        <!-- Tab Content: Estatísticas -->
+        <?php if ($isEdit && isset($stats)): ?>
+        <div class="settings-tab-panel" id="tab-stats" hidden>
+            <section class="form-card-section" aria-labelledby="stats-title" style="margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <h2 id="stats-title" class="section-card-title" style="margin-bottom: 4px;">Estatísticas de Desempenho</h2>
+                        <p class="section-card-subtitle" style="margin: 0; font-size: 13px; color: rgb(var(--muted));">Métricas de acessos, cliques no WhatsApp e conversão da Landing Page deste produto.</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button" id="btn_refresh_stats" class="button secondary small" style="height: 34px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer;">
+                            <i class="ti ti-refresh" id="refresh_stats_icon"></i> <span>Atualizar Dados</span>
+                        </button>
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 12px; padding: 6px 12px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="ti ti-activity" style="font-size: 14px;"></i> Monitoramento Ativo
+                        </span>
+                        <a href="<?= !empty($product->slug) ? site_url('p/' . $product->slug) : '#' ?>" target="_blank" class="button secondary small" style="height: 34px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" <?= empty($product->slug) ? 'onclick="return false;" style="opacity: 0.5; pointer-events: none;"' : '' ?>>
+                            <i class="ti ti-external-link"></i> Abrir Landing Page
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Grid de KPIs Principais -->
+                <div class="leads-dash-grid" style="margin-bottom: 24px;">
+                    <!-- Card 1: Total de Visualizações -->
+                    <div class="lead-kpi-card total-leads">
+                        <div class="kpi-header-row">
+                            <span class="kpi-label">Acessos Totais</span>
+                            <div class="kpi-icon-pill" aria-hidden="true">
+                                <i class="ti ti-eye"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kpi-big-number" id="kpi_total_pageviews"><?= number_format($stats['totalPageviews'], 0, ',', '.') ?></div>
+                            <div class="kpi-subtext" style="margin-top: 6px;">Visitas na página do produto</div>
+                        </div>
+                        <div class="kpi-subtext" id="kpi_trend_pageviews">
+                            <?php
+                            $diffPv = $stats['todayPageviews'] - $stats['yesterdayPageviews'];
+                            if ($diffPv > 0): ?>
+                                <span class="kpi-trend-pill positive" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #10b981;">
+                                    <i class="ti ti-trending-up"></i> +<?= $diffPv ?> hoje
+                                </span>
+                            <?php elseif ($diffPv < 0): ?>
+                                <span class="kpi-trend-pill negative" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #ef4444;">
+                                    <i class="ti ti-trending-down"></i> <?= $diffPv ?> hoje
+                                </span>
+                            <?php else: ?>
+                                <span class="kpi-trend-pill neutral" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #64748b;">
+                                    <i class="ti ti-minus"></i> Igual a ontem
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Visitantes Únicos -->
+                    <div class="lead-kpi-card daily-comparison">
+                        <div class="kpi-header-row">
+                            <span class="kpi-label">Visitantes Únicos</span>
+                            <div class="kpi-icon-pill success" aria-hidden="true">
+                                <i class="ti ti-users"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kpi-big-number"><?= number_format($stats['uniqueVisitors'], 0, ',', '.') ?></div>
+                            <div class="kpi-subtext" style="margin-top: 6px;">Pessoas distintas alcançadas</div>
+                        </div>
+                        <div class="kpi-subtext">
+                            <i class="ti ti-device-mobile" style="color: #635bff;"></i> <?= $stats['mobilePct'] ?>% tráfego mobile
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Cliques no WhatsApp / Conversão -->
+                    <div class="lead-kpi-card" style="grid-column: span 3; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #10b981, #3b82f6);"></div>
+                        <div class="kpi-header-row">
+                            <span class="kpi-label">Cliques no WhatsApp</span>
+                            <div class="kpi-icon-pill" style="color: #10b981; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);" aria-hidden="true">
+                                <i class="ti ti-brand-whatsapp"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kpi-big-number" id="kpi_total_cta_clicks" style="color: #10b981;"><?= number_format($stats['totalCtaClicks'], 0, ',', '.') ?></div>
+                            <div class="kpi-subtext" style="margin-top: 6px;">Cliques no botão de compra</div>
+                        </div>
+                        <div class="kpi-subtext">
+                            <span class="kpi-trend-pill positive" id="kpi_conversion_rate" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #10b981;">
+                                <i class="ti ti-bolt"></i> Taxa de conversão: <?= $stats['conversionRate'] ?>%
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Eventos Rastreados -->
+                    <div class="lead-kpi-card" style="grid-column: span 3; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #ec4899);"></div>
+                        <div class="kpi-header-row">
+                            <span class="kpi-label">Meta Ads & Conversões</span>
+                            <div class="kpi-icon-pill" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);" aria-hidden="true">
+                                <i class="ti ti-activity"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kpi-big-number" id="kpi_meta_ads_status"><?= !empty($product->meta_ads_active) ? 'Ativo' : 'Inativo' ?></div>
+                            <div class="kpi-subtext" style="margin-top: 6px;">Pixel & API de Conversões</div>
+                        </div>
+                        <div class="kpi-subtext">
+                            <i class="ti ti-shield-check" style="color: #10b981;"></i> ViewContent & Purchase
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Evolução e Dispositivos -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <!-- Gráfico Misto: Visitas (Linha) x Cliques (Barra) -->
+                    <div class="lead-kpi-card" style="padding: 20px; overflow: visible; position: relative;">
+                        <div class="kpi-header-row" style="margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <span class="kpi-label">Evolução de Acessos & Cliques</span>
+                                <div class="kpi-subtext" id="stats_period_subtitle" style="margin-top: 2px;">Desempenho diário nos últimos <?= $stats['period'] ?> dias</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <!-- Legenda -->
+                                <div style="display: flex; align-items: center; gap: 12px; font-size: 11px;">
+                                    <span style="display: inline-flex; align-items: center; gap: 4px; color: #a855f7; font-weight: 600;">
+                                        <span style="width: 14px; height: 3px; background: #a855f7; border-radius: 2px; display: inline-block;"></span> Visitas
+                                    </span>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px; color: #10b981; font-weight: 600;">
+                                        <span style="width: 10px; height: 10px; background: #10b981; border-radius: 3px; display: inline-block;"></span> Cliques
+                                    </span>
+                                </div>
+                                <div class="evolution-filter-pills" role="group">
+                                    <?php foreach ([7, 14, 21, 30] as $p): ?>
+                                        <button type="button" class="period-pill-btn js-stats-period-btn <?= ($stats['period'] == $p) ? 'active' : '' ?>" data-period="<?= $p ?>" style="padding: 3px 8px; font-size: 11px; border-radius: 6px; cursor: pointer; border: 1px solid <?= ($stats['period'] == $p) ? '#635bff' : 'rgb(var(--border))' ?>; background: <?= ($stats['period'] == $p) ? 'rgba(99, 91, 255, 0.15)' : 'rgb(var(--surface))' ?>; color: <?= ($stats['period'] == $p) ? '#635bff' : 'rgb(var(--muted))' ?>; font-weight: <?= ($stats['period'] == $p) ? '700' : 'normal' ?>;"><?= $p ?>d</button>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="position: relative; width: 100%; min-height: 180px;">
+                            <div id="stats_mixed_chart_container" style="width: 100%; position: relative;">
+                                <!-- Renderizado via renderMixedChart() -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Origem do Tráfego Real -->
+                    <div class="lead-kpi-card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div class="kpi-header-row" style="margin-bottom: 14px;">
+                                <span class="kpi-label">Origem do Tráfego</span>
+                                <div class="kpi-icon-pill" aria-hidden="true"><i class="ti ti-compass"></i></div>
+                            </div>
+                            
+                            <div id="stats_sources_container" style="display: flex; flex-direction: column; gap: 12px;">
+                                <?php if (!empty($stats['sources'])): ?>
+                                    <?php
+                                    $sourceColors = [
+                                        'Instagram' => '#ec4899',
+                                        'Facebook'  => '#2563eb',
+                                        'WhatsApp'  => '#10b981',
+                                        'Google'    => '#ea4335',
+                                        'Direto'    => '#f59e0b',
+                                        'Referral'  => '#8b5cf6',
+                                    ];
+                                    ?>
+                                    <?php foreach ($stats['sources'] as $src): ?>
+                                        <?php $color = $sourceColors[$src['name']] ?? '#64748b'; ?>
+                                        <div>
+                                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                                <span style="display: flex; align-items: center; gap: 6px; color: rgb(var(--foreground));">
+                                                    <i class="ti ti-point-filled" style="color: <?= $color ?>;"></i> <?= esc($src['name']) ?>
+                                                </span>
+                                                <span style="color: rgb(var(--muted));"><?= $src['percentage'] ?>% (<?= $src['total'] ?>)</span>
+                                            </div>
+                                            <div style="height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden;">
+                                                <div style="width: <?= $src['percentage'] ?>%; height: 100%; background: <?= $color ?>; border-radius: 3px;"></div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div style="color: rgb(var(--muted)); font-size: 12px; text-align: center; padding: 20px 0;">Aguardando primeiros acessos para mapear origens.</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="kpi-subtext" id="kpi_mobile_pct_2" style="margin-top: 14px; padding-top: 10px; border-top: 1px solid rgb(var(--border)); font-size: 11px;">
+                            <i class="ti ti-device-mobile" style="color: #635bff;"></i> <?= $stats['mobilePct'] ?>% tráfego mobile
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Últimas Interações Reais -->
+                <div style="background: rgb(var(--surface)); border: 1px solid rgb(var(--border)); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm);">
+                    <div style="padding: 16px 20px; border-bottom: 1px solid rgb(var(--border)); display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <h3 style="font-size: 14px; font-weight: 750; color: rgb(var(--foreground)); margin: 0 0 2px 0;">Últimos Eventos & Interações</h3>
+                            <p style="font-size: 12px; color: rgb(var(--muted)); margin: 0;">Logs reais gravados na Landing Page deste produto.</p>
+                        </div>
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600;">Banco de Dados</span>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                            <thead>
+                                <tr style="background: rgb(var(--surface-secondary)); color: rgb(var(--muted)); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgb(var(--border));">
+                                    <th style="padding: 10px 16px;">Evento</th>
+                                    <th style="padding: 10px 16px;">Origem / Canal</th>
+                                    <th style="padding: 10px 16px;">Dispositivo</th>
+                                    <th style="padding: 10px 16px;">IP / Visitante</th>
+                                    <th style="padding: 10px 16px; text-align: right;">Data / Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stats_recent_logs_tbody">
+                                <?php if (!empty($stats['recentLogs'])): ?>
+                                    <?php foreach ($stats['recentLogs'] as $log): ?>
+                                        <?php
+                                        $isClick = in_array($log['event_type'], ['cta_click', 'sticky_cta_click', 'whatsapp_click'], true);
+                                        $eventName = $isClick ? 'Clique de Compra (WhatsApp)' : 'Visualização de Página (PageView)';
+                                        $eventColor = $isClick ? '#10b981' : '#635bff';
+                                        $eventIcon = $isClick ? 'ti-brand-whatsapp' : 'ti-eye';
+                                        ?>
+                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                            <td style="padding: 12px 16px; font-weight: 600; color: <?= $eventColor ?>; display: flex; align-items: center; gap: 8px;">
+                                                <i class="ti <?= $eventIcon ?>" style="font-size: 16px;"></i> <?= $eventName ?>
+                                            </td>
+                                            <td style="padding: 12px 16px; color: rgb(var(--foreground));">
+                                                <?= esc(!empty($log['utm_source']) ? $log['utm_source'] : 'Direto') ?>
+                                                <?php if (!empty($log['utm_campaign'])): ?>
+                                                    <small style="color: rgb(var(--muted)); font-size: 11px;">(<?= esc($log['utm_campaign']) ?>)</small>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td style="padding: 12px 16px; color: rgb(var(--muted));">
+                                                <i class="ti ti-device-<?= $log['device_type'] === 'mobile' ? 'mobile' : 'laptop' ?>"></i>
+                                                <?= ucfirst(esc($log['device_type'])) ?>
+                                            </td>
+                                            <td style="padding: 12px 16px; color: rgb(var(--muted)); font-family: monospace; font-size: 11px;">
+                                                <?= esc($log['ip_address'] ?: substr($log['visitor_id'], 0, 12) . '...') ?>
+                                            </td>
+                                            <td style="padding: 12px 16px; text-align: right; color: rgb(var(--muted)); font-size: 12px;">
+                                                <?= date('d/m/Y H:i', strtotime($log['created_at'])) ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="5" style="padding: 30px 16px; text-align: center; color: rgb(var(--muted)); font-size: 13px;">
+                                            Nenhum evento registrado ainda. Quando os clientes acessarem a Landing Page do produto, os dados aparecerão aqui em tempo real.
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <?php endif; ?>
+
         <!-- Floating save bar -->
         <div class="save-bar" data-form-save-bar hidden>
             <p>
@@ -923,7 +1186,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const btn = mockupScreen?.querySelector('#mockup_button_text');
                 const btn2 = mockupScreen?.querySelector('#mockup_button_text_2');
                 const btn3 = mockupScreen?.querySelector('#mockup_button_text_3');
-                const btnSticky = mockupScreen?.querySelector('#mockup_sticky_btn_text');
+                const btnSticky = document.getElementById('mockup_sticky_btn_text') || mockupFrame?.querySelector('#mockup_sticky_btn_text');
                 if (btn) btn.textContent = value || 'Quero aproveitar agora';
                 if (btn2) btn2.textContent = value || 'Quero aproveitar agora';
                 if (btn3) btn3.textContent = value || 'Quero aproveitar agora';
@@ -936,7 +1199,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mainBtnIcon = mockupScreen?.querySelector('#mockup_button_text')?.nextElementSibling;
                 const closeBtnIcon = mockupScreen?.querySelector('#mockup_button_text_2')?.nextElementSibling;
                 const guaranteeBtnIcon = mockupScreen?.querySelector('#mockup_button_text_3')?.nextElementSibling;
-                const stickyBtnIcon = mockupScreen?.querySelector('#mockup_sticky_btn_text')?.nextElementSibling;
+                const stickyBtnIcon = document.getElementById('mockup_sticky_btn_text')?.nextElementSibling || mockupFrame?.querySelector('#mockup_sticky_btn_text')?.nextElementSibling;
                 if (mainBtnIcon) mainBtnIcon.className = 'ti ' + iconClass;
                 if (closeBtnIcon) closeBtnIcon.className = 'ti ' + iconClass;
                 if (guaranteeBtnIcon) guaranteeBtnIcon.className = 'ti ' + iconClass;
@@ -1680,6 +1943,381 @@ function setCoverImage(id, btn) {
         }
     });
 }
+
+// ----------------------------------------------------
+// Atualização Assíncrona de Estatísticas (AJAX / Sem Refresh)
+// ----------------------------------------------------
+<?php if ($isEdit && isset($product->id)): ?>
+let currentStatsPeriod = <?= (int) ($stats['period'] ?? 7) ?>;
+let lastStatsEvolutionData = <?= !empty($stats['evolution']) ? json_encode($stats['evolution']) : '[]' ?>;
+
+function renderMixedChart(evolution) {
+    const container = document.getElementById('stats_mixed_chart_container');
+    if (!container) return;
+
+    if (!evolution || evolution.length === 0) {
+        container.innerHTML = '<div style="width: 100%; text-align: center; color: rgb(var(--muted)); padding: 50px 0; font-size: 13px;">Nenhum acesso registrado no período.</div>';
+        return;
+    }
+
+    lastStatsEvolutionData = evolution;
+    const count = evolution.length;
+
+    // Calcular máximo comum para usar a mesma escala no eixo Y
+    let maxVal = 0;
+    evolution.forEach(d => {
+        if ((d.pageviews || 0) > maxVal) maxVal = d.pageviews;
+        if ((d.clicks || 0) > maxVal) maxVal = d.clicks;
+    });
+
+    const scaleMax = Math.max(maxVal, 1);
+
+    const svgWidth = 1000;
+    const svgHeight = 150;
+    const topPadding = 18;
+    const bottomPadding = 26;
+    const chartHeight = svgHeight - topPadding - bottomPadding;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // Montar pontos da linha (Visitas) na mesma escala
+    const points = [];
+    const step = svgWidth / count;
+
+    evolution.forEach((d, i) => {
+        const x = (i * step) + (step / 2);
+        const y = topPadding + chartHeight - (((d.pageviews || 0) / scaleMax) * chartHeight);
+        points.push({ x, y, data: d, index: i });
+    });
+
+    // Caminho SVG da linha e do gradiente da área
+    let linePath = '';
+    let areaPath = '';
+    if (points.length > 0) {
+        linePath = `M ${points[0].x} ${points[0].y}`;
+        points.forEach((p, i) => {
+            if (i > 0) {
+                // Curva Bezier suave
+                const prev = points[i - 1];
+                const cx1 = prev.x + (p.x - prev.x) / 2;
+                const cy1 = prev.y;
+                const cx2 = prev.x + (p.x - prev.x) / 2;
+                const cy2 = p.y;
+                linePath += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${p.x} ${p.y}`;
+            }
+        });
+
+        const firstX = points[0].x;
+        const lastX = points[points.length - 1].x;
+        const baseY = topPadding + chartHeight;
+        areaPath = `${linePath} L ${lastX} ${baseY} L ${firstX} ${baseY} Z`;
+    }
+
+    // Gerar Barras de Cliques (SVG) na mesma escala
+    let barsSvg = '';
+    const barWidth = Math.min(Math.max(step * 0.38, 10), 28);
+
+    points.forEach((p) => {
+        const clicks = p.data.clicks || 0;
+        const barH = (clicks / scaleMax) * chartHeight;
+        const barY = topPadding + chartHeight - barH;
+        const barX = p.x - (barWidth / 2);
+        const isToday = (p.data.date === todayStr);
+
+        barsSvg += `
+            <rect x="${barX}" y="${barY}" width="${barWidth}" height="${barH}" rx="4" ry="4" fill="${isToday ? '#10b981' : 'rgba(16, 185, 129, 0.65)'}" class="chart-click-bar">
+                <title>${p.data.dayLabel}: ${clicks} clique(s)</title>
+            </rect>
+        `;
+    });
+
+    // Gerar Pontos interativos da Linha (Visitas)
+    let dotsSvg = '';
+    points.forEach((p) => {
+        const isToday = (p.data.date === todayStr);
+        dotsSvg += `
+            <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${isToday ? '#10b981' : '#a855f7'}" stroke="#1e222d" stroke-width="2" class="chart-pv-dot" style="transition: r 0.15s ease;">
+            </circle>
+        `;
+    });
+
+    // Labels do eixo X
+    let labelsHtml = '<div style="display: flex; justify-content: space-between; width: 100%; margin-top: 4px;">';
+    points.forEach((p) => {
+        labelsHtml += `
+            <div style="flex: 1; text-align: center; font-size: 10px; color: rgb(var(--muted)); font-weight: 500;">
+                ${p.data.dayLabel}
+            </div>
+        `;
+    });
+    labelsHtml += '</div>';
+
+    // Colunas de Hover interativo com Tooltip fixo e sem corte
+    let overlayColumns = '<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 24px; display: flex;">';
+    points.forEach((p) => {
+        overlayColumns += `
+            <div class="mixed-chart-col" data-idx="${p.index}" style="flex: 1; height: 100%; position: relative; cursor: pointer; display: flex; justify-content: center;">
+                <div class="mixed-chart-tooltip" style="position: absolute; top: 2px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #f8fafc; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 8px 24px rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s ease; z-index: 100; display: flex; flex-direction: column; gap: 3px; font-weight: 600;">
+                    <div style="font-size: 11px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 2px; text-align: center;">${p.data.dayLabel}</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <span style="color: #c084fc; display: flex; align-items: center; gap: 4px;"><i class="ti ti-eye"></i> Visitas:</span>
+                        <span style="color: #fff;">${p.data.pageviews || 0}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <span style="color: #34d399; display: flex; align-items: center; gap: 4px;"><i class="ti ti-brand-whatsapp"></i> Cliques:</span>
+                        <span style="color: #fff;">${p.data.clicks || 0}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    overlayColumns += '</div>';
+
+    container.innerHTML = `
+        <div style="position: relative; width: 100%; height: 160px;">
+            <svg viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="none" style="width: 100%; height: 100%; overflow: visible; display: block;">
+                <defs>
+                    <linearGradient id="pvAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#a855f7" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#a855f7" stop-opacity="0.0"/>
+                    </linearGradient>
+                    <linearGradient id="gridLineGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.02)"/>
+                        <stop offset="50%" stop-color="rgba(255,255,255,0.08)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+                    </linearGradient>
+                </defs>
+                <!-- Linhas guia de fundo -->
+                <line x1="0" y1="${topPadding}" x2="${svgWidth}" y2="${topPadding}" stroke="url(#gridLineGradient)" stroke-dasharray="4,4" />
+                <line x1="0" y1="${topPadding + (chartHeight / 2)}" x2="${svgWidth}" y2="${topPadding + (chartHeight / 2)}" stroke="url(#gridLineGradient)" stroke-dasharray="4,4" />
+                <line x1="0" y1="${topPadding + chartHeight}" x2="${svgWidth}" y2="${topPadding + chartHeight}" stroke="rgba(255,255,255,0.1)" />
+
+                <!-- Barras (Cliques WhatsApp) -->
+                ${barsSvg}
+
+                <!-- Área sombreada (Visitas) -->
+                <path d="${areaPath}" fill="url(#pvAreaGradient)" />
+
+                <!-- Linha (Visitas) -->
+                <path d="${linePath}" fill="none" stroke="#a855f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+                <!-- Pontos da Linha -->
+                ${dotsSvg}
+            </svg>
+            ${overlayColumns}
+        </div>
+        ${labelsHtml}
+    `;
+
+    // Eventos de Hover para exibir o tooltip ajustado
+    container.querySelectorAll('.mixed-chart-col').forEach(col => {
+        col.addEventListener('mouseenter', function() {
+            const tip = this.querySelector('.mixed-chart-tooltip');
+            if (tip) tip.style.opacity = '1';
+            const idx = parseInt(this.dataset.idx, 10);
+            const dot = container.querySelectorAll('.chart-pv-dot')[idx];
+            if (dot) dot.setAttribute('r', '7');
+        });
+        col.addEventListener('mouseleave', function() {
+            const tip = this.querySelector('.mixed-chart-tooltip');
+            if (tip) tip.style.opacity = '0';
+            const idx = parseInt(this.dataset.idx, 10);
+            const dot = container.querySelectorAll('.chart-pv-dot')[idx];
+            if (dot) dot.setAttribute('r', '4.5');
+        });
+    });
+}
+
+function fetchProductStats(period) {
+    if (period) currentStatsPeriod = period;
+    const btnRefresh = document.getElementById('btn_refresh_stats');
+    const refreshIcon = document.getElementById('refresh_stats_icon');
+
+    if (btnRefresh) btnRefresh.disabled = true;
+    if (refreshIcon) refreshIcon.classList.add('ti-spin');
+
+    const url = '<?= site_url('produtos/' . $product->id . '/stats-data') ?>?stats_period=' + encodeURIComponent(currentStatsPeriod);
+
+    fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Falha ao carregar estatísticas');
+        return response.json();
+    })
+    .then(data => {
+        if (!data) return;
+
+        // 1. Atualizar KPIs principais
+        const elTotalPv = document.getElementById('kpi_total_pageviews');
+        if (elTotalPv) elTotalPv.textContent = Number(data.totalPageviews || 0).toLocaleString('pt-BR');
+
+        const elUniqueVis = document.getElementById('kpi_unique_visitors');
+        if (elUniqueVis) elUniqueVis.textContent = Number(data.uniqueVisitors || 0).toLocaleString('pt-BR');
+
+        const elCtaClicks = document.getElementById('kpi_total_cta_clicks');
+        if (elCtaClicks) elCtaClicks.textContent = Number(data.totalCtaClicks || 0).toLocaleString('pt-BR');
+
+        const elConvRate = document.getElementById('kpi_conversion_rate');
+        if (elConvRate) elConvRate.innerHTML = `<i class="ti ti-bolt"></i> Taxa de conversão: ${data.conversionRate || 0}%`;
+
+        // 2. Tendência hoje vs ontem
+        const elTrendPv = document.getElementById('kpi_trend_pageviews');
+        if (elTrendPv) {
+            const diffPv = (data.todayPageviews || 0) - (data.yesterdayPageviews || 0);
+            if (diffPv > 0) {
+                elTrendPv.innerHTML = `<span class="kpi-trend-pill positive" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #10b981;"><i class="ti ti-trending-up"></i> +${diffPv} hoje</span>`;
+            } else if (diffPv < 0) {
+                elTrendPv.innerHTML = `<span class="kpi-trend-pill negative" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #ef4444;"><i class="ti ti-trending-down"></i> ${diffPv} hoje</span>`;
+            } else {
+                elTrendPv.innerHTML = `<span class="kpi-trend-pill neutral" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #64748b;"><i class="ti ti-minus"></i> Igual a ontem</span>`;
+            }
+        }
+
+        // 3. Mobile %
+        const elMob1 = document.getElementById('kpi_mobile_pct_1');
+        if (elMob1) elMob1.innerHTML = `<i class="ti ti-device-mobile"></i> ${data.mobilePct || 0}% tráfego mobile`;
+
+        const elMob2 = document.getElementById('kpi_mobile_pct_2');
+        if (elMob2) elMob2.innerHTML = `<i class="ti ti-device-mobile" style="color: #635bff;"></i> ${data.mobilePct || 0}% tráfego mobile`;
+
+        // 4. Subtítulo do período e botões de filtro
+        const elSubtitle = document.getElementById('stats_period_subtitle');
+        if (elSubtitle) elSubtitle.textContent = `Visualizações da Landing Page nos últimos ${data.period || currentStatsPeriod} dias`;
+
+        document.querySelectorAll('.js-stats-period-btn').forEach(btn => {
+            const p = parseInt(btn.getAttribute('data-period'), 10);
+            const isActive = (p === parseInt(data.period, 10));
+            btn.classList.toggle('active', isActive);
+            btn.style.border = isActive ? '1px solid #635bff' : '1px solid rgb(var(--border))';
+            btn.style.background = isActive ? 'rgba(99, 91, 255, 0.15)' : 'rgb(var(--surface))';
+            btn.style.color = isActive ? '#635bff' : 'rgb(var(--muted))';
+            btn.style.fontWeight = isActive ? '700' : 'normal';
+        });
+
+        // 5. Gráfico de Evolução (Visitas = Linha SVG, Cliques = Barra)
+        renderMixedChart(data.evolution || []);
+
+        // 6. Fontes de Tráfego
+        const elSources = document.getElementById('stats_sources_container');
+        if (elSources) {
+            const sourceColors = {
+                'Instagram': '#ec4899',
+                'Facebook': '#2563eb',
+                'WhatsApp': '#10b981',
+                'Google': '#ea4335',
+                'Direto': '#f59e0b',
+                'Referral': '#8b5cf6'
+            };
+            if (data.sources && data.sources.length > 0) {
+                let htmlSources = '';
+                data.sources.forEach(src => {
+                    const col = sourceColors[src.name] || '#64748b';
+                    htmlSources += `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                <span style="display: flex; align-items: center; gap: 6px; color: rgb(var(--foreground));">
+                                    <i class="ti ti-point-filled" style="color: ${col};"></i> ${src.name}
+                                </span>
+                                <span style="color: rgb(var(--muted));">${src.percentage}% (${src.total})</span>
+                            </div>
+                            <div style="height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden;">
+                                <div style="width: ${src.percentage}%; height: 100%; background: ${col}; border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                elSources.innerHTML = htmlSources;
+            } else {
+                elSources.innerHTML = '<div style="color: rgb(var(--muted)); font-size: 12px; text-align: center; padding: 20px 0;">Aguardando primeiros acessos para mapear origens.</div>';
+            }
+        }
+
+        // 7. Logs Recentes
+        const elTbody = document.getElementById('stats_recent_logs_tbody');
+        if (elTbody) {
+            if (data.recentLogs && data.recentLogs.length > 0) {
+                let htmlLogs = '';
+                data.recentLogs.forEach(log => {
+                    const isClick = ['cta_click', 'sticky_cta_click', 'whatsapp_click'].includes(log.event_type);
+                    const eventName = isClick ? 'Clique de Compra (WhatsApp)' : 'Visualização de Página (PageView)';
+                    const eventColor = isClick ? '#10b981' : '#635bff';
+                    const eventIcon = isClick ? 'ti-brand-whatsapp' : 'ti-eye';
+                    const devIcon = (log.device_type === 'mobile') ? 'ti-device-mobile' : 'ti-device-laptop';
+                    const devName = (log.device_type ? log.device_type.charAt(0).toUpperCase() + log.device_type.slice(1) : 'Desktop');
+                    const visitorDisplay = log.ip_address || (log.visitor_id ? log.visitor_id.substring(0, 12) + '...' : '-');
+                    
+                    let dateFormatted = '-';
+                    if (log.created_at) {
+                        const d = new Date(log.created_at.replace(' ', 'T'));
+                        if (!isNaN(d)) {
+                            const day = String(d.getDate()).padStart(2, '0');
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
+                            const yr = d.getFullYear();
+                            const hrs = String(d.getHours()).padStart(2, '0');
+                            const mins = String(d.getMinutes()).padStart(2, '0');
+                            dateFormatted = `${day}/${month}/${yr} ${hrs}:${mins}`;
+                        }
+                    }
+
+                    const utmSource = log.utm_source || 'Direto';
+                    const utmCamp = log.utm_campaign ? `<small style="color: rgb(var(--muted)); font-size: 11px;">(${log.utm_campaign})</small>` : '';
+
+                    htmlLogs += `
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                            <td style="padding: 12px 16px; font-weight: 600; color: ${eventColor}; display: flex; align-items: center; gap: 8px;">
+                                <i class="ti ${eventIcon}" style="font-size: 16px;"></i> ${eventName}
+                            </td>
+                            <td style="padding: 12px 16px; color: rgb(var(--foreground));">
+                                ${utmSource} ${utmCamp}
+                            </td>
+                            <td style="padding: 12px 16px; color: rgb(var(--muted));">
+                                <i class="ti ${devIcon}"></i> ${devName}
+                            </td>
+                            <td style="padding: 12px 16px; color: rgb(var(--muted)); font-family: monospace; font-size: 11px;">
+                                ${visitorDisplay}
+                            </td>
+                            <td style="padding: 12px 16px; text-align: right; color: rgb(var(--muted)); font-size: 12px;">
+                                ${dateFormatted}
+                            </td>
+                        </tr>
+                    `;
+                });
+                elTbody.innerHTML = htmlLogs;
+            } else {
+                elTbody.innerHTML = '<tr><td colspan="5" style="padding: 30px 16px; text-align: center; color: rgb(var(--muted)); font-size: 13px;">Nenhum evento registrado ainda. Quando os clientes acessarem a Landing Page do produto, os dados aparecerão aqui em tempo real.</td></tr>';
+            }
+        }
+    })
+    .catch(err => {
+        console.error(err);
+    })
+    .finally(() => {
+        if (btnRefresh) btnRefresh.disabled = false;
+        if (refreshIcon) refreshIcon.classList.remove('ti-spin');
+    });
+}
+
+document.addEventListener('click', function(e) {
+    const periodBtn = e.target.closest('.js-stats-period-btn');
+    if (periodBtn) {
+        e.preventDefault();
+        const p = parseInt(periodBtn.getAttribute('data-period'), 10);
+        if (p) fetchProductStats(p);
+    }
+
+    const refreshBtn = e.target.closest('#btn_refresh_stats');
+    if (refreshBtn) {
+        e.preventDefault();
+        fetchProductStats(currentStatsPeriod);
+    }
+});
+
+// Renderizar gráfico inicial de estatísticas
+if (typeof renderMixedChart === 'function' && Array.isArray(lastStatsEvolutionData)) {
+    renderMixedChart(lastStatsEvolutionData);
+}
+<?php endif; ?>
 </script>
     <!-- Google Fonts: Inter & Cormorant Garamond -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2632,23 +3270,27 @@ function setCoverImage(id, btn) {
 
 #lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card {
     order: 8 !important;
-    background: #1a1a1a !important;
-    color: #ffffff !important;
+    background: transparent !important;
+    color: #2c2c2c !important;
+    border: 1px solid #e5e5e5 !important;
     border-radius: 0 !important;
-    padding: 20px 14px !important;
-    text-align: center !important;
+    padding: 16px 14px !important;
+    text-align: left !important;
+    box-shadow: none !important;
     margin-bottom: 0 !important;
 }
 
-#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card h2 {
-    font-family: 'Cormorant Garamond', serif, Georgia !important;
-    font-size: 18px !important;
-    color: #ffffff !important;
+#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card div[style*="color: #334155"] {
+    color: #2c2c2c !important;
 }
 
-#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card p {
-    color: #cccccc !important;
-    font-size: 10.5px !important;
+#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card .mockup-guarantee-cta-btn {
+    border-radius: 0 !important;
+    background: var(--lp-primary, #9d174d) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
 }
 
 #lp_live_preview_container[data-model="model-6"] .mockup-urgency-card {
@@ -2735,6 +3377,15 @@ function setCoverImage(id, btn) {
 }
 
 #lp_live_preview_container[data-model="model-6"] .mockup-closing-card .mockup-closing-cta-btn {
+    border-radius: 0 !important;
+    background: var(--lp-primary, #9d174d) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+}
+
+#lp_mockup_frame[data-model="model-6"] .mockup-sticky-cta-btn {
     border-radius: 0 !important;
     background: var(--lp-primary, #9d174d) !important;
     text-transform: uppercase !important;

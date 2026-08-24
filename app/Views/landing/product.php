@@ -20,6 +20,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 
+    <?php if (! empty($product->meta_ads_active) && ! empty($metaAds['pixel_id'])): ?>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '<?= esc($metaAds['pixel_id'], 'js') ?>');
+    fbq('track', 'PageView');
+    fbq('track', 'ViewContent', {
+        content_name: '<?= esc($product->name, 'js') ?>',
+        content_type: 'product',
+        content_ids: ['<?= esc((string)$product->id, 'js') ?>'],
+        value: <?= (float)($product->promotional_price ?: $product->price) ?>,
+        currency: 'BRL'
+    });
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=<?= esc($metaAds['pixel_id'], 'url') ?>&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <?php endif; ?>
+
     <style>
         /* =========================================
            PALETAS DE CORES (Variáveis CSS)
@@ -637,6 +664,8 @@
         }
 
         .btn-sticky-cta {
+            position: relative;
+            overflow: hidden;
             background: var(--lp-primary);
             color: #ffffff;
             font-size: 13px;
@@ -648,7 +677,21 @@
             align-items: center;
             gap: 6px;
             white-space: nowrap;
-            box-shadow: 0 4px 12px -2px rgba(131, 24, 67, 0.3);
+            box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-sticky-cta:hover, .btn-sticky-cta:active {
+            background: var(--lp-primary-hover);
+            color: #ffffff;
+        }
+
+        html[data-model="model-6"] .btn-sticky-cta {
+            border-radius: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            box-shadow: none;
         }
 
         /* =========================================
@@ -1639,25 +1682,27 @@
 
         html[data-model="model-6"] .guarantees-card {
             order: 7;
-            background: #1a1a1a;
-            color: #fff;
+            background: transparent;
+            color: #2c2c2c;
+            border: 1px solid #e5e5e5;
             border-radius: 0;
-            padding: 32px 24px;
-            text-align: center;
+            box-shadow: none;
+            padding: 20px;
+            text-align: left;
             margin-bottom: 0;
         }
 
-        html[data-model="model-6"] .guarantees-card h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
-            color: #fff;
-            margin-bottom: 16px;
+        html[data-model="model-6"] .guarantees-card .guarantee-item {
+            color: #2c2c2c;
         }
 
-        html[data-model="model-6"] .guarantees-card p {
-            color: #ccc;
-            font-size: 14px;
-            line-height: 1.6;
+        html[data-model="model-6"] .guarantees-card .btn-cta {
+            border-radius: 0;
+            background: var(--lp-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            box-shadow: none;
         }
 
         html[data-model="model-6"] .urgency-block {
@@ -1996,6 +2041,46 @@
             btn.addEventListener('click', function() {
                 const card = this.closest('.faq-card');
                 card.classList.toggle('open');
+            });
+        });
+
+        // Rastreamento local interno de cliques de compra/WhatsApp (Estatísticas do Produto)
+        document.querySelectorAll('a.btn-cta, a.btn-sticky-cta').forEach(link => {
+            link.addEventListener('click', function() {
+                const isSticky = this.classList.contains('btn-sticky-cta');
+                const eventType = isSticky ? 'sticky_cta_click' : 'cta_click';
+                
+                // Envio em beacon/fetch assíncrono para não travar o redirecionamento
+                try {
+                    const trackUrl = '<?= site_url('p/' . $product->id . '/track') ?>';
+                    const formData = new FormData();
+                    formData.append('event_type', eventType);
+                    formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
+                    
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(trackUrl, formData);
+                    } else {
+                        fetch(trackUrl, { method: 'POST', body: formData, keepalive: true });
+                    }
+                } catch (e) {
+                    console.debug('Tracking click error', e);
+                }
+
+                <?php if (! empty($product->meta_ads_active) && ! empty($metaAds['pixel_id'])): ?>
+                if (typeof fbq === 'function') {
+                    try {
+                        fbq('track', 'Purchase', {
+                            content_name: '<?= esc($product->name, 'js') ?>',
+                            content_type: 'product',
+                            content_ids: ['<?= esc((string)$product->id, 'js') ?>'],
+                            value: <?= (float)($product->promotional_price ?: $product->price) ?>,
+                            currency: 'BRL'
+                        });
+                    } catch (pixelErr) {
+                        console.warn('Meta Pixel Purchase tracking error:', pixelErr);
+                    }
+                }
+                <?php endif; ?>
             });
         });
     </script>

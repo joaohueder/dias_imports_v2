@@ -7,6 +7,7 @@ use App\Models\CompanyWhatsappModel;
 use App\Models\MetaAdsSettingModel;
 use App\Models\ProductImageModel;
 use App\Models\ProductModel;
+use App\Models\ProductAccessLogModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class ProductLanding extends BaseController
@@ -18,6 +19,14 @@ class ProductLanding extends BaseController
 
         if (!$product) {
             throw PageNotFoundException::forPageNotFound('Produto não encontrado ou inativo.');
+        }
+
+        // Registra acesso real na tabela de métricas
+        try {
+            $logModel = new ProductAccessLogModel();
+            $logModel->recordEvent((int) $product->id, 'pageview');
+        } catch (\Throwable $e) {
+            log_message('error', 'Erro ao registrar log de acesso do produto: ' . $e->getMessage());
         }
 
         $imageModel = new ProductImageModel();
@@ -74,5 +83,17 @@ class ProductLanding extends BaseController
             'whatsappUrl' => $whatsappUrl,
             'faqList' => $faqList,
         ]);
+    }
+
+    public function trackClick(int $productId)
+    {
+        $eventType = $this->request->getPost('event_type') ?: 'cta_click';
+        try {
+            $logModel = new ProductAccessLogModel();
+            $logModel->recordEvent($productId, $eventType);
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Throwable $e) {
+            return $this->response->setJSON(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 }

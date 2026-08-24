@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ProductModel;
 use App\Models\ProductImageModel;
 use App\Models\CompanyWhatsappModel;
+use App\Models\ProductAccessLogModel;
 
 class Products extends BaseController
 {
@@ -190,13 +191,22 @@ class Products extends BaseController
         $whatsappModel = new CompanyWhatsappModel();
         $whatsapps = $whatsappModel->where('is_active', 1)->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
 
+        $statsPeriod = (int) ($this->request->getGet('stats_period') ?: 7);
+        if (!in_array($statsPeriod, [7, 14, 21, 30], true)) {
+            $statsPeriod = 7;
+        }
+
+        $logModel = new ProductAccessLogModel();
+        $stats = $logModel->getProductMetrics((int) $id, $statsPeriod);
+
         $data = [
             'pageTitle' => 'Editar Produto',
             'pageDescription' => 'Edite as informações do produto.',
             'activePage' => 'products',
             'product' => $product,
             'whatsapps' => $whatsapps,
-            'images' => $this->productImageModel->where('product_id', $id)->orderBy('sort_order', 'ASC')->findAll()
+            'images' => $this->productImageModel->where('product_id', $id)->orderBy('sort_order', 'ASC')->findAll(),
+            'stats' => $stats,
         ];
 
         return $this->renderPage('admin/products/form', $data);
@@ -263,6 +273,27 @@ class Products extends BaseController
             return redirect()->to('produtos')->with('success', 'Produto excluído com sucesso.');
         }
         return redirect()->to('produtos')->with('error', 'Erro ao excluir produto.');
+    }
+
+    /**
+     * Retorna os dados estatísticos agregados via AJAX para atualização sem reload
+     */
+    public function getStatsData($id)
+    {
+        $product = $this->productModel->find($id);
+        if (!$product) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Produto não encontrado.']);
+        }
+
+        $statsPeriod = (int) ($this->request->getGet('stats_period') ?: 7);
+        if (!in_array($statsPeriod, [7, 14, 21, 30], true)) {
+            $statsPeriod = 7;
+        }
+
+        $logModel = new ProductAccessLogModel();
+        $stats = $logModel->getProductMetrics((int) $id, $statsPeriod);
+
+        return $this->response->setJSON($stats);
     }
 
     public function uploadImage()

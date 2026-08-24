@@ -14,6 +14,7 @@ $routes->post('leads/capture', 'Landing::submitLead', ['filter' => 'csrf']);
 
 // Landing page pública do produto (slug)
 $routes->get('p/(:segment)', 'ProductLanding::show/$1');
+$routes->post('p/(:num)/track', 'ProductLanding::trackClick/$1', ['filter' => 'csrf']);
 
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Home::index');
@@ -38,6 +39,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('produtos/(:num)/editar', 'Admin\Products::update/$1', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/(:num)/status', 'Admin\Products::toggleStatus/$1', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/(:num)/excluir', 'Admin\Products::delete/$1', ['filter' => ['permission:products,delete', 'csrf']]);
+    $routes->get('produtos/(:num)/estatisticas', 'Admin\Products::stats/$1', ['filter' => 'permission:products,edit']);
+    $routes->get('produtos/(:num)/stats-data', 'Admin\Products::getStatsData/$1', ['filter' => 'permission:products,view']);
     $routes->post('produtos/upload-imagem', 'Admin\Products::uploadImage', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/excluir-imagem', 'Admin\Products::deleteImage', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/ordenar-imagens', 'Admin\Products::reorderImages', ['filter' => ['permission:products,edit', 'csrf']]);

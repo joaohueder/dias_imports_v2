@@ -342,7 +342,7 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                 <span class="event-badge">PageView</span>
                                 <span class="meta-event-tag">Visualização de Página</span>
                             </div>
-                            <p>Disparado instantaneamente no carregamento da Landing Page de Leads tanto pelo Pixel do navegador quanto pela API de Conversões do servidor com deduplicação.</p>
+                            <p>Disparado instantaneamente no carregamento da Landing Page de Leads e nas Páginas de Produtos configuradas com Meta Ads ativo.</p>
                         </div>
 
                         <div class="meta-event-card">
@@ -351,6 +351,22 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                                 <span class="meta-event-tag">Cadastro Realizado</span>
                             </div>
                             <p>Disparado ao confirmar o envio do formulário de cadastro, enviando dados higienizados e <code>event_id</code> único para garantir 100% de atribuição de conversão.</p>
+                        </div>
+
+                        <div class="meta-event-card">
+                            <div class="meta-event-head">
+                                <span class="event-badge" style="background: rgba(13, 202, 240, 0.15); color: #0dcaf0; border-color: rgba(13, 202, 240, 0.3);">ViewContent</span>
+                                <span class="meta-event-tag">Visualização de Produto</span>
+                            </div>
+                            <p>Disparado ao acessar a Landing Page de um produto com Meta Ads ativo, enviando nome do produto, ID, valor e moeda (BRL).</p>
+                        </div>
+
+                        <div class="meta-event-card">
+                            <div class="meta-event-head">
+                                <span class="event-badge success" style="background: rgba(32, 201, 151, 0.15); color: #20c997; border-color: rgba(32, 201, 151, 0.3);">Purchase</span>
+                                <span class="meta-event-tag">Clique de Compra (WhatsApp)</span>
+                            </div>
+                            <p>Disparado quando o cliente clica nos botões de CTA/compra da página do produto (tanto o principal quanto a barra flutuante inferior), enviando nome, ID, valor e moeda.</p>
                         </div>
                     </div>
                 </div>
