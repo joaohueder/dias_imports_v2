@@ -818,6 +818,7 @@ window.getAppBaseUrl = () => {
     const evolutionPanel = settings.querySelector('[data-settings-panel="evolution"]');
     const companyPanel = settings.querySelector('[data-settings-panel="empresa"]');
     const templatesPanel = settings.querySelector('[data-settings-panel="modelos-mensagens"]');
+    const realtimePanel = settings.querySelector('[data-settings-panel="tempo-real"]');
     const footerTelemetry = document.querySelector('[data-footer-telemetry]');
 
     const rtCompanyActive = settings.dataset.rtCompanyActive === '1';
@@ -829,6 +830,9 @@ window.getAppBaseUrl = () => {
     const rtTemplatesActive = settings.dataset.rtTemplatesActive === '1';
     const rtTemplatesInterval = (parseInt(settings.dataset.rtTemplatesInterval, 10) || 5) * 1000;
 
+    const rtRealtimeActive = settings.dataset.rtRealtimeActive === '1';
+    const rtRealtimeInterval = (parseInt(settings.dataset.rtRealtimeInterval, 10) || 5) * 1000;
+
     let instanceStatusTimer = null;
     let instanceStatusRequest = null;
     let instanceStatusFailures = 0;
@@ -838,6 +842,9 @@ window.getAppBaseUrl = () => {
 
     let templatesTimer = null;
     let templatesRequest = null;
+
+    let realtimeTimer = null;
+    let realtimeRequest = null;
 
     const isPanelVisible = (panel) => !document.hidden && panel && !panel.hidden;
 
@@ -983,6 +990,44 @@ window.getAppBaseUrl = () => {
 
     if (isPanelVisible(templatesPanel) && rtTemplatesActive) scheduleTemplatesUpdate();
 
+    // --- Painel Tempo Real (Diagnóstico e Worker Status) Realtime ---
+    const scheduleRealtimeUpdate = (delay = rtRealtimeInterval) => {
+        window.clearTimeout(realtimeTimer);
+        if (isPanelVisible(realtimePanel) && rtRealtimeActive) {
+            realtimeTimer = window.setTimeout(refreshRealtimeFeed, delay);
+        }
+    };
+
+    const refreshRealtimeFeed = async () => {
+        if (!isPanelVisible(realtimePanel) || !rtRealtimeActive || realtimeRequest) return;
+        const container = settings.querySelector('[data-realtime-dashboard-container]');
+        if (!container) return;
+
+        realtimeRequest = new AbortController();
+        try {
+            const response = await fetch(`${window.location.origin}/configuracoes/tempo-real/feed?_t=${Date.now()}`, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin',
+                cache: 'no-store',
+                signal: realtimeRequest.signal,
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (response.ok && payload.success) {
+                if (payload.html) container.innerHTML = payload.html;
+                if (footerTelemetry && payload.footerHtml) footerTelemetry.innerHTML = payload.footerHtml;
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Error fetching realtime feed:', error);
+            }
+        } finally {
+            realtimeRequest = null;
+            scheduleRealtimeUpdate();
+        }
+    };
+
+    if (isPanelVisible(realtimePanel) && rtRealtimeActive) scheduleRealtimeUpdate();
+
     // Listener para troca de abas em configurações para acionar os timers corretos e sincronizar indicador no cabeçalho
     const realtimeIndicator = document.querySelector('[data-realtime-indicator]');
     const updateHeaderIndicator = (tabName) => {
@@ -991,6 +1036,7 @@ window.getAppBaseUrl = () => {
         if (tabName === 'evolution') isActive = rtEvolutionActive;
         else if (tabName === 'empresa') isActive = rtCompanyActive;
         else if (tabName === 'modelos-mensagens') isActive = rtTemplatesActive;
+        else if (tabName === 'tempo-real') isActive = rtRealtimeActive;
         
         realtimeIndicator.style.display = isActive ? '' : 'none';
     };
@@ -1003,6 +1049,7 @@ window.getAppBaseUrl = () => {
             if (tabName === 'evolution' && rtEvolutionActive) scheduleInstanceStatusUpdate(500);
             if (tabName === 'empresa' && rtCompanyActive) scheduleCompanyUpdate(500);
             if (tabName === 'modelos-mensagens' && rtTemplatesActive) scheduleTemplatesUpdate(500);
+            if (tabName === 'tempo-real' && rtRealtimeActive) scheduleRealtimeUpdate(500);
         }
     });
 
@@ -1010,14 +1057,17 @@ window.getAppBaseUrl = () => {
         window.clearTimeout(instanceStatusTimer);
         window.clearTimeout(companyTimer);
         window.clearTimeout(templatesTimer);
+        window.clearTimeout(realtimeTimer);
         if (!document.hidden) {
             if (isPanelVisible(evolutionPanel) && rtEvolutionActive) refreshInstanceStatuses();
             if (isPanelVisible(companyPanel) && rtCompanyActive) refreshCompanyFeed();
             if (isPanelVisible(templatesPanel) && rtTemplatesActive) refreshTemplatesFeed();
+            if (isPanelVisible(realtimePanel) && rtRealtimeActive) refreshRealtimeFeed();
         } else {
             instanceStatusRequest?.abort();
             companyRequest?.abort();
             templatesRequest?.abort();
+            realtimeRequest?.abort();
         }
     });
 

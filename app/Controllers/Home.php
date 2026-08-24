@@ -587,6 +587,26 @@ class Home extends BaseController
         ]);
     }
 
+    public function realtimeFeed(): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $realtimeWorkerStatus = $snapshotService->getWorkerStatus();
+
+        $html = view('admin/settings/_realtime_dashboard', [
+            'realtimeWorkerStatus' => $realtimeWorkerStatus,
+        ]);
+
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
+        return $this->response->setJSON([
+            'success' => true,
+            'html' => $html,
+            'footerHtml' => $telemetry['html'],
+            'worker' => $realtimeWorkerStatus,
+        ]);
+    }
+
     private function renderPage(string $activePage): string
     {
         $item = self::NAVIGATION[$activePage];
@@ -708,6 +728,10 @@ class Home extends BaseController
             'settings_templates' => [
                 'active' => $realtimeModel->isScreenActive('settings_templates'),
                 'interval' => $realtimeModel->getInterval('settings_templates'),
+            ],
+            'settings_realtime' => [
+                'active' => true,
+                'interval' => $realtimeSleepSeconds ?? 5,
             ],
         ];
 
