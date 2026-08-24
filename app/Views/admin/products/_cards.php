@@ -24,11 +24,11 @@ $helperInitials = static function(string $name): string {
         $totalImages = count($images);
         $coverImage = !empty($images) ? $images[0]->image_path : null;
 
-        // Métricas simuladas/iniciais conforme visual de alta conversão
-        $accessCount = 0;
-        $clickCount = 0;
-        $conversionRate = 0;
-        $enviosCount = 0;
+        // Métricas reais agregadas
+        $accessCount = (int) ($product->pageviews ?? 0);
+        $clickCount = (int) ($product->clicks ?? 0);
+        $conversionRate = (float) ($product->conversionRate ?? 0);
+        $enviosCount = (int) ($product->sendsCount ?? 0);
     ?>
     <article class="product-card-premium <?= ! $isActive ? 'is-inactive' : '' ?>"
              data-product-card
@@ -129,10 +129,17 @@ $helperInitials = static function(string $name): string {
                         </a>
                     <?php endif; ?>
 
-                    <a href="<?= site_url('p/' . $product->slug) ?>" target="_blank" class="btn-product-action action-send">
-                        <i class="ti ti-send"></i>
-                        <span>Enviar</span>
-                    </a>
+                    <?php if (!empty($isSendJobActive)): ?>
+                        <button type="button" class="btn-product-action action-send" onclick="openSendModal(<?= esc($product->id) ?>, '<?= esc(addslashes($product->name)) ?>')">
+                            <i class="ti ti-send"></i>
+                            <span>Enviar</span>
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="btn-product-action action-send disabled" disabled title="Recurso desativado nas Configurações da Central de Trabalho (Disparar Produtos para Grupos do WhatsApp)." style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="ti ti-send-off"></i>
+                            <span>Enviar (Desativado)</span>
+                        </button>
+                    <?php endif; ?>
                 </div>
 
                 <div class="product-actions-row">

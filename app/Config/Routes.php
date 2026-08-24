@@ -45,6 +45,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('produtos/excluir-imagem', 'Admin\Products::deleteImage', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/ordenar-imagens', 'Admin\Products::reorderImages', ['filter' => ['permission:products,edit', 'csrf']]);
     $routes->post('produtos/capa-imagem', 'Admin\Products::setCoverImage', ['filter' => ['permission:products,edit', 'csrf']]);
+    $routes->post('produtos/enviar-grupos', 'Admin\Products::enqueueSend', ['filter' => ['permission:products,edit', 'csrf']]);
 
     // Leads VIP
     $routes->get('leads-vip', 'VipLeads::index', ['filter' => 'permission:vip_leads,view']);

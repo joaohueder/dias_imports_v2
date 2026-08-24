@@ -934,6 +934,7 @@
             }, 20000);
         };
         const showQrError = (message) => {
+            console.error('Erro Evolution QR Code:', message);
             qrLoading.hidden = true;
             qrImage.hidden = true;
             qrError.hidden = false;
@@ -1840,6 +1841,7 @@
                 }
             } catch (err) {
                 // Erro de rede ou indisponibilidade total da aplicação
+                console.error('Falha de monitoramento de integridade/saúde do sistema:', err);
                 statusDot.classList.remove('status-warning');
                 statusDot.classList.add('status-danger');
                 statusPill.classList.remove('status-warning');

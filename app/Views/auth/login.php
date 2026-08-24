@@ -599,6 +599,7 @@
 </div>
 
 <?php if (is_string($loginError) && $loginError !== ''): ?>
+<script>console.error(<?= json_encode('Erro de Autenticação: ' . $loginError, JSON_UNESCAPED_UNICODE) ?>);</script>
 <div class="login-error-modal" id="loginErrorModal" aria-hidden="false">
     <section class="login-error-card" role="alertdialog" aria-modal="true" aria-labelledby="loginErrorTitle" aria-describedby="loginErrorMessage">
         <div class="login-error-icon" aria-hidden="true"><i class="ti ti-alert-triangle"></i></div>

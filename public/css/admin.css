@@ -4169,10 +4169,17 @@ body.processing-locked { overflow: hidden; }
     border-color: rgba(124, 105, 255, 0.3);
 }
 
-.btn-product-action.action-send:hover {
+.btn-product-action.action-send:hover:not(:disabled) {
     background: rgba(124, 105, 255, 0.25);
     color: #fff;
     border-color: rgba(124, 105, 255, 0.5);
+}
+
+.btn-product-action:disabled,
+.btn-product-action.disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: auto;
 }
 
 .btn-product-action.action-danger:hover {

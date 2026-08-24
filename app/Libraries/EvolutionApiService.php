@@ -201,6 +201,37 @@ class EvolutionApiService
         ]);
     }
 
+    public function sendGroupMessage(string $name, string $groupJid, string $text): array
+    {
+        $name = $this->validateInstanceName($name);
+        return $this->request('POST', '/message/sendText/' . rawurlencode($name), [
+            'number' => $groupJid,
+            'text'   => $text,
+        ]);
+    }
+
+    public function sendGroupMedia(string $name, string $groupJid, string $mediaUrl, string $caption = '', string $mediaType = 'image'): array
+    {
+        $name = $this->validateInstanceName($name);
+        $fileName = basename(parse_url($mediaUrl, PHP_URL_PATH) ?: 'imagem.jpg');
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $mime = match ($ext) {
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+            'gif' => 'image/gif',
+            default => 'image/jpeg',
+        };
+
+        return $this->request('POST', '/message/sendMedia/' . rawurlencode($name), [
+            'number'    => $groupJid,
+            'mediatype' => $mediaType,
+            'mimetype'  => $mime,
+            'caption'   => $caption,
+            'media'     => $mediaUrl,
+            'fileName'  => $fileName,
+        ]);
+    }
+
     public function createGroup(string $name, string $subject, array $participants, string $description = ''): array
     {
         $name = $this->validateInstanceName($name);

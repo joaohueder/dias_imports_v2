@@ -161,6 +161,8 @@
                                                 <?php
                                                 if ($item['job_key'] === 'sync_whatsapp_groups') {
                                                     echo 'Atualizar Grupo WhatsApp';
+                                                } elseif ($item['job_key'] === 'send_product_to_group') {
+                                                    echo 'Disparo de Produto (WhatsApp)';
                                                 } else {
                                                     echo esc($item['job_key']);
                                                 }

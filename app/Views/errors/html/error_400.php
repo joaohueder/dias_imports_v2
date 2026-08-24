@@ -68,6 +68,9 @@
             color: #dd4814;
         }
     </style>
+    <script>
+        console.error('HTTP 400 Bad Request: <?= esc(addslashes(ENVIRONMENT !== 'production' ? $message : lang('Errors.sorryBadRequest')), 'raw') ?>');
+    </script>
 </head>
 <body>
 <div class="wrap">

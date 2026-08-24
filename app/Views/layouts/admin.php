@@ -204,6 +204,7 @@ $globalSuccess = session()->getFlashdata('success');
 </div>
 
 <?php if (is_string($globalError) && $globalError !== ''): ?>
+<script>console.error(<?= json_encode('Erro do Sistema: ' . $globalError, JSON_UNESCAPED_UNICODE) ?>);</script>
 <div class="error-dialog" data-error-dialog hidden aria-hidden="true">
     <section class="error-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="global-error-title" aria-describedby="global-error-message" tabindex="-1">
         <div class="error-dialog-icon" aria-hidden="true"><i class="ti ti-alert-triangle"></i></div>

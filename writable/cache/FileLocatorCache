@@ -192,6 +192,16 @@
         ),
       ),
     ),
+    'Language/en/Security.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Security.php',
+        ),
+      ),
+    ),
   ),
   'findQualifiedNameFromPath' => 
   array (
@@ -361,6 +371,13 @@
       'Views' => 
       array (
         'php' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\/Commands/Generators/Views/migration.tpl.php',
+      ),
+    ),
+    'CodeIgniter\\Commands\\Generators\\Views\\seeder.tpl.php' => 
+    array (
+      'Views' => 
+      array (
+        'php' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\/Commands/Generators/Views/seeder.tpl.php',
       ),
     ),
   ),

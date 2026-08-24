@@ -70,16 +70,45 @@ class Products extends BaseController
                 $imagesByProduct[$img->product_id][] = $img;
             }
 
+            $accessLogModel = new ProductAccessLogModel();
+            $batchStats = $accessLogModel->getBatchProductMetrics($productIds);
+
+            $jobQueueModel = new \App\Models\SystemJobQueueModel();
+            $sendsRows = $jobQueueModel->select("payload, COUNT(*) as cnt")
+                ->where('job_key', 'send_product_to_group')
+                ->groupBy('payload')
+                ->findAll();
+
+            $sendsByProduct = [];
+            foreach ($sendsRows as $sr) {
+                $pData = json_decode($sr['payload'] ?? '', true);
+                if (!empty($pData['product_id'])) {
+                    $pid = (int)$pData['product_id'];
+                    $sendsByProduct[$pid] = ($sendsByProduct[$pid] ?? 0) + (int)$sr['cnt'];
+                }
+            }
+
             foreach ($products as $product) {
                 $product->images = $imagesByProduct[$product->id] ?? [];
+                $stat = $batchStats[$product->id] ?? ['pageviews' => 0, 'clicks' => 0, 'conversionRate' => 0];
+                $product->pageviews = $stat['pageviews'];
+                $product->clicks = $stat['clicks'];
+                $product->conversionRate = $stat['conversionRate'];
+                $product->sendsCount = $sendsByProduct[$product->id] ?? 0;
             }
         }
+
+        $sendJob = (new \App\Models\SystemJobModel())->where('job_key', 'send_product_to_group')->first();
+        $isSendJobActive = !empty($sendJob) && (int)$sendJob['is_active'] === 1;
 
         $data = [
             'pageTitle' => 'Produtos',
             'pageDescription' => 'Gerencie os produtos e suas landing pages.',
             'activePage' => 'products',
-            'products' => $products
+            'products' => $products,
+            'activeGroups' => (new \App\Models\WhatsappGroupModel())->where('status', 'active')->orderBy('name', 'ASC')->findAll(),
+            'messageTemplates' => (new \App\Models\MessageTemplateModel())->where('is_active', 1)->orderBy('name', 'ASC')->findAll(),
+            'isSendJobActive' => $isSendJobActive,
         ];
 
         return $this->renderPage('admin/products/index', $data);
@@ -427,6 +456,33 @@ class Products extends BaseController
             'success' => true,
             'csrfHash' => csrf_hash()
         ]);
+    }
+
+    public function enqueueSend(): ResponseInterface
+    {
+        $productId = (int) $this->request->getPost('product_id');
+        $templateMode = (string) ($this->request->getPost('template_mode') ?: 'random');
+        $selectedTemplateId = $this->request->getPost('template_id') ? (int) $this->request->getPost('template_id') : null;
+        $groupIds = (array) $this->request->getPost('group_ids');
+
+        if ($productId <= 0) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Produto não informado.',
+            ]);
+        }
+
+        if (empty($groupIds)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Selecione ao menos 1 grupo do WhatsApp para envio.',
+            ]);
+        }
+
+        $jobCenterService = new \App\Services\JobCenterService();
+        $result = $jobCenterService->enqueueProductDispatches($productId, $groupIds, $templateMode, $selectedTemplateId);
+
+        return $this->response->setJSON($result);
     }
 
     public function reorderImages()

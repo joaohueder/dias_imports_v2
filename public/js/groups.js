@@ -223,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (error) {
+            console.error('Erro ao consultar a Evolution API para listar grupos:', error);
             instanceGroupsLoading.style.display = 'none';
             instanceGroupsEmpty.style.display = 'flex';
             const hint = instanceGroupsEmpty.querySelector('span');
@@ -678,6 +679,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showToast(title, message, type = 'info') {
+        if (type === 'error' || type === 'warning') {
+            console.error(`[${title}] ${message}`);
+        }
         const container = document.querySelector('[data-toast-container]');
         if (!container) return;
 

@@ -360,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Atualiza a listagem e dashboard em tempo real
                 await fetchLeads();
             } catch (err) {
+                console.error('Erro ao salvar lead:', err);
                 alert(err.message || 'Ocorreu um erro ao salvar o lead.');
             } finally {
                 // Remove a tela de bloqueio

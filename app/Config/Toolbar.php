@@ -102,9 +102,7 @@ class Toolbar extends BaseConfig
      *
      * @var list<string>
      */
-    public array $watchedDirectories = [
-        'app',
-    ];
+    public array $watchedDirectories = [];
 
     /**
      * --------------------------------------------------------------------------
@@ -116,9 +114,7 @@ class Toolbar extends BaseConfig
      *
      * @var list<string>
      */
-    public array $watchedExtensions = [
-        'php', 'css', 'js', 'html', 'svg', 'json', 'env',
-    ];
+    public array $watchedExtensions = [];
 
     /**
      * --------------------------------------------------------------------------

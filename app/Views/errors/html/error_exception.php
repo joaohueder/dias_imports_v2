@@ -17,6 +17,14 @@ $errorId = uniqid('error', true);
     </style>
 
     <script>
+        console.error(<?= json_encode([
+            'exception' => $title ?? 'Exception',
+            'message'   => $exception->getMessage(),
+            'code'      => $exception->getCode(),
+            'file'      => $file,
+            'line'      => $line,
+            'trace'     => array_map(static fn($t) => ($t['class'] ?? '') . ($t['type'] ?? '') . ($t['function'] ?? '') . ' in ' . ($t['file'] ?? 'unknown') . ':' . ($t['line'] ?? '0'), $exception->getTrace()),
+        ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>);
         <?= file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'debug.js') ?>
     </script>
 </head>

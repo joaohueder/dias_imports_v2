@@ -222,6 +222,10 @@ class JobCenterService
                     $res = $this->handleSyncWhatsappGroup($item);
                     $success = $res['success'];
                     $resultMsg = $res['message'] ?? null;
+                } elseif ($item['job_key'] === 'send_product_to_group') {
+                    $res = $this->handleSendProductToGroup($item);
+                    $success = $res['success'];
+                    $resultMsg = $res['message'] ?? null;
                 } else {
                     $resultMsg = "Manipulador não implementado para o trabalho {$item['job_key']}";
                 }
@@ -425,6 +429,258 @@ class JobCenterService
         return [
             'success' => true,
             'message' => $reportMessage,
+        ];
+    }
+
+    /**
+     * Manipulador específico para disparar produto para 1 grupo do WhatsApp
+     */
+    protected function handleSendProductToGroup(array $item): array
+    {
+        $data = is_string($item['payload']) ? json_decode($item['payload'], true) : $item['payload'];
+        if (!is_array($data)) {
+            return ['success' => false, 'message' => 'Payload inválido ou vazio.'];
+        }
+
+        $groupJid = $data['group_jid'] ?? '';
+        $messageText = $data['message_text'] ?? '';
+        $imageUrl = $data['image_url'] ?? null;
+        $instanceName = trim((string)($data['instance_name'] ?? ''));
+
+        if (empty($groupJid)) {
+            return ['success' => false, 'message' => 'JID do grupo não informado.'];
+        }
+        if (empty($messageText)) {
+            return ['success' => false, 'message' => 'Texto da mensagem não informado.'];
+        }
+
+        $evolutionService = new EvolutionApiService();
+        $settings = $evolutionService->getSettings();
+        $defaultInstance = trim((string)($settings['default_instance_name'] ?? ''));
+
+        // Valida instância conectada
+        if ($instanceName === '') {
+            $instanceName = $defaultInstance;
+        }
+
+        try {
+            $instances = $evolutionService->fetchInstances();
+            $connectedInstance = '';
+            $validInstance = false;
+            foreach ($instances as $inst) {
+                if ($instanceName !== '' && $inst['name'] === $instanceName && !empty($inst['connected'])) {
+                    $validInstance = true;
+                    break;
+                }
+                if (!empty($inst['connected']) && $connectedInstance === '') {
+                    $connectedInstance = $inst['name'];
+                }
+            }
+
+            if (!$validInstance) {
+                if ($connectedInstance !== '') {
+                    $instanceName = $connectedInstance;
+                } else {
+                    return ['success' => false, 'message' => 'Nenhuma instância conectada na Evolution API para realizar o disparo.'];
+                }
+            }
+        } catch (\Throwable $e) {
+            if ($instanceName === '') {
+                return ['success' => false, 'message' => 'Falha ao verificar instâncias na Evolution API: ' . $e->getMessage()];
+            }
+        }
+
+        // Se houver imagem válida do produto, envia como mídia com legenda; se falhar ou não houver, envia texto puro
+        $sendOk = false;
+        $methodUsed = 'texto';
+
+        if (!empty($imageUrl)) {
+            try {
+                $evolutionService->sendGroupMedia($instanceName, $groupJid, $imageUrl, $messageText, 'image');
+                $sendOk = true;
+                $methodUsed = 'imagem com legenda';
+            } catch (\Throwable $mediaEx) {
+                log_message('warning', 'Falha ao enviar mídia do produto via Evolution API, tentando texto puro: ' . $mediaEx->getMessage());
+                // Fallback para envio de texto
+                try {
+                    $evolutionService->sendGroupMessage($instanceName, $groupJid, $messageText);
+                    $sendOk = true;
+                    $methodUsed = 'texto (fallback após falha de imagem)';
+                } catch (\Throwable $textEx) {
+                    return ['success' => false, 'message' => 'Falha ao enviar mensagem: ' . $textEx->getMessage()];
+                }
+            }
+        } else {
+            try {
+                $evolutionService->sendGroupMessage($instanceName, $groupJid, $messageText);
+                $sendOk = true;
+                $methodUsed = 'texto puro';
+            } catch (\Throwable $textEx) {
+                return ['success' => false, 'message' => 'Falha ao enviar mensagem: ' . $textEx->getMessage()];
+            }
+        }
+
+        // Incrementa contagem de disparos no modelo de mensagem se foi usado template_id
+        if (!empty($data['template_id'])) {
+            try {
+                $templateModel = new \App\Models\MessageTemplateModel();
+                $tpl = $templateModel->find((int)$data['template_id']);
+                if ($tpl) {
+                    $templateModel->update((int)$data['template_id'], [
+                        'send_count' => ((int)($tpl['send_count'] ?? 0)) + 1
+                    ]);
+                }
+            } catch (\Throwable $ignored) {}
+        }
+
+        $groupName = $data['group_name'] ?? $groupJid;
+        $prodName = $data['product_name'] ?? 'Produto';
+
+        return [
+            'success' => true,
+            'message' => "Produto \"{$prodName}\" enviado com sucesso para \"{$groupName}\" ({$methodUsed}) via instância {$instanceName}."
+        ];
+    }
+
+    /**
+     * Enfileira disparos de produtos para grupos selecionados
+     */
+    public function enqueueProductDispatches(int $productId, array $groupIds, string $templateMode, ?int $selectedTemplateId = null): array
+    {
+        $job = $this->jobModel->getByKey('send_product_to_group');
+        if (!$job || empty($job['is_active'])) {
+            return [
+                'success' => false,
+                'message' => 'O trabalho de disparo de produtos está desativado nas configurações da Central de Trabalho.',
+            ];
+        }
+
+        $productModel = new \App\Models\ProductModel();
+        $product = $productModel->find($productId);
+        if (!$product) {
+            return [
+                'success' => false,
+                'message' => 'Produto não encontrado.',
+            ];
+        }
+
+        $groupModel = new WhatsappGroupModel();
+        $groups = $groupModel->whereIn('id', $groupIds)->where('status', 'active')->findAll();
+
+        if (empty($groups)) {
+            return [
+                'success' => false,
+                'message' => 'Nenhum grupo ativo selecionado foi encontrado.',
+            ];
+        }
+
+        $templateModel = new \App\Models\MessageTemplateModel();
+        $activeTemplates = $templateModel->where('is_active', 1)->findAll();
+
+        if (empty($activeTemplates)) {
+            return [
+                'success' => false,
+                'message' => 'Nenhum modelo de mensagem ativo encontrado. Cadastre ou ative modelos nas configurações.',
+            ];
+        }
+
+        // Busca fotos do produto para capa/mídia
+        $imageModel = new \App\Models\ProductImageModel();
+        $coverImageRow = $imageModel->where('product_id', $productId)->orderBy('is_cover', 'DESC')->orderBy('sort_order', 'ASC')->first();
+        $productImageUrl = null;
+        if ($coverImageRow && !empty($coverImageRow->image_path)) {
+            $productImageUrl = base_url('uploads/products/' . $coverImageRow->image_path);
+        }
+
+        // Variáveis de substituição do produto
+        $priceFormatted = number_format((float)$product->price, 2, ',', '.');
+        $promoPriceFormatted = !empty($product->promotional_price) && (float)$product->promotional_price > 0
+            ? number_format((float)$product->promotional_price, 2, ',', '.')
+            : null;
+        $hasPromo = $promoPriceFormatted !== null && (float)$product->promotional_price < (float)$product->price;
+        $discountPercent = $hasPromo ? round((((float)$product->price - (float)$product->promotional_price) / (float)$product->price) * 100) : 0;
+        $productUrl = site_url('p/' . $product->slug);
+
+        $replacements = [
+            '{{nome}}'              => $product->name,
+            '{nome}'                => $product->name,
+            '{{produto}}'           => $product->name,
+            '{produto}'             => $product->name,
+            '{{descricao}}'         => (string)($product->description ?? ''),
+            '{descricao}'           => (string)($product->description ?? ''),
+            '{{preco}}'             => 'R$ ' . $priceFormatted,
+            '{preco}'               => 'R$ ' . $priceFormatted,
+            '{{preco_promocional}}' => $promoPriceFormatted ? 'R$ ' . $promoPriceFormatted : 'R$ ' . $priceFormatted,
+            '{preco_promocional}'   => $promoPriceFormatted ? 'R$ ' . $promoPriceFormatted : 'R$ ' . $priceFormatted,
+            '{{desconto}}'          => $hasPromo ? "{$discountPercent}% OFF" : '',
+            '{desconto}'            => $hasPromo ? "{$discountPercent}% OFF" : '',
+            '{{link}}'              => $productUrl,
+            '{link}'                => $productUrl,
+        ];
+
+        // Se templateMode for specific
+        $fixedTemplate = null;
+        if ($templateMode === 'specific' && $selectedTemplateId) {
+            foreach ($activeTemplates as $t) {
+                if ((int)$t['id'] === (int)$selectedTemplateId) {
+                    $fixedTemplate = $t;
+                    break;
+                }
+            }
+            if (!$fixedTemplate) {
+                return [
+                    'success' => false,
+                    'message' => 'O modelo de mensagem selecionado não está ativo ou não foi encontrado.',
+                ];
+            }
+        }
+
+        $minDelay = max(1, (int) ($job['min_delay_seconds'] ?? 10));
+        $maxDelay = max($minDelay, (int) ($job['max_delay_seconds'] ?? 45));
+
+        $scheduledTimestamp = time();
+        $enqueued = 0;
+
+        foreach ($groups as $group) {
+            // Escolhe template
+            $tplToUse = $fixedTemplate;
+            if ($templateMode === 'random' || !$tplToUse) {
+                $randIndex = array_rand($activeTemplates);
+                $tplToUse = $activeTemplates[$randIndex];
+            }
+
+            $rawContent = (string)($tplToUse['content'] ?? '');
+            $parsedMessage = strtr($rawContent, $replacements);
+
+            $groupName = !empty($group['name']) ? $group['name'] : $group['group_jid'];
+            $itemRef = "{$product->name} → {$groupName}";
+
+            $this->queueModel->insert([
+                'job_key'        => 'send_product_to_group',
+                'item_reference' => mb_substr($itemRef, 0, 190),
+                'payload'        => json_encode([
+                    'product_id'    => $product->id,
+                    'product_name'  => $product->name,
+                    'group_id'      => $group['id'],
+                    'group_jid'     => $group['group_jid'],
+                    'group_name'    => $groupName,
+                    'instance_name' => $group['instance_name'] ?? '',
+                    'template_id'   => $tplToUse['id'] ?? null,
+                    'message_text'  => $parsedMessage,
+                    'image_url'     => $productImageUrl,
+                ], JSON_UNESCAPED_UNICODE),
+                'status'         => 'pending',
+                'scheduled_at'   => date('Y-m-d H:i:s', $scheduledTimestamp),
+                'attempts'       => 0,
+            ]);
+
+            $enqueued++;
+        }
+
+        return [
+            'success' => true,
+            'message' => "{$enqueued} envio(s) do produto \"{$product->name}\" foram enfileirados com sucesso na Central de Trabalho.",
+            'count'   => $enqueued,
         ];
     }
 

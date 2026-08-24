@@ -86,6 +86,37 @@ class ProductAccessLogModel extends Model
         ]);
     }
 
+    public function getBatchProductMetrics(array $productIds): array
+    {
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $db = $this->db;
+        $rows = $db->table($this->table)
+            ->select("product_id, 
+                      SUM(CASE WHEN event_type = 'pageview' THEN 1 ELSE 0 END) as pageviews,
+                      SUM(CASE WHEN event_type IN ('cta_click', 'sticky_cta_click', 'whatsapp_click') THEN 1 ELSE 0 END) as clicks")
+            ->whereIn('product_id', $productIds)
+            ->groupBy('product_id')
+            ->get()->getResultArray();
+
+        $stats = [];
+        foreach ($rows as $row) {
+            $pv = (int) $row['pageviews'];
+            $clicks = (int) $row['clicks'];
+            $rate = $pv > 0 ? round(($clicks / $pv) * 100, 1) : 0;
+            
+            $stats[$row['product_id']] = [
+                'pageviews' => $pv,
+                'clicks' => $clicks,
+                'conversionRate' => $rate
+            ];
+        }
+
+        return $stats;
+    }
+
     public function getProductMetrics(int $productId, int $days = 7): array
     {
         $db = $this->db;

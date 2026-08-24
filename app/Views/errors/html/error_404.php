@@ -68,6 +68,9 @@
             color: #dd4814;
         }
     </style>
+    <script>
+        console.error('HTTP 404 Page Not Found: <?= esc(addslashes(ENVIRONMENT !== 'production' ? $message : lang('Errors.sorryCannotFind')), 'raw') ?>');
+    </script>
 </head>
 <body>
     <div class="wrap">
