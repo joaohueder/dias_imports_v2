@@ -107,6 +107,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->post('landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
     $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real', 'Home::saveRealtimeSettings', ['filter' => ['permission:realtime,edit', 'csrf']]);
+    $routes->post('configuracoes/tempo-real/parar', 'Home::stopRealtimeWorker', ['filter' => ['permission:realtime,edit', 'csrf']]);
     $routes->post('configuracoes/tempo-real/(:num)/status', 'Home::toggleRealtimeScreen/$1', ['filter' => ['permission:realtime,edit', 'csrf']]);
 });
 

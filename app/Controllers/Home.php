@@ -371,25 +371,51 @@ class Home extends BaseController
             return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para alterar as configurações em tempo real.');
         }
 
+        // Salva o intervalo global de sleep do realtime
+        $sleepSeconds = (int)$this->request->getPost('realtime_sleep_seconds');
+        if ($sleepSeconds < 1) {
+            $sleepSeconds = 5;
+        }
+
+        $appSettingModel = new \App\Models\AppSettingModel();
+        $existingSetting = $appSettingModel->where('setting_key', 'realtime_sleep_seconds')->first();
+        if ($existingSetting) {
+            $appSettingModel->update($existingSetting['id'], [
+                'setting_value' => (string)$sleepSeconds,
+            ]);
+        } else {
+            $appSettingModel->insert([
+                'setting_key' => 'realtime_sleep_seconds',
+                'setting_value' => (string)$sleepSeconds,
+            ]);
+        }
+
         $model = new \App\Models\RealtimeScreenSettingModel();
         $screens = $this->request->getPost('screens');
 
-        if (is_array($screens)) {
-            foreach ($screens as $screenId => $data) {
-                $id = (int)$screenId;
-                $existing = $model->find($id);
-                if ($existing) {
-                    $isActive = !empty($data['is_active']) ? 1 : 0;
-                    $interval = !empty($data['interval']) ? (int)$data['interval'] : 5;
-                    $model->update($id, [
-                        'is_active' => $isActive,
-                        'refresh_interval_seconds' => $interval > 0 ? $interval : 5,
-                    ]);
-                }
-            }
+        // Atualiza status ativo de cada tela e unifica refresh_interval_seconds
+        $allScreens = $model->findAll();
+        foreach ($allScreens as $scr) {
+            $isActive = !empty($screens[$scr['id']]['is_active']) ? 1 : 0;
+            $model->update($scr['id'], [
+                'is_active' => $isActive,
+                'refresh_interval_seconds' => $sleepSeconds,
+            ]);
         }
 
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Configurações de tempo real atualizadas com sucesso.');
+        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Configurações de tempo real e intervalo do worker atualizados com sucesso.');
+    }
+
+    public function stopRealtimeWorker(): RedirectResponse
+    {
+        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
+            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para parar o worker em tempo real.');
+        }
+
+        $service = new \App\Services\RealtimeSnapshotService();
+        $service->requestWorkerStop();
+
+        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Sinal de parada enviado com sucesso ao worker realtime. Ele será encerrado no próximo ciclo de verificação.');
     }
 
     public function landingLeadsSettings(): string
@@ -609,6 +635,13 @@ class Home extends BaseController
             }
 
             try {
+                $realtimeSleepSetting = (new \App\Models\AppSettingModel())->where('setting_key', 'realtime_sleep_seconds')->first();
+                $realtimeSleepSeconds = $realtimeSleepSetting && !empty($realtimeSleepSetting['setting_value']) ? (int)$realtimeSleepSetting['setting_value'] : 5;
+            } catch (\Throwable) {
+                $realtimeSleepSeconds = 5;
+            }
+
+            try {
                 $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();
             } catch (\Throwable) {
                 $messageTemplates = [];
@@ -683,6 +716,7 @@ class Home extends BaseController
             'landingLeadSetting' => $landingLeadSetting,
             'systemJobs' => $systemJobs ?? [],
             'realtimeScreens' => $realtimeScreens,
+            'realtimeSleepSeconds' => $realtimeSleepSeconds ?? 5,
             'realtimeWorkerStatus' => $realtimeWorkerStatus ?? [],
             'realtimeScreenSettings' => $realtimeScreenSettings,
             'isRealtimeActive' => $realtimeModel->isScreenActive('overview'),

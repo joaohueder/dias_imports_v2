@@ -37,11 +37,20 @@ class RealtimeScreenSettingModel extends Model
     }
 
     /**
-     * Retorna o intervalo em segundos para a tela
+     * Retorna o intervalo padrão unificado em segundos (baseado no sleep do worker)
      */
-    public function getInterval(string $key): int
+    public function getInterval(string $key = ''): int
     {
-        $screen = $this->getByKey($key);
-        return !empty($screen) ? (int)$screen['refresh_interval_seconds'] : 5;
+        try {
+            $appSetting = (new \App\Models\AppSettingModel())->where('setting_key', 'realtime_sleep_seconds')->first();
+            if ($appSetting && !empty($appSetting['setting_value'])) {
+                $val = (int)$appSetting['setting_value'];
+                if ($val > 0) {
+                    return $val;
+                }
+            }
+        } catch (\Throwable) {}
+
+        return 5;
     }
 }

@@ -559,57 +559,68 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             $snapshots = $wStatus['snapshots'] ?? [];
             $recentErrors = $wStatus['recent_errors'] ?? [];
         ?>
-        <div class="realtime-dashboard-card" style="margin-bottom: 24px; padding: 20px; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e5e7eb); border-radius: 12px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 38px; height: 38px; border-radius: 10px; background: <?= $isOnline ? 'rgb(var(--success) / .12)' : 'rgb(var(--danger) / .12)' ?>; display: flex; align-items: center; justify-content: center; color: <?= $isOnline ? 'rgb(var(--success))' : 'rgb(var(--danger))' ?>; font-size: 20px;">
+        <div class="webcron-card" style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                <div class="webcron-header" style="margin: 0;">
+                    <div class="webcron-icon" style="<?= $isOnline ? 'background: rgb(var(--success) / .12); color: rgb(var(--success)); border-color: rgb(var(--success) / .28);' : 'background: rgb(var(--danger) / .12); color: rgb(var(--danger)); border-color: rgb(var(--danger) / .28);' ?>">
                         <i class="ti <?= $isOnline ? 'ti-pulse' : 'ti-alert-circle' ?>"></i>
                     </div>
-                    <div>
-                        <h3 style="margin: 0; font-size: 15px; font-weight: 600;">Status do Worker Realtime</h3>
-                        <p style="margin: 2px 0 0; font-size: 12px; color: rgb(var(--muted));">Diagnóstico em tempo real da saúde dos snapshots e ciclos</p>
+                    <div class="webcron-title-group">
+                        <h3>Status do Worker Realtime</h3>
+                        <p>Diagnóstico em tempo real da saúde dos snapshots e ciclos</p>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <?php if ($isOnline): ?>
-                        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgb(var(--success) / .15); color: rgb(var(--success));">
+                        <span class="webcron-badge" style="background: rgb(var(--success) / .14); color: rgb(var(--success)); border: 1px solid rgb(var(--success) / .28); font-size: 12px; padding: 6px 14px;">
                             <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--success)); box-shadow: 0 0 8px rgb(var(--success));"></span>
                             ONLINE (Ciclo ativo há <?= $secondsAgo !== null ? $secondsAgo . 's' : '0s' ?>)
                         </span>
+                        <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'edit')): ?>
+                            <form action="<?= site_url('configuracoes/tempo-real/parar') ?>" method="post" onsubmit="return confirm('Deseja realmente enviar o sinal para parar o Worker Realtime? Ele será finalizado com segurança no próximo ciclo.');" style="margin: 0;">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="button secondary" style="padding: 6px 12px; font-size: 12px; color: rgb(var(--danger)); border-color: rgb(var(--danger) / .3); background: rgb(var(--danger) / .08);">
+                                    <i class="ti ti-player-stop" aria-hidden="true"></i> Parar Worker
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     <?php else: ?>
-                        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgb(var(--danger) / .15); color: rgb(var(--danger));">
+                        <span class="webcron-badge" style="background: rgb(var(--danger) / .14); color: rgb(var(--danger)); border: 1px solid rgb(var(--danger) / .28); font-size: 12px; padding: 6px 14px;">
                             <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--danger));"></span>
                             OFFLINE / PARADO
                         </span>
+                        <a href="<?= base_url('cron-realtime.php') . '?token=' . esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>" target="_blank" rel="noopener noreferrer" class="button primary" style="padding: 6px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                            <i class="ti ti-player-play" aria-hidden="true"></i> Ativar / Executar Worker
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
 
             <!-- Mini KPIs de Saúde -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
-                <div style="padding: 12px 14px; border-radius: 8px; background: rgb(var(--primary) / .04); border: 1px solid rgb(var(--primary) / .1);">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Último Batimento (Heartbeat)</div>
-                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: var(--text-color, #111);"><?= esc($lastHeartbeat) ?></div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                <div class="webcron-item" style="padding: 14px 16px; margin: 0; gap: 4px;">
+                    <div style="font-size: 11px; font-weight: 700; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: .05em;">Último Batimento</div>
+                    <div style="font-size: 14px; font-weight: 700; color: rgb(var(--foreground));"><?= esc($lastHeartbeat) ?></div>
                 </div>
-                <div style="padding: 12px 14px; border-radius: 8px; background: rgb(var(--success) / .04); border: 1px solid rgb(var(--success) / .1);">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Tarefas Processadas</div>
-                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: rgb(var(--success));"><?= $jobsProc ?> executadas</div>
+                <div class="webcron-item" style="padding: 14px 16px; margin: 0; gap: 4px;">
+                    <div style="font-size: 11px; font-weight: 700; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: .05em;">Tarefas Processadas</div>
+                    <div style="font-size: 14px; font-weight: 700; color: rgb(var(--success));"><?= $jobsProc ?> executadas</div>
                 </div>
-                <div style="padding: 12px 14px; border-radius: 8px; background: <?= $jobsFail > 0 ? 'rgb(var(--danger) / .04)' : 'rgb(var(--primary) / .04)' ?>; border: 1px solid <?= $jobsFail > 0 ? 'rgb(var(--danger) / .1)' : 'rgb(var(--primary) / .1)' ?>;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Falhas de Tarefas</div>
-                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: <?= $jobsFail > 0 ? 'rgb(var(--danger))' : 'var(--text-color, #111)' ?>;"><?= $jobsFail ?> falhas</div>
+                <div class="webcron-item" style="padding: 14px 16px; margin: 0; gap: 4px;">
+                    <div style="font-size: 11px; font-weight: 700; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: .05em;">Falhas de Tarefas</div>
+                    <div style="font-size: 14px; font-weight: 700; color: <?= $jobsFail > 0 ? 'rgb(var(--danger))' : 'rgb(var(--foreground))' ?>;"><?= $jobsFail ?> falhas</div>
                 </div>
-                <div style="padding: 12px 14px; border-radius: 8px; background: <?= !empty($lastError) ? 'rgb(var(--danger) / .08)' : 'rgb(var(--success) / .04)' ?>; border: 1px solid <?= !empty($lastError) ? 'rgb(var(--danger) / .2)' : 'rgb(var(--success) / .1)' ?>;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Integridade do Ciclo</div>
-                    <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: <?= !empty($lastError) ? 'rgb(var(--danger))' : 'rgb(var(--success))' ?>;">
+                <div class="webcron-item" style="padding: 14px 16px; margin: 0; gap: 4px; <?= !empty($lastError) ? 'border-color: rgb(var(--danger) / .3); background: rgb(var(--danger) / .08);' : '' ?>">
+                    <div style="font-size: 11px; font-weight: 700; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: .05em;">Integridade do Ciclo</div>
+                    <div style="font-size: 14px; font-weight: 700; color: <?= !empty($lastError) ? 'rgb(var(--danger))' : 'rgb(var(--success))' ?>;">
                         <?= !empty($lastError) ? 'Erro detectado' : 'Tudo Operacional' ?>
                     </div>
                 </div>
             </div>
 
             <!-- Grade de Snapshots das Telas -->
-            <div style="margin-top: 16px;">
-                <h4 style="margin: 0 0 10px; font-size: 13px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: 0.5px;">Snapshots Gerados em Disco</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="font-size: 12px; font-weight: 700; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: .06em;">Snapshots Gerados em Disco</div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
                     <?php 
                     $screenTitles = [
@@ -626,18 +637,18 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                         $snap = $snapshots[$sKey] ?? ['exists' => false];
                         $snapExists = !empty($snap['exists']);
                     ?>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: var(--bg-hover, #f9fafb); border: 1px solid var(--border-color, #e5e7eb); font-size: 12px;">
+                        <div class="webcron-item" style="padding: 10px 14px; flex-direction: row; align-items: center; justify-content: space-between; margin: 0;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="width: 8px; height: 8px; border-radius: 50%; background: <?= $snapExists ? 'rgb(var(--success))' : 'rgb(var(--muted))' ?>;"></span>
-                                <span style="font-weight: 500;"><?= esc($sTitle) ?></span>
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: <?= $snapExists ? 'rgb(var(--success))' : 'rgb(var(--muted))' ?>; <?= $snapExists ? 'box-shadow: 0 0 6px rgb(var(--success) / .6);' : '' ?>"></span>
+                                <span style="font-size: 13px; font-weight: 600; color: rgb(var(--foreground));"><?= esc($sTitle) ?></span>
                             </div>
                             <div>
                                 <?php if ($snapExists): ?>
-                                    <span style="font-size: 11px; color: rgb(var(--muted));" title="Atualizado em <?= esc($snap['updated_at']) ?>">
+                                    <span style="font-size: 12px; color: rgb(var(--muted)); font-weight: 500;" title="Atualizado em <?= esc($snap['updated_at']) ?>">
                                         <?= $snap['seconds_ago'] !== null ? $snap['seconds_ago'] . 's atrás' : 'OK' ?>
                                     </span>
                                 <?php else: ?>
-                                    <span style="font-size: 11px; color: rgb(var(--danger));">Aguardando cron</span>
+                                    <span style="font-size: 12px; color: rgb(var(--danger)); font-weight: 600;">Aguardando cron</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -647,13 +658,13 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 
             <!-- Últimos Erros Se Existirem -->
             <?php if (!empty($lastError) || !empty($recentErrors)): ?>
-                <div style="margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: rgb(var(--danger) / .06); border: 1px solid rgb(var(--danger) / .2);">
-                    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: rgb(var(--danger)); margin-bottom: 6px;">
+                <div class="webcron-item" style="background: rgb(var(--danger) / .08); border-color: rgb(var(--danger) / .3); padding: 14px 16px; margin: 0; gap: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: rgb(var(--danger));">
                         <i class="ti ti-alert-triangle"></i>
                         <span>Últimos Erros Registrados:</span>
                     </div>
                     <?php if (!empty($lastError)): ?>
-                        <div style="font-size: 12px; font-family: monospace; color: rgb(var(--danger)); margin-bottom: 4px;">
+                        <div style="font-size: 12px; font-family: monospace; color: rgb(var(--danger)); margin-bottom: 2px;">
                             <strong>Último ciclo:</strong> <?= esc($lastError) ?>
                         </div>
                     <?php endif; ?>
@@ -674,22 +685,37 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         <?php else: ?>
             <form action="<?= site_url('configuracoes/tempo-real') ?>" method="post" data-dirty-form>
                 <?= csrf_field() ?>
+
+                <div class="webcron-card" style="margin-bottom: 16px; padding: 16px 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: rgb(var(--foreground));">
+                                <i class="ti ti-clock-pause" style="margin-right: 6px; color: #8b7cff;"></i>
+                                Intervalo Global de Execução do Worker Realtime
+                            </h3>
+                            <p style="margin: 0; font-size: 12px; color: rgb(var(--muted));">
+                                Tempo de pausa (sleep) entre cada ciclo de processamento do <code style="color: #8b7cff;">cron-realtime.php</code>. Todas as telas ativas sincronizam automaticamente neste mesmo intervalo.
+                            </p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <label for="realtime_sleep_seconds" style="font-size: 13px; font-weight: 500; color: rgb(var(--foreground)); white-space: nowrap; margin: 0;">Pausa / Sleep (segundos):</label>
+                            <input type="number" id="realtime_sleep_seconds" name="realtime_sleep_seconds" value="<?= esc((string) ($realtimeSleepSeconds ?? 5)) ?>" min="1" max="60" required style="width: 80px; padding: 6px 10px; font-size: 14px; font-weight: 600; text-align: center; border-radius: 6px; border: 1px solid var(--border-color, #334155); background: var(--bg-card, #1e293b); color: rgb(var(--foreground));" <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="jobs-list" style="gap: 8px;">
                     <?php foreach ($realtimeScreens as $screen): ?>
-                        <div class="job-settings-card" style="padding: 12px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px; flex-wrap: wrap;">
+                        <div class="job-settings-card" style="padding: 14px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px; flex-wrap: wrap;">
                             <div class="job-card-title" style="margin: 0; flex: 1; min-width: 200px;">
-                                <h3 style="margin: 0; font-size: 14px; font-weight: 500; text-align: left;"><?= esc($screen['screen_name']) ?></h3>
+                                <h3 style="margin: 0; font-size: 14px; font-weight: 500; text-align: left; color: rgb(var(--foreground));"><?= esc($screen['screen_name']) ?></h3>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 20px;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <label for="interval_<?= $screen['id'] ?>" style="font-size: 13px; color: rgb(var(--muted)); white-space: nowrap; margin: 0;">Intervalo (s):</label>
-                                    <input type="number" id="interval_<?= $screen['id'] ?>" name="screens[<?= $screen['id'] ?>][interval]" value="<?= esc((string) $screen['refresh_interval_seconds']) ?>" min="1" max="3600" required style="width: 76px; padding: 4px 8px; font-size: 13px; text-align: center; border-radius: 6px; border: 1px solid var(--border-color, #d1d5db); background: var(--bg-card, #fff);" <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
-                                </div>
+                            <div style="display: flex; align-items: center;">
                                 <div class="job-card-toggle" style="margin: 0; display: flex; align-items: center;">
                                     <label class="toggle-switch" title="<?= $screen['is_active'] ? 'Atualização ativa' : 'Atualização inativa' ?>" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
                                         <input type="checkbox" name="screens[<?= $screen['id'] ?>][is_active]" value="1" <?= $screen['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
                                         <span class="toggle-slider"></span>
-                                        <span class="toggle-label-text" style="font-size: 13px;"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
+                                        <span class="toggle-label-text" style="font-size: 13px; color: rgb(var(--foreground));"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
                                     </label>
                                 </div>
                             </div>

@@ -66,6 +66,33 @@ class RealtimeSnapshotService
     }
 
     /**
+     * Emite um sinal em disco para parar imediatamente o worker cron-realtime.
+     */
+    public function requestWorkerStop(): bool
+    {
+        $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
+        $realtimeDir = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime';
+        if (!is_dir($realtimeDir)) {
+            @mkdir($realtimeDir, 0755, true);
+        }
+
+        $stopSignalFile = $realtimeDir . DIRECTORY_SEPARATOR . 'stop.signal';
+        $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';
+
+        @file_put_contents($stopSignalFile, (string) time(), LOCK_EX);
+        if (file_exists($heartbeatFile)) {
+            @unlink($heartbeatFile);
+        }
+
+        $this->updateWorkerStatus([
+            'last_error' => null,
+            'last_message' => 'Worker parado pelo usuário.',
+        ]);
+
+        return true;
+    }
+
+    /**
      * Retorna informações de diagnóstico e status do Worker Realtime.
      */
     public function getWorkerStatus(): array
@@ -158,47 +185,58 @@ class RealtimeSnapshotService
      * Executa a geração de snapshots de todas as telas ativas em tempo real.
      * Deve ser executado dentro do cron-realtime.php (reutilizando a conexão MySQL).
      */
-    public function generateAllSnapshots(): void
+    public function generateAllSnapshots(): array
     {
         $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $generated = [];
 
         // 1. Visão Geral (Overview)
         if ($realtimeModel->isScreenActive('overview')) {
             $this->generateOverviewSnapshot();
+            $generated[] = 'overview';
         }
 
         // 2. Grupos do WhatsApp
         if ($realtimeModel->isScreenActive('whatsapp_groups')) {
             $this->generateWhatsappGroupsSnapshot();
+            $generated[] = 'whatsapp_groups';
         }
 
         // 3. Central de Trabalho
         if ($realtimeModel->isScreenActive('job_center')) {
             $this->generateJobCenterSnapshot();
+            $generated[] = 'job_center';
         }
 
         // 4. Produtos
         if ($realtimeModel->isScreenActive('products')) {
             $this->generateProductsSnapshot();
+            $generated[] = 'products';
         }
 
         // 5. Leads VIP
         if ($realtimeModel->isScreenActive('vip_leads')) {
             $this->generateVipLeadsSnapshot();
+            $generated[] = 'vip_leads';
         }
 
         // 6. Usuários
         if ($realtimeModel->isScreenActive('users')) {
             $this->generateUsersSnapshot();
+            $generated[] = 'users';
         }
 
         // 7. Configurações (Empresa e Modelos)
         if ($realtimeModel->isScreenActive('settings_company')) {
             $this->generateCompanyWhatsappsSnapshot();
+            $generated[] = 'settings_company';
         }
         if ($realtimeModel->isScreenActive('settings_templates')) {
             $this->generateMessageTemplatesSnapshot();
+            $generated[] = 'settings_templates';
         }
+
+        return $generated;
     }
 
     /**

@@ -27,7 +27,13 @@ if (! is_dir($realtimeDir)) {
 
 $lockFile      = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.lock';
 $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';
+$stopSignalFile = $realtimeDir . DIRECTORY_SEPARATOR . 'stop.signal';
 $logFile       = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.log';
+
+// Remove sinal de parada anterior ao iniciar nova execução
+if (file_exists($stopSignalFile)) {
+    @unlink($stopSignalFile);
+}
 
 // 3. Proteção de Lock exclusivo com flock() não-bloqueante
 $lockHandle = fopen($lockFile, 'c');
@@ -63,22 +69,10 @@ $startedAt         = microtime(true);
 @ini_set('max_execution_time', '300');
 @set_time_limit(300);
 
-// Desabilita buffers para permitir streaming de saída em tempo real se chamado via Web
-while (ob_get_level() > 0) {
-    ob_end_flush();
-}
-ob_implicit_flush(true);
-
-if (!headers_sent() && PHP_SAPI !== 'cli') {
-    header('Content-Type: text/plain; charset=utf-8');
-    header('Cache-Control: no-cache, must-revalidate');
-    header('X-Content-Type-Options: nosniff');
-}
-
 $db = null;
 
 try {
-    // 5. Bootstrap do CodeIgniter 4
+    // 5. Bootstrap do CodeIgniter 4 antes de emitir headers para evitar conflito com session.ini
     require FCPATH . '../app/Config/Paths.php';
     $paths = new Config\Paths();
     require $paths->systemDirectory . '/Boot.php';
@@ -106,6 +100,18 @@ try {
 
     CronRealtimeBoot::init($paths);
 
+    // Desabilita buffers para permitir streaming de saída em tempo real se chamado via Web
+    while (ob_get_level() > 0) {
+        ob_end_flush();
+    }
+    ob_implicit_flush(true);
+
+    if (!headers_sent() && PHP_SAPI !== 'cli') {
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('X-Content-Type-Options: nosniff');
+    }
+
     // 6. Validação de segurança para chamadas via Web/URL
     $isCli = (PHP_SAPI === 'cli');
     $envToken = env('app.cronToken') ?: env('app_cronToken') ?: 'dias_imports_cron_secret_2026';
@@ -125,11 +131,22 @@ try {
     $db = \Config\Database::connect();
     $db->initialize();
 
+    // Carrega o intervalo configurado de sleep (ou fallback para 5s)
+    try {
+        $settingRow = $db->table('app_settings')->where('setting_key', 'realtime_sleep_seconds')->get()->getRow();
+        if ($settingRow && !empty($settingRow->setting_value)) {
+            $configuredSleep = (int) $settingRow->setting_value;
+            if ($configuredSleep > 0) {
+                $intervalSeconds = $configuredSleep;
+            }
+        }
+    } catch (\Throwable) {}
+
     // 8. Inicializa instâncias de serviços necessários
     $jobCenterService = new \App\Services\JobCenterService();
     $snapshotService  = new \App\Services\RealtimeSnapshotService();
 
-    echo "[" . date('H:i:s') . "] Conexão única MySQL estabelecida. Iniciando ciclo contínuo de 5s...\n";
+    echo "[" . date('H:i:s') . "] Conexão única MySQL estabelecida. Iniciando ciclo contínuo de {$intervalSeconds}s (sleep configurado)...\n";
     echo str_repeat('-', 60) . "\n";
     flush();
 
@@ -139,6 +156,14 @@ try {
     $totalFailed = 0;
 
     while ((microtime(true) - $startedAt) + $intervalSeconds <= $maxRuntimeSeconds) {
+        // Verifica se houve solicitação manual de parada
+        if (file_exists($stopSignalFile)) {
+            @unlink($stopSignalFile);
+            echo "\n[" . date('H:i:s') . "] 🛑 Sinal de parada manual recebido. Encerrando worker realtime...\n";
+            flush();
+            break;
+        }
+
         $cycle++;
         $cycleStart = microtime(true);
 
@@ -152,7 +177,7 @@ try {
 
             // 2. Atualiza snapshots de dados das telas ativas em tempo real
             $snapshotResults = $snapshotService->generateAllSnapshots();
-            $snapshotCount = count($snapshotResults);
+            $snapshotCount = is_array($snapshotResults) ? count($snapshotResults) : $snapshotResults;
 
             // 3. Atualiza arquivo de status de saúde para o dashboard
             $snapshotService->updateWorkerStatus([
