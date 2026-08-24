@@ -1,5 +1,6 @@
 .env
 /writable/*
+writable/*
 !/writable/cache/
 !/writable/cache/index.html
 !/writable/debugbar/
