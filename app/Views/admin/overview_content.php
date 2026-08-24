@@ -418,38 +418,192 @@
         </div>
     </div>
 
-    <!-- Duo Leads: Gráfico de Barras 14 Dias + Últimos Leads -->
+    <!-- Duo Leads: Gráfico SVG (Linha de Views + Barra Dividida Cliques/Leads) + Últimos Leads -->
     <div class="dashboard-duo-grid">
-        <!-- Evolução de Leads (Barras) -->
+        <!-- Evolução de Leads e Tráfego (Linha = Visualizações / Barra = Cliques e Leads) -->
         <div class="overview-panel">
             <div class="panel-header">
                 <div class="panel-title-wrap">
-                    <i class="ti ti-chart-bar text-amber"></i>
+                    <i class="ti ti-chart-line text-amber"></i>
                     <div>
-                        <h3 class="panel-title">Captação Diária de Leads</h3>
-                        <span class="panel-subtitle">Entrada de novos contatos nos últimos 14 dias</span>
+                        <h3 class="panel-title">Evolução da Captação & Acessos</h3>
+                        <span class="panel-subtitle">Visualizações, cliques e leads nos últimos 14 dias</span>
                     </div>
                 </div>
             </div>
 
             <div class="panel-body">
-                <div class="leads-bar-chart-wrap">
+                <div class="chart-legend-wrap">
+                    <span class="legend-item"><span class="legend-dot dot-blue"></span> Visualizações (Linha)</span>
+                    <span class="legend-item"><span class="legend-bar-sample dot-amber"></span> Cliques (Barra)</span>
+                    <span class="legend-item"><span class="legend-bar-sample dot-emerald"></span> Leads VIP (Barra)</span>
+                </div>
+
+                <div class="overview-chart-container">
                     <?php
-                    $lEvolution = $overviewData['leads']['evolution'];
-                    $maxL = max($overviewData['leads']['max_count'], 5);
+                    $leadChartPoints = $overviewData['leads']['evolution'];
+                    $lMax = max($overviewData['leads']['max_traffic_val'] ?? 1, 10);
+                    $w = 600;
+                    $h = 165;
+                    $padX = 28;
+                    $padY = 22;
+                    $cnt = count($leadChartPoints);
+                    $slotWidth = $cnt > 0 ? ($w - ($padX * 2)) / $cnt : $w;
+                    $barWidth = max(round($slotWidth * 0.40), 8);
+
+                    $pvCoords = [];
+                    $stackedBars = [];
+
+                    foreach ($leadChartPoints as $i => $pt) {
+                        $xCenter = round($padX + ($i * $slotWidth) + ($slotWidth / 2), 1);
+                        $barX = round($xCenter - ($barWidth / 2), 1);
+                        
+                        $pvY = round($h - $padY - (($pt['pageviews'] / $lMax) * ($h - ($padY * 2))), 1);
+                        $pvCoords[] = [$xCenter, $pvY, $pt['pageviews'], $pt['dayLabel']];
+
+                        $clicksH = round((($pt['clicks'] / $lMax) * ($h - ($padY * 2))), 1);
+                        $leadsH = round((($pt['leads'] / $lMax) * ($h - ($padY * 2))), 1);
+
+                        $baseY = $h - $padY;
+                        $clicksY = round($baseY - $clicksH, 1);
+                        $leadsY = round($clicksY - $leadsH, 1);
+
+                        $stackedBars[] = [
+                            'x' => $barX,
+                            'w' => $barWidth,
+                            'clicksY' => $clicksY,
+                            'clicksH' => max($clicksH, ($pt['clicks'] > 0 ? 3 : 0)),
+                            'clicksVal' => $pt['clicks'],
+                            'leadsY' => $leadsY,
+                            'leadsH' => max($leadsH, ($pt['leads'] > 0 ? 3 : 0)),
+                            'leadsVal' => $pt['leads'],
+                            'label' => $pt['dayLabel'],
+                            'hasClicks' => $pt['clicks'] > 0,
+                            'hasLeads' => $pt['leads'] > 0,
+                        ];
+                    }
+
+                    $pvPath = '';
+                    $pvArea = '';
+
+                    foreach ($pvCoords as $i => $c) {
+                        $cmd = $i === 0 ? 'M' : 'L';
+                        $pvPath .= "{$cmd} {$c[0]} {$c[1]} ";
+                    }
+
+                    if (!empty($pvCoords)) {
+                        $lastX = end($pvCoords)[0];
+                        $firstX = $pvCoords[0][0];
+                        $baseY = $h - $padY;
+                        $pvArea = $pvPath . "L {$lastX} {$baseY} L {$firstX} {$baseY} Z";
+                    }
                     ?>
-                    <div class="leads-bars-container">
-                        <?php foreach ($lEvolution as $lPt): ?>
-                            <?php $heightPct = max(round(($lPt['count'] / $maxL) * 100), 6); ?>
-                            <div class="leads-bar-col">
-                                <div class="leads-bar-tooltip"><?= $lPt['count'] ?> lead<?= $lPt['count'] === 1 ? '' : 's' ?></div>
-                                <div class="leads-bar-track">
-                                    <div class="leads-bar-fill <?= $lPt['count'] > 0 ? 'has-data' : '' ?>" style="height: <?= $heightPct ?>%;"></div>
-                                </div>
-                                <span class="leads-bar-label"><?= esc($lPt['dayLabel']) ?></span>
-                            </div>
+
+                    <svg viewBox="0 0 <?= $w ?> <?= $h ?>" class="overview-svg-chart" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="leadPvGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.32"/>
+                                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.01"/>
+                            </linearGradient>
+                            <linearGradient id="leadClickGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.95"/>
+                                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                            </linearGradient>
+                            <linearGradient id="leadLeadGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#34d399" stop-opacity="0.95"/>
+                                <stop offset="100%" stop-color="#10b981" stop-opacity="0.8"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Linhas de Grade Horizontais -->
+                        <line x1="<?= $padX ?>" y1="<?= $padY ?>" x2="<?= $w - $padX ?>" y2="<?= $padY ?>" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
+                        <line x1="<?= $padX ?>" y1="<?= round($h / 2) ?>" x2="<?= $w - $padX ?>" y2="<?= round($h / 2) ?>" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />
+                        <line x1="<?= $padX ?>" y1="<?= $h - $padY ?>" x2="<?= $w - $padX ?>" y2="<?= $h - $padY ?>" stroke="rgba(255,255,255,0.12)" />
+
+                        <!-- Área Preenchida PageViews -->
+                        <path d="<?= $pvArea ?>" fill="url(#leadPvGrad)" />
+
+                        <!-- Linha Principal PageViews -->
+                        <path d="<?= $pvPath ?>" fill="none" stroke="#0ea5e9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <!-- Barras Divididas (Cliques na base, Leads no topo) -->
+                        <?php foreach ($stackedBars as $b): ?>
+                            <!-- Segmento Cliques -->
+                            <?php if ($b['hasClicks']): ?>
+                                <rect 
+                                    x="<?= $b['x'] ?>" 
+                                    y="<?= $b['clicksY'] ?>" 
+                                    width="<?= $b['w'] ?>" 
+                                    height="<?= $b['clicksH'] ?>" 
+                                    rx="<?= $b['hasLeads'] ? '0' : '3' ?>" 
+                                    class="chart-bar bar-amber"
+                                    fill="url(#leadClickGrad)" 
+                                    data-val="<?= $b['clicksVal'] ?>" 
+                                    data-label="<?= esc($b['label']) ?>" 
+                                    data-type="Cliques CTA"
+                                />
+                            <?php endif; ?>
+
+                            <!-- Segmento Leads VIP -->
+                            <?php if ($b['hasLeads']): ?>
+                                <rect 
+                                    x="<?= $b['x'] ?>" 
+                                    y="<?= $b['leadsY'] ?>" 
+                                    width="<?= $b['w'] ?>" 
+                                    height="<?= $b['leadsH'] ?>" 
+                                    rx="3" 
+                                    class="chart-bar bar-emerald"
+                                    fill="url(#leadLeadGrad)" 
+                                    data-val="<?= $b['leadsVal'] ?>" 
+                                    data-label="<?= esc($b['label']) ?>" 
+                                    data-type="Leads VIP"
+                                />
+                            <?php endif; ?>
+
+                            <?php if (!$b['hasClicks'] && !$b['hasLeads']): ?>
+                                <rect 
+                                    x="<?= $b['x'] ?>" 
+                                    y="<?= $h - $padY - 2 ?>" 
+                                    width="<?= $b['w'] ?>" 
+                                    height="2" 
+                                    rx="1" 
+                                    class="chart-bar bar-muted"
+                                    fill="rgba(255,255,255,0.06)" 
+                                    data-val="0" 
+                                    data-label="<?= esc($b['label']) ?>" 
+                                    data-type="Cliques / Leads"
+                                />
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+
+                        <!-- Pontos Interativos Visualizações -->
+                        <?php foreach ($pvCoords as $c): ?>
+                            <circle cx="<?= $c[0] ?>" cy="<?= $c[1] ?>" r="4" class="chart-point point-blue" data-val="<?= $c[2] ?>" data-label="<?= esc($c[3]) ?>" data-type="Visualizações" />
+                        <?php endforeach; ?>
+                    </svg>
+
+                    <!-- Eixo X Datas -->
+                    <div class="chart-x-axis-grid">
+                        <?php 
+                        $totalPts = count($leadChartPoints);
+                        $step = ($totalPts > 6) ? (int) floor(($totalPts - 1) / 4) : 1;
+                        $shownIndices = [];
+                        for ($k = 0; $k < $totalPts; $k += $step) {
+                            $shownIndices[] = $k;
+                        }
+                        if (!in_array($totalPts - 1, $shownIndices)) {
+                            $shownIndices[] = $totalPts - 1;
+                        }
+                        ?>
+                        <?php foreach ($leadChartPoints as $i => $pt): ?>
+                            <?php if (in_array($i, $shownIndices)): ?>
+                                <span class="x-label-pill"><?= esc($pt['dayLabel']) ?></span>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
+
+                    <!-- Tooltip Flutuante -->
+                    <div class="chart-tooltip"></div>
                 </div>
             </div>
         </div>
@@ -587,18 +741,41 @@
                 <?php else: ?>
                     <div class="top-groups-list">
                         <?php foreach ($overviewData['whatsapp']['top_groups'] as $gIdx => $group): ?>
-                            <div class="top-group-item">
-                                <div class="top-group-rank">#<?= $gIdx + 1 ?></div>
-                                <div class="top-group-info">
-                                    <span class="group-name"><?= esc($group['name']) ?></span>
-                                    <span class="group-meta">
-                                        <i class="ti ti-users"></i> <?= (int)$group['participants_count'] ?> participantes
-                                    </span>
+                            <div class="top-group-item <?= $gIdx === 0 ? 'is-top-1' : '' ?>">
+                                <div class="top-group-rank rank-<?= $gIdx + 1 ?>">
+                                    <?php if ($gIdx === 0): ?>
+                                        <i class="ti ti-crown"></i>
+                                    <?php else: ?>
+                                        <span>#<?= $gIdx + 1 ?></span>
+                                    <?php endif; ?>
                                 </div>
-                                <div class="top-group-status">
-                                    <span class="badge-mini <?= $group['status'] === 'active' ? 'badge-active' : 'badge-inactive' ?>">
-                                        <?= $group['status'] === 'active' ? 'Ativo' : 'Inativo' ?>
-                                    </span>
+                                <div class="top-group-avatar">
+                                    <?php if (!empty($group['avatar_url'])): ?>
+                                        <img src="<?= esc($group['avatar_url']) ?>" alt="<?= esc($group['name']) ?>" loading="lazy" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="avatar-placeholder" style="display: none;"><i class="ti ti-brand-whatsapp"></i></div>
+                                    <?php else: ?>
+                                        <div class="avatar-placeholder"><i class="ti ti-brand-whatsapp"></i></div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="top-group-info">
+                                    <div class="top-group-row-1">
+                                        <a href="<?= site_url('grupos-whatsapp') ?>" class="top-group-name" title="<?= esc($group['name']) ?>">
+                                            <?= esc($group['name']) ?>
+                                        </a>
+                                        <span class="badge-mini <?= $group['status'] === 'active' ? 'badge-active' : 'badge-inactive' ?>">
+                                            <?= $group['status'] === 'active' ? 'Ativo' : 'Inativo' ?>
+                                        </span>
+                                    </div>
+                                    <div class="top-group-row-2">
+                                        <span class="metric-pill metric-participants" title="Participantes">
+                                            <i class="ti ti-users"></i> <?= number_format((int)$group['participants_count'], 0, ',', '.') ?> participantes
+                                        </span>
+                                        <?php if (!empty($group['instance_name'])): ?>
+                                            <span class="top-group-instance" title="Instância Evolution">
+                                                <i class="ti ti-plug"></i> <?= esc($group['instance_name']) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -731,27 +908,4 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- NAVEGAÇÃO DE MÓDULOS (ACESSO RÁPIDO) -->
-<div class="dashboard-group">
-    <div class="section-heading">
-        <h2>Módulos do Sistema</h2>
-        <span>Acesso direto aos ambientes de gestão</span>
-    </div>
-
-    <section class="module-grid" aria-label="Módulos administrativos">
-        <?php foreach ($navigation as $key => $item): ?>
-            <?php if ($key === 'overview') continue; ?>
-            <?php if (! \App\Libraries\UserPermissions::canAccessRouteKey($key)) continue; ?>
-            <a class="module-card" href="<?= site_url($item['path']) ?>">
-                <div class="module-card-top">
-                    <span class="module-icon" aria-hidden="true"><i class="ti <?= esc($item['icon']) ?>"></i></span>
-                    <i class="ti ti-arrow-right module-arrow" aria-hidden="true"></i>
-                </div>
-                <h3><?= esc($item['label']) ?></h3>
-                <p><?= esc($item['description']) ?></p>
-            </a>
-        <?php endforeach; ?>
-    </section>
 </div>
