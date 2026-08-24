@@ -1,3 +1,8 @@
+window.getAppBaseUrl = () => {
+    const meta = document.querySelector('meta[name="base-url"]');
+    return meta ? meta.getAttribute('content') : window.location.origin;
+};
+
 (() => {
     const sheet = document.querySelector('[data-mobile-more]');
     const openButton = document.querySelector('[data-open-more]');
@@ -1624,7 +1629,8 @@
                 if (!resetPwdDialog || !pwdForm) return;
                 const userId = btn.dataset.userId;
                 const userName = btn.dataset.userName;
-                pwdForm.action = `${window.location.origin}/usuarios/${userId}/redefinir-senha`;
+                const baseUrl = window.getAppBaseUrl ? window.getAppBaseUrl() : window.location.origin;
+                pwdForm.action = `${baseUrl}/usuarios/${userId}/redefinir-senha`;
                 if (pwdUserName) pwdUserName.textContent = userName;
                 const input = pwdForm.querySelector('input[name="new_password"]');
                 if (input) input.value = '';

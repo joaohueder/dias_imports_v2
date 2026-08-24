@@ -19,6 +19,7 @@ $globalSuccess = session()->getFlashdata('success');
     <meta name="csrf-token-name" content="<?= csrf_token() ?>">
     <meta name="csrf-hash" content="<?= csrf_hash() ?>">
     <meta name="csrf-header" content="<?= config('Security')->headerName ?? 'X-CSRF-TOKEN' ?>">
+    <meta name="base-url" content="<?= rtrim(site_url(), '/') ?>">
     <script>document.cookie = "debug-hot-reload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";</script>
 </head>
 <body>

@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterBtns = document.querySelectorAll('.users-filter-pills .filter-pill');
     const btnSyncGroups = document.getElementById('btn-sync-groups');
     
+    function getBaseUrl() {
+        return window.getAppBaseUrl ? window.getAppBaseUrl() : (document.querySelector('meta[name="base-url"]')?.getAttribute('content') || window.location.origin);
+    }
+
     // Modal Novo Grupo / Selecionar da Instância
     const btnOpenNewGroupModal = document.getElementById('btn-open-new-group-modal');
     const dialogNewGroup = document.getElementById('dialog-new-group');
@@ -204,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (instanceGroupsSearch) instanceGroupsSearch.value = '';
 
         try {
-            const response = await fetch(`${window.location.origin}/grupos-whatsapp/evolution-list`, {
+            const response = await fetch(`${getBaseUrl()}/grupos-whatsapp/evolution-list`, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
             const data = await response.json();
@@ -427,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadGroups() {
         const q = searchInput ? searchInput.value.trim() : '';
-        const url = `${window.location.origin}/grupos-whatsapp/feed?status=${currentStatus}&q=${encodeURIComponent(q)}`;
+        const url = `${getBaseUrl()}/grupos-whatsapp/feed?status=${currentStatus}&q=${encodeURIComponent(q)}`;
 
         try {
             const response = await fetch(url, {
@@ -489,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<i class="ti ti-loader rotate"></i> <span>Sincronizando...</span>';
 
         try {
-            const response = await fetch(`${window.location.origin}/grupos-whatsapp/sincronizar`, {
+            const response = await fetch(`${getBaseUrl()}/grupos-whatsapp/sincronizar`, {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -543,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/status`, {
+            const response = await fetch(`${getBaseUrl()}/grupos-whatsapp/${id}/status`, {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -589,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/atualizar-dados`, {
+            const response = await fetch(`${getBaseUrl()}/grupos-whatsapp/${id}/atualizar-dados`, {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -644,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`${window.location.origin}/grupos-whatsapp/${id}/excluir`, {
+            const response = await fetch(`${getBaseUrl()}/grupos-whatsapp/${id}/excluir`, {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',

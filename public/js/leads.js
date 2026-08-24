@@ -81,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const res = await fetch(`/leads-vip/feed?${params.toString()}`, {
+            const baseUrl = window.getAppBaseUrl ? window.getAppBaseUrl() : (document.querySelector('meta[name="base-url"]')?.getAttribute('content') || '');
+            const res = await fetch(`${baseUrl}/leads-vip/feed?${params.toString()}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
