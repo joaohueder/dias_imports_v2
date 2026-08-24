@@ -68,6 +68,10 @@ echo " INICIANDO CRON RUNNER - " . date('Y-m-d H:i:s') . "\n";
 echo "==================================================\n\n";
 
 try {
+    // Força conexão nova/ativa com o banco de dados antes de instanciar o serviço
+    $db = \Config\Database::connect();
+    $db->reconnect();
+
     $limit = max(1, min(100, (int) ($_GET['limit'] ?? $_POST['limit'] ?? 50)));
     $service = new \App\Services\JobCenterService();
     
@@ -91,6 +95,7 @@ try {
     
     // Executa a limpeza de fila travada (cron-clean) internamente
     $db = \Config\Database::connect();
+    $db->reconnect();
     $builder = $db->table('system_job_queue');
     $countProcessing = $builder->where('status', 'processing')->countAllResults(false);
     
@@ -113,7 +118,14 @@ try {
     echo "==================================================\n";
 
 } catch (\Throwable $e) {
-    http_response_code(500);
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
     echo "\n[ERRO FATAL] " . $e->getMessage() . "\n";
     echo $e->getTraceAsString() . "\n";
+} finally {
+    try {
+        $db = \Config\Database::connect();
+        $db->close();
+    } catch (\Throwable $ignored) {}
 }

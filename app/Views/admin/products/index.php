@@ -40,7 +40,11 @@ $counts = [
 
     <!-- Cards Grid -->
     <div class="users-grid products-grid" data-products-grid>
-        <?= view('admin/products/_cards', ['products' => $products]) ?>
+        <?= view('admin/products/_cards', [
+            'products' => $products,
+            'isSendJobActive' => $isSendJobActive,
+            'messageTemplates' => $messageTemplates,
+        ]) ?>
     </div>
 
     <!-- Empty search state -->

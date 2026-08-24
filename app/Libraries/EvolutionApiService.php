@@ -222,12 +222,25 @@ class EvolutionApiService
             default => 'image/jpeg',
         };
 
+        // Evolution API v2.3.x pode exigir base64 para envio de mídia dependendo da configuração do servidor.
+        // Vamos tentar converter a URL local para base64 se for um arquivo local acessível.
+        $mediaData = $mediaUrl;
+        if (str_starts_with($mediaUrl, base_url())) {
+            $localPath = FCPATH . str_replace(base_url(), '', $mediaUrl);
+            if (is_file($localPath)) {
+                $fileContent = file_get_contents($localPath);
+                if ($fileContent !== false) {
+                    $mediaData = 'data:' . $mime . ';base64,' . base64_encode($fileContent);
+                }
+            }
+        }
+
         return $this->request('POST', '/message/sendMedia/' . rawurlencode($name), [
             'number'    => $groupJid,
             'mediatype' => $mediaType,
             'mimetype'  => $mime,
             'caption'   => $caption,
-            'media'     => $mediaUrl,
+            'media'     => $mediaData,
             'fileName'  => $fileName,
         ]);
     }

@@ -57,6 +57,7 @@ if ($providedToken === '' || !hash_equals($envToken, $providedToken)) {
 
 try {
     $db = \Config\Database::connect();
+    $db->reconnect();
     $builder = $db->table('system_job_queue');
 
     // Identifica quantos estavam como 'processing'
@@ -83,9 +84,16 @@ try {
         'timestamp'=> date('Y-m-d H:i:s'),
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 } catch (\Throwable $e) {
-    http_response_code(500);
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
     echo json_encode([
         'success' => false,
         'message' => 'Erro ao redefinir tarefas: ' . $e->getMessage(),
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+} finally {
+    try {
+        $db = \Config\Database::connect();
+        $db->close();
+    } catch (\Throwable $ignored) {}
 }

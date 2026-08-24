@@ -130,10 +130,17 @@ $helperInitials = static function(string $name): string {
                     <?php endif; ?>
 
                     <?php if (!empty($isSendJobActive)): ?>
-                        <button type="button" class="btn-product-action action-send" onclick="openSendModal(<?= esc($product->id) ?>, '<?= esc(addslashes($product->name)) ?>')">
-                            <i class="ti ti-send"></i>
-                            <span>Enviar</span>
-                        </button>
+                        <?php if (empty($messageTemplates)): ?>
+                            <button type="button" class="btn-product-action action-send disabled" disabled title="Nenhum modelo de mensagem cadastrado. Cadastre em Configurações > Modelos de Mensagens." style="opacity: 0.5; cursor: not-allowed;">
+                                <i class="ti ti-send-off"></i>
+                                <span>Enviar (Sem Modelos)</span>
+                            </button>
+                        <?php else: ?>
+                            <button type="button" class="btn-product-action action-send" onclick="openSendModal(<?= esc($product->id) ?>, '<?= esc(addslashes($product->name)) ?>')">
+                                <i class="ti ti-send"></i>
+                                <span>Enviar</span>
+                            </button>
+                        <?php endif; ?>
                     <?php else: ?>
                         <button type="button" class="btn-product-action action-send disabled" disabled title="Recurso desativado nas Configurações da Central de Trabalho (Disparar Produtos para Grupos do WhatsApp)." style="opacity: 0.5; cursor: not-allowed;">
                             <i class="ti ti-send-off"></i>

@@ -214,6 +214,14 @@ class JobCenterService
                 sleep($delay);
             }
 
+            // Garante que a conexão com o banco de dados continua ativa após o sleep
+            try {
+                $db = \Config\Database::connect();
+                $db->reconnect();
+            } catch (\Throwable $connEx) {
+                // Silencioso se já estiver conectado
+            }
+
             $success = false;
             $resultMsg = null;
 
@@ -233,6 +241,12 @@ class JobCenterService
                 $success = false;
                 $resultMsg = $e->getMessage();
             }
+
+            // Garante reconexão com banco antes de atualizar o status do item na fila
+            try {
+                $db = \Config\Database::connect();
+                $db->reconnect();
+            } catch (\Throwable $connEx) {}
 
             if ($success) {
                 $this->queueModel->update($item['id'], [
