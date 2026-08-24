@@ -53,10 +53,11 @@ header('Content-Type: text/plain; charset=utf-8');
 header('Cache-Control: no-cache, must-revalidate');
 header('X-Content-Type-Options: nosniff');
 
+$isCli = (PHP_SAPI === 'cli');
 $envToken = env('app.cronToken') ?: env('app_cronToken') ?: 'dias_imports_cron_secret_2026';
 $providedToken = (string) ($_GET['token'] ?? $_POST['token'] ?? ($_SERVER['HTTP_X_CRON_TOKEN'] ?? ''));
 
-if ($providedToken === '' || !hash_equals($envToken, $providedToken)) {
+if (!$isCli && ($providedToken === '' || !hash_equals($envToken, $providedToken))) {
     http_response_code(403);
     echo "Acesso negado: token inválido ou ausente.\n";
     exit;

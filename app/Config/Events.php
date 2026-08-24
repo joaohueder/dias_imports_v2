@@ -47,11 +47,15 @@ Events::on('pre_system', static function (): void {
     if (CI_DEBUG && ! is_cli()) {
         Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
         service('toolbar')->respond();
-        // Hot Reload route - for framework use on the hot reloader.
-        if (ENVIRONMENT === 'development') {
-            service('routes')->get('__hot-reload', static function (): void {
-                (new HotReloader())->run();
-            });
-        }
+        // Hot Reload route - responde imediatamente para evitar travamento em single thread PHP server
+        service('routes')->get('__hot-reload', static function (): void {
+            service('response')
+                ->setHeader('Content-Type', 'text/event-stream')
+                ->setHeader('Cache-Control', 'no-cache')
+                ->setHeader('Connection', 'keep-alive')
+                ->setBody("event: ping\ndata: {\"status\":\"ok\"}\n\n")
+                ->send();
+            exit(0);
+        });
     }
 });

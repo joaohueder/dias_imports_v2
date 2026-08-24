@@ -8,22 +8,27 @@ class AddTemplateModelAndColorPaletteToLandingLeadSettings extends Migration
 {
     public function up(): void
     {
-        $fields = [
-            'template_model' => [
+        $fields = [];
+        if (!$this->db->fieldExists('template_model', 'landing_lead_settings')) {
+            $fields['template_model'] = [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'default'    => 'model-1',
                 'after'      => 'id',
-            ],
-            'color_palette' => [
+            ];
+        }
+        if (!$this->db->fieldExists('color_palette', 'landing_lead_settings')) {
+            $fields['color_palette'] = [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'default'    => 'palette-aurora',
                 'after'      => 'template_model',
-            ],
-        ];
+            ];
+        }
 
-        $this->forge->addColumn('landing_lead_settings', $fields);
+        if (!empty($fields)) {
+            $this->forge->addColumn('landing_lead_settings', $fields);
+        }
     }
 
     public function down(): void

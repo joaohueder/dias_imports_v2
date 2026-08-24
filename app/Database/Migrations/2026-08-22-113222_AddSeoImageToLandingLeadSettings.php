@@ -8,16 +8,18 @@ class AddSeoImageToLandingLeadSettings extends Migration
 {
     public function up()
     {
-        $fields = [
-            'seo_image' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-                'null'       => true,
-                'after'      => 'seo_description',
-            ],
-        ];
+        if (!$this->db->fieldExists('seo_image', 'landing_lead_settings')) {
+            $fields = [
+                'seo_image' => [
+                    'type'       => 'VARCHAR',
+                    'constraint' => '255',
+                    'null'       => true,
+                    'after'      => 'seo_description',
+                ],
+            ];
 
-        $this->forge->addColumn('landing_lead_settings', $fields);
+            $this->forge->addColumn('landing_lead_settings', $fields);
+        }
     }
 
     public function down()

@@ -18,6 +18,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
 
     <form action="<?= $formAction ?>" method="post" class="user-main-form" data-dirty-form id="product-editor-form" data-processing-title="<?= $isEdit ? 'Atualizando produto' : 'Cadastrando produto' ?>" data-processing-message="Salvando as informações com segurança.">
         <?= csrf_field() ?>
+        <input type="hidden" name="active_tab" id="active_tab" value="<?= esc(service('request')->getGet('tab') ?? 'tab-info') ?>">
 
         <!-- Tabs Navigation -->
         <div class="settings-tabs" style="flex-direction: row; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; border-bottom: 1px solid rgb(var(--border)); margin-bottom: 16px;">
@@ -1080,6 +1081,8 @@ document.addEventListener('DOMContentLoaded', function() {
     tabBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const target = this.dataset.tabTarget;
+            document.getElementById('active_tab').value = target;
+            
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => {
                 c.hidden = true;
@@ -1095,6 +1098,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Restore active tab from URL or hidden input
+    const initialTab = document.getElementById('active_tab').value;
+    if (initialTab) {
+        const tabBtn = document.querySelector(`[data-tab-target="${initialTab}"]`);
+        if (tabBtn) {
+            tabBtn.click();
+        }
+    }
 
     // Landing Page Live Preview Logic
     const mockupFrame = document.getElementById('lp_mockup_frame');

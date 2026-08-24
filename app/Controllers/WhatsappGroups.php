@@ -35,8 +35,7 @@ class WhatsappGroups extends BaseController
 
         $data = $this->getGroupsData($status, $search);
 
-        $layoutSetting = (new AppSettingModel())->where('setting_key', 'layout_max_width')->first();
-        $layoutMaxWidth = $layoutSetting['setting_value'] ?? '1200';
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $userName = (string) session()->get('user_name');
         $userEmail = (string) session()->get('user_email');
@@ -467,48 +466,40 @@ class WhatsappGroups extends BaseController
 
     private function getGroupsData(string $status = 'all', string $search = ''): array
     {
-        $allGroups = $this->groupModel->orderBy('id', 'DESC')->findAll();
+        $builder = $this->groupModel->orderBy('id', 'DESC');
 
-        $totalAll = count($allGroups);
-        $totalActive = 0;
-        $totalInactive = 0;
-
-        foreach ($allGroups as $g) {
-            if ($g['status'] === 'active') {
-                $totalActive++;
-            } else {
-                $totalInactive++;
-            }
+        if ($search !== '') {
+            $term = $search;
+            $builder->groupStart()
+                ->like('name', $term)
+                ->orLike('description', $term)
+                ->orLike('category', $term)
+                ->groupEnd();
         }
 
-        $filtered = [];
-        foreach ($allGroups as $g) {
-            if ($status === 'active' && $g['status'] !== 'active') {
-                continue;
-            }
-            if ($status === 'inactive' && $g['status'] !== 'inactive') {
-                continue;
-            }
-
-            if ($search !== '') {
-                $term = mb_strtolower($search);
-                $nameMatch = str_contains(mb_strtolower($g['name'] ?? ''), $term);
-                $descMatch = str_contains(mb_strtolower($g['description'] ?? ''), $term);
-                $catMatch = str_contains(mb_strtolower($g['category'] ?? ''), $term);
-                if (! $nameMatch && ! $descMatch && ! $catMatch) {
-                    continue;
-                }
-            }
-
-            $filtered[] = $g;
+        if ($status === 'active' || $status === 'inactive') {
+            $builder->where('status', $status);
         }
+
+        $groups = $builder->findAll();
+
+        // Calcular métricas com uma única query agregada no banco
+        $db = \Config\Database::connect();
+        $metricsRow = $db->table('whatsapp_groups')
+            ->select("
+                COUNT(*) as total,
+                SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,
+                SUM(CASE WHEN status = 'inactive' THEN 1 ELSE 0 END) as inactive
+            ")
+            ->get()
+            ->getRowArray();
 
         return [
-            'groups' => $filtered,
+            'groups' => $groups,
             'metrics' => [
-                'total' => $totalAll,
-                'active' => $totalActive,
-                'inactive' => $totalInactive,
+                'total' => (int) ($metricsRow['total'] ?? 0),
+                'active' => (int) ($metricsRow['active'] ?? 0),
+                'inactive' => (int) ($metricsRow['inactive'] ?? 0),
             ],
         ];
     }

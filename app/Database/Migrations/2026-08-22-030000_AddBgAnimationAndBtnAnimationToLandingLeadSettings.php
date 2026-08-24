@@ -10,22 +10,27 @@ class AddBgAnimationAndBtnAnimationToLandingLeadSettings extends Migration
 {
     public function up(): void
     {
-        $fields = [
-            'bg_animation' => [
+        $fields = [];
+        if (!$this->db->fieldExists('bg_animation', 'landing_lead_settings')) {
+            $fields['bg_animation'] = [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'default'    => 'bg-particles',
                 'after'      => 'color_palette',
-            ],
-            'btn_animation' => [
+            ];
+        }
+        if (!$this->db->fieldExists('btn_animation', 'landing_lead_settings')) {
+            $fields['btn_animation'] = [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,
                 'default'    => 'btn-pulse',
                 'after'      => 'bg_animation',
-            ],
-        ];
+            ];
+        }
 
-        $this->forge->addColumn('landing_lead_settings', $fields);
+        if (!empty($fields)) {
+            $this->forge->addColumn('landing_lead_settings', $fields);
+        }
     }
 
     public function down(): void

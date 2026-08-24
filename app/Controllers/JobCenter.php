@@ -48,13 +48,7 @@ class JobCenter extends BaseController
         $firstName = $nameParts[0];
         $lastName = count($nameParts) > 1 ? $nameParts[count($nameParts) - 1] : '';
         $userInitials = mb_strtoupper(mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1));
-        $setting = (new \App\Models\AppSettingModel())->where('setting_key', 'layout_max_width')->first();
-        $storedLayoutWidth = $setting['setting_value'] ?? '1200';
-        $storedNumericWidth = filter_var($storedLayoutWidth, FILTER_VALIDATE_INT);
-        $layoutMaxWidth = $storedLayoutWidth === 'fluid'
-            || ($storedNumericWidth !== false && $storedNumericWidth >= 900 && $storedNumericWidth <= 1800)
-            ? $storedLayoutWidth
-            : '1200';
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $data = array_merge([
             'activePage' => $activePage,
@@ -214,4 +208,35 @@ class JobCenter extends BaseController
         return redirect()->to(site_url('configuracoes?tab=central-trabalho'))
             ->with('success', "Configurações do trabalho '{$job['name']}' atualizadas com sucesso.");
     }
-}
+    public function statusSummary(): ResponseInterface
+    {
+        $queueStats = [
+            'pending'      => 0,
+            'processing'   => 0,
+            'failed'       => 0,
+            'completed'    => 0,
+            'total_active' => 0,
+        ];
+
+        try {
+            $stats = $this->queueModel->getQueueStats();
+            $pending = (int) ($stats['pending'] ?? 0);
+            $processing = (int) ($stats['processing'] ?? 0);
+            $failed = (int) ($stats['failed'] ?? 0);
+            $completed = (int) ($stats['completed'] ?? 0);
+
+            $queueStats = [
+                'pending'      => $pending,
+                'processing'   => $processing,
+                'failed'       => $failed,
+                'completed'    => $completed,
+                'total_active' => $pending + $processing + $failed,
+            ];
+        } catch (\Throwable $e) {
+            // Em caso de erro, mantém estrutura zerada
+        }
+
+        return $this->response->setJSON([
+            'queue' => $queueStats,
+        ]);
+    }}

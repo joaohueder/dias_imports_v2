@@ -102,6 +102,16 @@
         ),
       ),
     ),
+    'Helpers/cookie_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\cookie_helper.php',
+        ),
+      ),
+    ),
     'Helpers/security_helper' => 
     array (
       'php' => 
@@ -109,6 +119,26 @@
         1 => 
         array (
           0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\security_helper.php',
+        ),
+      ),
+    ),
+    'Language/en/HTTP.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\HTTP.php',
+        ),
+      ),
+    ),
+    'Helpers/text_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\text_helper.php',
         ),
       ),
     ),
@@ -132,46 +162,6 @@
         ),
       ),
     ),
-    'Helpers/text_helper' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\text_helper.php',
-        ),
-      ),
-    ),
-    'Helpers/cookie_helper' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\cookie_helper.php',
-        ),
-      ),
-    ),
-    'Helpers/inflector_helper' => 
-    array (
-      'php' => 
-      array (
-        1 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Helpers\\inflector_helper.php',
-        ),
-      ),
-    ),
-    'Language/en/CLI.php' => 
-    array (
-      'php' => 
-      array (
-        0 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\CLI.php',
-        ),
-      ),
-    ),
     'Language/en/Migrations.php' => 
     array (
       'php' => 
@@ -179,26 +169,6 @@
         0 => 
         array (
           0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Migrations.php',
-        ),
-      ),
-    ),
-    'Language/en/Errors.php' => 
-    array (
-      'php' => 
-      array (
-        0 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Errors.php',
-        ),
-      ),
-    ),
-    'Language/en/Security.php' => 
-    array (
-      'php' => 
-      array (
-        0 => 
-        array (
-          0 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Language\\en\\Security.php',
         ),
       ),
     ),
@@ -292,6 +262,11 @@
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-150000_CreateJobCenterTables.php' => 'App\\Database\\Migrations\\CreateJobCenterTables',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-221009_CreateProductsTable.php' => 'App\\Database\\Migrations\\CreateProductsTable',
     'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-192524_AddFaqAndFeaturesToProducts.php' => 'App\\Database\\Migrations\\AddFaqAndFeaturesToProducts',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-195500_AddAboutCtaBtnToProducts.php' => 'App\\Database\\Migrations\\AddAboutCtaBtnToProducts',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-200500_AddCtaIconAndBtnAnimationToProducts.php' => 'App\\Database\\Migrations\\AddCtaIconAndBtnAnimationToProducts',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-234908_AddCtaIconDirectToProducts.php' => 'App\\Database\\Migrations\\AddCtaIconDirectToProducts',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-24-000000_CreateProductAccessLogsTable.php' => 'App\\Database\\Migrations\\CreateProductAccessLogsTable',
+    'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-24-010000_AddSendProductToGroupJob.php' => 'App\\Database\\Migrations\\AddSendProductToGroupJob',
   ),
   'listFiles' => 
   array (
@@ -364,23 +339,6 @@
       64 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\Commands\\Worker\\WorkerUninstall.php',
     ),
   ),
-  'locateFile' => 
-  array (
-    'CodeIgniter\\Commands\\Generators\\Views\\migration.tpl.php' => 
-    array (
-      'Views' => 
-      array (
-        'php' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\/Commands/Generators/Views/migration.tpl.php',
-      ),
-    ),
-    'CodeIgniter\\Commands\\Generators\\Views\\seeder.tpl.php' => 
-    array (
-      'Views' => 
-      array (
-        'php' => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\system\\/Commands/Generators/Views/seeder.tpl.php',
-      ),
-    ),
-  ),
   'listNamespaceFiles' => 
   array (
     'App' => 
@@ -403,30 +361,11 @@
         13 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-150000_CreateJobCenterTables.php',
         14 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-22-221009_CreateProductsTable.php',
         15 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-192524_AddFaqAndFeaturesToProducts.php',
-      ),
-    ),
-    'CodeIgniter' => 
-    array (
-      '/Database/Migrations/' => 
-      array (
-      ),
-    ),
-    'Config' => 
-    array (
-      '/Database/Migrations/' => 
-      array (
-      ),
-    ),
-    'Psr\\Log' => 
-    array (
-      '/Database/Migrations/' => 
-      array (
-      ),
-    ),
-    'Laminas\\Escaper' => 
-    array (
-      '/Database/Migrations/' => 
-      array (
+        16 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-195500_AddAboutCtaBtnToProducts.php',
+        17 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-200500_AddCtaIconAndBtnAnimationToProducts.php',
+        18 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-234908_AddCtaIconDirectToProducts.php',
+        19 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-24-000000_CreateProductAccessLogsTable.php',
+        20 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-24-010000_AddSendProductToGroupJob.php',
       ),
     ),
   ),

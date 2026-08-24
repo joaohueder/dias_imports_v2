@@ -19,12 +19,15 @@ class CreateAppSettingsTable extends Migration
         $this->forge->addUniqueKey('setting_key');
         $this->forge->createTable('app_settings', true);
 
-        $this->db->table('app_settings')->insert([
-            'setting_key' => 'layout_max_width',
-            'setting_value' => '1200',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
+        $exists = $this->db->table('app_settings')->where('setting_key', 'layout_max_width')->countAllResults();
+        if ($exists === 0) {
+            $this->db->table('app_settings')->insert([
+                'setting_key' => 'layout_max_width',
+                'setting_value' => '1200',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+        }
     }
 
     public function down(): void

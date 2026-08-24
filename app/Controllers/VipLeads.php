@@ -34,8 +34,7 @@ class VipLeads extends BaseController
 
         $data = $this->getLeadsData($days, $search, $dateFilter);
 
-        $layoutSetting = (new AppSettingModel())->where('setting_key', 'layout_max_width')->first();
-        $layoutMaxWidth = $layoutSetting['setting_value'] ?? '1200';
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $userName = (string) session()->get('user_name');
         $userEmail = (string) session()->get('user_email');
@@ -168,20 +167,22 @@ class VipLeads extends BaseController
         $db = \Config\Database::connect();
         $leadModel = new LeadModel();
 
-        // Total absoluto de leads
-        $totalLeads = $leadModel->countAllResults();
-
-        // Hoje x Ontem
         $todayStr = date('Y-m-d');
         $yesterdayStr = date('Y-m-d', strtotime('-1 day'));
 
-        $todayCount = $db->table('leads')
-            ->where("DATE(created_at)", $todayStr)
-            ->countAllResults();
+        // Consolidar totalLeads, todayCount e yesterdayCount em uma única consulta
+        $overviewStats = $db->table('leads')
+            ->select("
+                COUNT(*) as totalLeads,
+                SUM(CASE WHEN DATE(created_at) = '{$todayStr}' THEN 1 ELSE 0 END) as todayCount,
+                SUM(CASE WHEN DATE(created_at) = '{$yesterdayStr}' THEN 1 ELSE 0 END) as yesterdayCount
+            ")
+            ->get()
+            ->getRowArray();
 
-        $yesterdayCount = $db->table('leads')
-            ->where("DATE(created_at)", $yesterdayStr)
-            ->countAllResults();
+        $totalLeads = (int) ($overviewStats['totalLeads'] ?? 0);
+        $todayCount = (int) ($overviewStats['todayCount'] ?? 0);
+        $yesterdayCount = (int) ($overviewStats['yesterdayCount'] ?? 0);
 
         // Evolução dos últimos $days dias
         $evolutionDays = [];

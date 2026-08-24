@@ -42,7 +42,7 @@ class ProductLanding extends BaseController
         $whatsappNumber = $product->whatsapp_number;
         if (empty($whatsappNumber)) {
             $defaultWhatsapp = (new CompanyWhatsappModel())->where('is_default', 1)->first();
-            $whatsappNumber = $defaultWhatsapp ? $defaultWhatsapp['phone_number'] : ($company['phone'] ?? '');
+            $whatsappNumber = $defaultWhatsapp ? ($defaultWhatsapp['phone'] ?? $defaultWhatsapp['phone_number'] ?? '') : ($company['phone'] ?? '');
         }
         $cleanWhatsapp = preg_replace('/\D+/', '', (string) $whatsappNumber);
 

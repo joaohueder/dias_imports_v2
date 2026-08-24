@@ -18,7 +18,6 @@ $routes->post('p/(:num)/track', 'ProductLanding::trackClick/$1', ['filter' => 'c
 
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Home::index');
-    $routes->get('health/status', 'Health::check');
 
     // Grupos de WhatsApp
     $routes->get('grupos-whatsapp', 'WhatsappGroups::index', ['filter' => 'permission:whatsapp_groups,view']);

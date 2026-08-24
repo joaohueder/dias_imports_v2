@@ -44,8 +44,7 @@ class Users extends BaseController
             }
         }
 
-        $layoutSetting = (new \App\Models\AppSettingModel())->where('setting_key', 'layout_max_width')->first();
-        $layoutMaxWidth = $layoutSetting['setting_value'] ?? '1200';
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $userName = (string) session()->get('user_name');
         $userEmail = (string) session()->get('user_email');
@@ -96,8 +95,7 @@ class Users extends BaseController
 
     private function renderForm(?array $user = null): string
     {
-        $layoutSetting = (new \App\Models\AppSettingModel())->where('setting_key', 'layout_max_width')->first();
-        $layoutMaxWidth = $layoutSetting['setting_value'] ?? '1200';
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $userName = (string) session()->get('user_name');
         $userEmail = (string) session()->get('user_email');

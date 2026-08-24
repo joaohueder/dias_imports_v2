@@ -105,7 +105,7 @@ class CreateProductsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('products');
+        $this->forge->createTable('products', true);
 
         // Tabela de imagens dos produtos
         $this->forge->addField([
@@ -141,13 +141,15 @@ class CreateProductsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('product_id', 'products', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('product_images');
+        if (!$this->db->tableExists('product_images')) {
+            $this->forge->addForeignKey('product_id', 'products', 'id', 'CASCADE', 'CASCADE');
+        }
+        $this->forge->createTable('product_images', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('product_images');
-        $this->forge->dropTable('products');
+        $this->forge->dropTable('product_images', true);
+        $this->forge->dropTable('products', true);
     }
 }

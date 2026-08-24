@@ -329,7 +329,7 @@ class EvolutionApiService
             $options = [
                 'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json', 'apikey' => $apiKey],
                 'connect_timeout' => 10,
-                'timeout' => 60,
+                'timeout' => 30,
                 'http_errors' => false,
                 'allow_redirects' => false,
                 'verify' => $this->resolveTlsVerification(),

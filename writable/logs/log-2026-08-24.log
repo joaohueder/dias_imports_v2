@@ -776,3 +776,1633 @@ DEBUG - 2026-08-24 11:06:56 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-08-24 11:07:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-08-24 11:09:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-08-24 11:09:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-08-24 16:37:36 --> Error: Class "Locale" not found
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:37:36 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:14 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:14 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:20 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:20 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:32 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:32 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:34 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:34 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:35 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:35 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:35 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:35 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:38:44 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:38:44 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:39:47 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:39:47 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:39:48 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:39:48 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:39:49 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:39:49 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:39:49 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:39:49 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-08-24 16:39:50 --> Error: Class "Locale" not found
+[Method: GET, Route: /]
+in SYSTEMPATH\CodeIgniter.php on line 189.
+ 1 SYSTEMPATH\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+ 2 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+ 3 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-08-24 16:39:50 --> ErrorException: Uncaught Error: Class "Locale" not found in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php:142
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Helpers\number_helper.php(60): format_number(6.0, 2, NULL, Array)
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(158): number_to_size(6.0, 2)
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Views\errors\html\error_exception.php(417): CodeIgniter\Debug\BaseExceptionHandler::describeMemory(6291456)
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(270): include('C:\\Sistemas\\Dia...')
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\BaseExceptionHandler.php(273): CodeIgniter\Debug\BaseExceptionHandler->CodeIgniter\Debug\{closure}()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\ExceptionHandler.php(126): CodeIgniter\Debug\BaseExceptionHandler->render(Object(Error), 500, 'C:\\Sistemas\\Dia...')
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Debug\Exceptions.php(151): CodeIgniter\Debug\ExceptionHandler->handle(Object(Error), Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), 500, 1)
+#7 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#8 {main}
+  thrown
+【Previous Exception】
+Error
+Class "Locale" not found
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(404): CodeIgniter\CodeIgniter->initialize()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(67): CodeIgniter\Boot::initializeCodeIgniter()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#3 {main}
+[Method: GET, Route: /]
+in SYSTEMPATH\Helpers\number_helper.php on line 142.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-08-24 11:40:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:40:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:40:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:40:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:40:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:41:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:41:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:41:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:42:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:42:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:42:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:42:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:43:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:43:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:45:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:46:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:54:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:55:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:55:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:55:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:55:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:57:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 11:58:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:00:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:01:42 --> CSRF token verified.
+DEBUG - 2026-08-24 12:01:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:01:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:07:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:08:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:08:27 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#14 {main}
+CRITICAL - 2026-08-24 12:08:27 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+[Method: GET, Route: configuracoes]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(714): CodeIgniter\Model->doFirst()
+ 5 APPPATH\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+ 6 APPPATH\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Home->settings()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:08:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:08:30 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#14 {main}
+CRITICAL - 2026-08-24 12:08:30 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(714): CodeIgniter\Model->doFirst()
+ 5 APPPATH\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+ 6 APPPATH\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Home->index()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:08:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:08:41 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#14 {main}
+CRITICAL - 2026-08-24 12:08:41 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(714): CodeIgniter\Model->doFirst()
+ 5 APPPATH\Controllers\Home.php(443): CodeIgniter\BaseModel->first()
+ 6 APPPATH\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Home->index()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:09:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:09:11 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:09:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:09:31 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+ERROR - 2026-08-24 12:09:34 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#14 {main}
+CRITICAL - 2026-08-24 12:09:34 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+[Method: GET, Route: configuracoes]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(714): CodeIgniter\Model->doFirst()
+ 5 APPPATH\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+ 6 APPPATH\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Home->settings()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:09:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:09:36 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:12:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:12:05 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+ERROR - 2026-08-24 12:12:07 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->settings()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#14 {main}
+CRITICAL - 2026-08-24 12:12:07 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+[Method: GET, Route: configuracoes]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(714): CodeIgniter\Model->doFirst()
+ 5 APPPATH\Controllers\Home.php(457): CodeIgniter\BaseModel->first()
+ 6 APPPATH\Controllers\Home.php(118): App\Controllers\Home->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Home->settings()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:12:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:12:10 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:15:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:15:30 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:15:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:15:33 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:15:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:15:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:15:36 --> Error connecting to the database: mysqli_sql_exception: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php(201): mysqli->real_connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#15 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente in C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Database\BaseBuilder.php(1659): CodeIgniter\Database\BaseConnection->query()
+#3 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Model.php(297): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\BaseModel.php(714): CodeIgniter\Model->doFirst()
+#5 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\BaseController.php(45): CodeIgniter\BaseModel->first()
+#6 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(443): App\Controllers\BaseController->getLayoutMaxWidth()
+#7 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\app\Controllers\Home.php(89): App\Controllers\Home->renderPage()
+#8 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(974): App\Controllers\Home->index()
+#9 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+#10 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+#11 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+#13 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\public\index.php(59): CodeIgniter\Boot::bootWeb()
+#14 C:\Sistemas\Dias Imports\Dias Importes - Marketing v2\dias_imports_v2\system\rewrite.php(44): require_once('...')
+#15 {main}
+DEBUG - 2026-08-24 12:17:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:17:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:17:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:17:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:21:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:21:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:21:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:21:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:21:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:27:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:27:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:32:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:34:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:35:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:38:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:39:30 --> CSRF token verified.
+DEBUG - 2026-08-24 12:39:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:39:39 --> Evolution API transport failed: timeout (CodeIgniter\HTTP\Exceptions\HTTPException)
+DEBUG - 2026-08-24 12:39:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:39:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:40:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:41:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:41:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:42:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:45:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:45:00 --> CSRF token verified.
+ERROR - 2026-08-24 12:45:00 --> Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:45:00 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+[Method: POST, Route: produtos/novo]
+in SYSTEMPATH\Database\BaseConnection.php on line 863.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 2 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 4 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 5 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:45:00 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 2 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 4 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 6 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 7 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 8 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 9 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+10 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:45:00 --> [Caused by] mysqli_sql_exception: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+ERROR - 2026-08-24 12:45:33 --> Duplicate entry 'layout_max_width' for key 'app_settings_key_unique'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-21-220000_CreateAppSettingsTable.php(22): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateAppSettingsTable->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+ERROR - 2026-08-24 12:45:57 --> Duplicate column name 'template_model'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(772): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-020000_AddTemplateModelAndColorPaletteToLandingLeadSettings.php(26): CodeIgniter\Database\Forge->addColumn()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\AddTemplateModelAndColorPaletteToLandingLeadSettings->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+DEBUG - 2026-08-24 12:46:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:46:36 --> CSRF token verified.
+ERROR - 2026-08-24 12:46:36 --> Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:36 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+[Method: POST, Route: produtos/novo]
+in SYSTEMPATH\Database\BaseConnection.php on line 863.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 2 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 4 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 5 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:36 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 2 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 4 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 6 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 7 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 8 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 9 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+10 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:36 --> [Caused by] mysqli_sql_exception: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:46:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:46:42 --> CSRF token verified.
+ERROR - 2026-08-24 12:46:42 --> Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:42 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+[Method: POST, Route: produtos/novo]
+in SYSTEMPATH\Database\BaseConnection.php on line 863.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 2 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 4 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 5 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:42 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 2 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 4 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 6 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 7 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 8 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 9 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+10 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:42 --> [Caused by] mysqli_sql_exception: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+ERROR - 2026-08-24 12:46:49 --> Duplicate column name 'bg_animation'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(772): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-030000_AddBgAnimationAndBtnAnimationToLandingLeadSettings.php(28): CodeIgniter\Database\Forge->addColumn()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\AddBgAnimationAndBtnAnimationToLandingLeadSettings->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+DEBUG - 2026-08-24 12:46:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:46:55 --> CSRF token verified.
+ERROR - 2026-08-24 12:46:55 --> Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:55 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+[Method: POST, Route: produtos/novo]
+in SYSTEMPATH\Database\BaseConnection.php on line 863.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 2 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 4 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 5 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:55 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 2 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 4 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 6 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 7 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 8 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 9 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+10 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:46:55 --> [Caused by] mysqli_sql_exception: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+ERROR - 2026-08-24 12:47:03 --> Duplicate column name 'seo_title'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(772): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-040000_AddSeoFieldsToLandingLeadSettings.php(24): CodeIgniter\Database\Forge->addColumn()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\AddSeoFieldsToLandingLeadSettings->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+DEBUG - 2026-08-24 12:47:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:47:19 --> CSRF token verified.
+ERROR - 2026-08-24 12:47:20 --> Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:47:20 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+[Method: POST, Route: produtos/novo]
+in SYSTEMPATH\Database\BaseConnection.php on line 863.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 2 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 4 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 5 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:47:20 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 2 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 4 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 6 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 7 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 8 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+ 9 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+10 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+CRITICAL - 2026-08-24 12:47:20 --> [Caused by] mysqli_sql_exception: Unknown column 'cta_icon' in 'INSERT INTO'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2355): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Model.php(357): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert()
+ 7 SYSTEMPATH\Model.php(670): CodeIgniter\BaseModel->insert()
+ 8 APPPATH\Controllers\Admin\Products.php(169): CodeIgniter\Model->insert()
+ 9 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->store()
+10 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+11 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+ERROR - 2026-08-24 12:47:40 --> Duplicate column name 'role'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(772): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-115606_AddRoleAndPermissionsToUsers.php(26): CodeIgniter\Database\Forge->addColumn()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\AddRoleAndPermissionsToUsers->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+ERROR - 2026-08-24 12:47:59 --> Table 'whatsapp_groups' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-141037_CreateWhatsappGroupsTable.php(81): CodeIgniter\Database\Forge->createTable()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateWhatsappGroupsTable->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+ERROR - 2026-08-24 12:48:19 --> Table 'products' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query()
+ 5 APPPATH\Database\Migrations\2026-08-22-221009_CreateProductsTable.php(108): CodeIgniter\Database\Forge->createTable()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateProductsTable->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+11 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+13 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+ERROR - 2026-08-24 12:48:34 --> Duplicate column name 'cta_icon'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(825): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 APPPATH\Database\Migrations\2026-08-23-234908_AddCtaIconDirectToProducts.php(11): CodeIgniter\Database\BaseConnection->query()
+ 5 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\AddCtaIconDirectToProducts->up()
+ 6 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate()
+ 7 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest()
+ 8 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::{closure:CodeIgniter\Commands\Database\Migrate::run():88}()
+ 9 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked()
+10 SYSTEMPATH\CLI\Commands.php(72): CodeIgniter\Commands\Database\Migrate->run()
+11 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run()
+12 SYSTEMPATH\Boot.php(444): CodeIgniter\CLI\Console->run()
+13 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand()
+14 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark()
+DEBUG - 2026-08-24 12:48:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:48:55 --> CSRF token verified.
+DEBUG - 2026-08-24 12:48:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:51:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-08-24 12:51:40 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: produtos/1/editar]
+in APPPATH\Views\admin\products\form.php on line 21.
+ 1 APPPATH\Views\admin\products\form.php(21): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Views\\admin\\products\\form.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->{closure:CodeIgniter\View\View::render():237}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render()
+ 5 APPPATH\Controllers\Admin\Products.php(47): view()
+ 6 APPPATH\Controllers\Admin\Products.php(237): App\Controllers\Admin\Products->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->edit()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:51:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:51:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-08-24 12:51:50 --> ErrorException: Undefined property: CodeIgniter\View\View::$request
+[Method: GET, Route: produtos/1/editar]
+in APPPATH\Views\admin\products\form.php on line 21.
+ 1 APPPATH\Views\admin\products\form.php(21): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Views\\admin\\products\\form.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->{closure:CodeIgniter\View\View::render():237}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render()
+ 5 APPPATH\Controllers\Admin\Products.php(47): view()
+ 6 APPPATH\Controllers\Admin\Products.php(237): App\Controllers\Admin\Products->renderPage()
+ 7 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Admin\Products->edit()
+ 8 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 9 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:52:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:52:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:26 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:28 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:28 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:29 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:30 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:31 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:31 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:32 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:33 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:37 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:52:39 --> CSRF token verified.
+DEBUG - 2026-08-24 12:52:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-08-24 12:52:56 --> ErrorException: Undefined array key "phone_number"
+[Method: GET, Route: p/bone-country-761741]
+in APPPATH\Controllers\ProductLanding.php on line 45.
+ 1 APPPATH\Controllers\ProductLanding.php(45): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\ProductLanding->show()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb()
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\public\\index.php')
+DEBUG - 2026-08-24 12:53:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:54:16 --> CSRF token verified.
+DEBUG - 2026-08-24 12:54:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:54:21 --> CSRF token verified.
+DEBUG - 2026-08-24 12:54:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:54:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:55:05 --> Evolution API transport failed: timeout (CodeIgniter\HTTP\Exceptions\HTTPException)
+DEBUG - 2026-08-24 12:55:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:55:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:55:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:55:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 12:56:10 --> Evolution API transport failed: timeout (CodeIgniter\HTTP\Exceptions\HTTPException)
+DEBUG - 2026-08-24 12:56:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:56:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:56:40 --> CSRF token verified.
+DEBUG - 2026-08-24 12:56:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:56:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:56:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:56:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:58:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:58:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:58:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:58:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-08-24 12:58:59 --> CSRF token verified.
+DEBUG - 2026-08-24 12:59:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 12:59:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-24 13:00:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

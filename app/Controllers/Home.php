@@ -440,13 +440,7 @@ class Home extends BaseController
         $firstName = $nameParts[0];
         $lastName = count($nameParts) > 1 ? $nameParts[count($nameParts) - 1] : '';
         $userInitials = mb_strtoupper(mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1));
-        $setting = (new AppSettingModel())->where('setting_key', self::LAYOUT_SETTING_KEY)->first();
-        $storedLayoutWidth = $setting['setting_value'] ?? self::DEFAULT_LAYOUT_WIDTH;
-        $storedNumericWidth = filter_var($storedLayoutWidth, FILTER_VALIDATE_INT);
-        $layoutMaxWidth = $storedLayoutWidth === 'fluid'
-            || ($storedNumericWidth !== false && $storedNumericWidth >= 900 && $storedNumericWidth <= 1800)
-            ? $storedLayoutWidth
-            : self::DEFAULT_LAYOUT_WIDTH;
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
         $view = $activePage === 'settings' ? 'admin/settings' : 'admin/page';
         $companyProfile = null;
         $companyWhatsapps = [];

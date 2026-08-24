@@ -19,6 +19,7 @@ $globalSuccess = session()->getFlashdata('success');
     <meta name="csrf-token-name" content="<?= csrf_token() ?>">
     <meta name="csrf-hash" content="<?= csrf_hash() ?>">
     <meta name="csrf-header" content="<?= config('Security')->headerName ?? 'X-CSRF-TOKEN' ?>">
+    <script>document.cookie = "debug-hot-reload=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";</script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Ir para o conteúdo</a>
@@ -112,15 +113,9 @@ $globalSuccess = session()->getFlashdata('success');
         <header class="topbar">
             <div class="breadcrumb">Painel <span aria-hidden="true">/</span> <strong><?= esc($pageTitle) ?></strong></div>
             <div class="topbar-actions">
-                <a href="<?= site_url('central-trabalho') ?>" class="queue-status-pill" id="header-queue-pill" title="Fila de Execução: 0 pendentes, 0 em execução, 0 falhas">
-                    <i class="ti ti-cpu" aria-hidden="true"></i>
-                    <span class="queue-status-label">Fila:</span>
-                    <span class="queue-status-count" id="header-queue-total">0</span>
-                    <span class="queue-status-breakdown" id="header-queue-breakdown">(0/0/0)</span>
-                </a>
-                <span class="status-pill" id="system-status-pill" data-health-url="<?= site_url('health/status') ?>">
-                    <span class="status-dot" id="system-status-dot" aria-hidden="true"></span>
-                    <span id="system-status-text">Sistema online</span>
+                <span class="status-pill" title="Host do Banco de Dados">
+                    <i class="ti ti-database" aria-hidden="true"></i>
+                    <span><?= esc(config('Database')->default['hostname'] ?? env('database.default.hostname', 'localhost')) ?></span>
                 </span>
             </div>
         </header>

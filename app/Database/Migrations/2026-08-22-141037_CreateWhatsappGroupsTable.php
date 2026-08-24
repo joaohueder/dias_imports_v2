@@ -78,11 +78,11 @@ class CreateWhatsappGroupsTable extends Migration
         $this->forge->addUniqueKey(['instance_name', 'group_jid']);
         $this->forge->addKey('status');
         $this->forge->addKey('category');
-        $this->forge->createTable('whatsapp_groups');
+        $this->forge->createTable('whatsapp_groups', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('whatsapp_groups');
+        $this->forge->dropTable('whatsapp_groups', true);
     }
 }

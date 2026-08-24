@@ -33,13 +33,7 @@ class Products extends BaseController
         $lastName = count($nameParts) > 1 ? $nameParts[count($nameParts) - 1] : '';
         $userInitials = mb_strtoupper(mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1));
         
-        $setting = (new AppSettingModel())->where('setting_key', self::LAYOUT_SETTING_KEY)->first();
-        $storedLayoutWidth = $setting['setting_value'] ?? self::DEFAULT_LAYOUT_WIDTH;
-        $storedNumericWidth = filter_var($storedLayoutWidth, FILTER_VALIDATE_INT);
-        $layoutMaxWidth = $storedLayoutWidth === 'fluid'
-            || ($storedNumericWidth !== false && $storedNumericWidth >= 900 && $storedNumericWidth <= 1800)
-            ? $storedLayoutWidth
-            : self::DEFAULT_LAYOUT_WIDTH;
+        $layoutMaxWidth = $this->getLayoutMaxWidth();
 
         $viewData = array_merge([
             'layoutMaxWidth' => $layoutMaxWidth,
@@ -174,7 +168,9 @@ class Products extends BaseController
         // Pula validação interna do Model pois já validamos no Controller
         $insertId = $this->productModel->skipValidation(true)->insert($data);
         if ($insertId) {
-            return redirect()->to("produtos/{$insertId}/editar")->with('success', 'Produto criado com sucesso.');
+            $activeTab = $this->request->getPost('active_tab');
+            $redirectUrl = "produtos/{$insertId}/editar" . ($activeTab ? "?tab={$activeTab}" : '');
+            return redirect()->to($redirectUrl)->with('success', 'Produto criado com sucesso.');
         }
 
         $modelErrors = $this->productModel->errors();
@@ -268,7 +264,9 @@ class Products extends BaseController
 
         // Pula validação interna do Model pois já validamos no Controller
         if ($this->productModel->skipValidation(true)->update($id, $data)) {
-            return redirect()->to("produtos/{$id}/editar")->with('success', 'Produto atualizado com sucesso.');
+            $activeTab = $this->request->getPost('active_tab');
+            $redirectUrl = "produtos/{$id}/editar" . ($activeTab ? "?tab={$activeTab}" : '');
+            return redirect()->to($redirectUrl)->with('success', 'Produto atualizado com sucesso.');
         }
 
         $modelErrors = $this->productModel->errors();
