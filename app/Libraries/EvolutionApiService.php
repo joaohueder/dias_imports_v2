@@ -222,27 +222,33 @@ class EvolutionApiService
             default => 'image/jpeg',
         };
 
-        // Evolution API v2.3.x pode exigir base64 para envio de mídia dependendo da configuração do servidor.
-        // Vamos tentar converter a URL local para base64 se for um arquivo local acessível.
+        // Evolution API v2.3.x pode exigir base64 ou URL pública.
+        // Se for um arquivo local do sistema, lê o arquivo e codifica em base64.
         $mediaData = $mediaUrl;
-        if (str_starts_with($mediaUrl, base_url())) {
-            $localPath = FCPATH . str_replace(base_url(), '', $mediaUrl);
-            if (is_file($localPath)) {
-                $fileContent = file_get_contents($localPath);
-                if ($fileContent !== false) {
-                    $mediaData = 'data:' . $mime . ';base64,' . base64_encode($fileContent);
-                }
+        $cleanUrl = parse_url($mediaUrl, PHP_URL_PATH);
+        $relativeUpload = str_starts_with($mediaUrl, base_url()) 
+            ? ltrim(str_replace(base_url(), '', $mediaUrl), '/\\')
+            : ($cleanUrl ? ltrim(str_replace('/uploads/', 'uploads/', $cleanUrl), '/\\') : '');
+
+        $localPath = FCPATH . $relativeUpload;
+        if (is_file($localPath)) {
+            $fileContent = file_get_contents($localPath);
+            if ($fileContent !== false) {
+                // Evolution API v2.3.x aceita tanto raw base64 quanto Data URI ou URL pública
+                $mediaData = base64_encode($fileContent);
             }
         }
 
-        return $this->request('POST', '/message/sendMedia/' . rawurlencode($name), [
+        $payload = [
             'number'    => $groupJid,
             'mediatype' => $mediaType,
             'mimetype'  => $mime,
             'caption'   => $caption,
             'media'     => $mediaData,
             'fileName'  => $fileName,
-        ]);
+        ];
+
+        return $this->request('POST', '/message/sendMedia/' . rawurlencode($name), $payload);
     }
 
     public function createGroup(string $name, string $subject, array $participants, string $description = ''): array
@@ -367,13 +373,25 @@ class EvolutionApiService
         }
         $decoded = $body === '' ? [] : json_decode($body, true);
         if ($status < 200 || $status >= 300) {
+            log_message('error', 'Evolution API Error [{status}] on {path}: {body}', [
+                'status' => $status,
+                'path'   => $path,
+                'body'   => $body,
+            ]);
+            $errorDetails = '';
+            if (is_array($decoded)) {
+                $errorDetails = $decoded['response']['message'] ?? $decoded['message'] ?? (is_string($decoded['error'] ?? null) ? $decoded['error'] : '');
+                if (is_array($errorDetails)) {
+                    $errorDetails = implode(', ', $errorDetails);
+                }
+            }
             $message = match ($status) {
-                400, 422 => 'A Evolution API rejeitou os dados enviados.',
+                400, 422 => 'A Evolution API rejeitou os dados enviados' . ($errorDetails ? ": {$errorDetails}" : '.'),
                 401, 403 => 'A Evolution API recusou a credencial configurada.',
                 404 => 'Recurso ou instância não encontrado na Evolution API.',
                 409 => 'A operação entrou em conflito com o estado atual da instância.',
                 429 => 'Limite temporário da Evolution API atingido. Tente novamente mais tarde.',
-                default => 'A Evolution API está indisponível ou retornou uma falha inesperada.',
+                default => 'A Evolution API está indisponível ou retornou uma falha inesperada: ' . ($errorDetails ?: $body),
             };
             throw new RuntimeException($message);
         }
