@@ -66,6 +66,95 @@ class RealtimeSnapshotService
     }
 
     /**
+     * Retorna informações de diagnóstico e status do Worker Realtime.
+     */
+    public function getWorkerStatus(): array
+    {
+        $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
+        $realtimeDir = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime';
+        $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';
+        $statusFile = $realtimeDir . DIRECTORY_SEPARATOR . 'status.json';
+        $logFile = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.log';
+
+        $lastHeartbeat = file_exists($heartbeatFile) ? @filemtime($heartbeatFile) : null;
+        $secondsAgo = $lastHeartbeat ? (time() - $lastHeartbeat) : null;
+
+        // Se o heartbeat foi atualizado há menos de 45 segundos, consideramos ONLINE
+        $isOnline = ($secondsAgo !== null && $secondsAgo <= 45);
+
+        $statusData = [];
+        if (file_exists($statusFile)) {
+            $raw = @file_get_contents($statusFile);
+            if ($raw) {
+                $statusData = json_decode($raw, true) ?: [];
+            }
+        }
+
+        // Snapshots gerados no disco
+        $snapshotsList = [];
+        $expectedScreens = ['overview', 'whatsapp_groups', 'job_center', 'products', 'vip_leads', 'users', 'settings_company', 'settings_templates'];
+        foreach ($expectedScreens as $key) {
+            $f = $this->getFilePath($key);
+            if (file_exists($f)) {
+                $mtime = @filemtime($f);
+                $snapshotsList[$key] = [
+                    'exists' => true,
+                    'mtime' => $mtime,
+                    'updated_at' => date('d/m/Y H:i:s', $mtime),
+                    'seconds_ago' => time() - $mtime,
+                    'size_bytes' => @filesize($f) ?: 0,
+                ];
+            } else {
+                $snapshotsList[$key] = [
+                    'exists' => false,
+                    'mtime' => null,
+                    'updated_at' => null,
+                    'seconds_ago' => null,
+                    'size_bytes' => 0,
+                ];
+            }
+        }
+
+        // Últimos erros do log se existirem
+        $recentErrors = [];
+        if (file_exists($logFile)) {
+            $lines = @file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            if (is_array($lines) && !empty($lines)) {
+                $recentErrors = array_slice(array_reverse($lines), 0, 5);
+            }
+        }
+
+        return [
+            'is_online' => $isOnline,
+            'seconds_ago' => $secondsAgo,
+            'last_heartbeat' => $lastHeartbeat ? date('d/m/Y H:i:s', $lastHeartbeat) : 'Nunca executado',
+            'cycle' => (int) ($statusData['cycle'] ?? 0),
+            'last_cycle_at' => $statusData['last_cycle_at'] ?? null,
+            'last_error' => $statusData['last_error'] ?? null,
+            'jobs_processed' => (int) ($statusData['jobs_processed'] ?? 0),
+            'jobs_failed' => (int) ($statusData['jobs_failed'] ?? 0),
+            'snapshots' => $snapshotsList,
+            'recent_errors' => $recentErrors,
+        ];
+    }
+
+    /**
+     * Atualiza o arquivo de status de saúde do worker.
+     */
+    public function updateWorkerStatus(array $data): void
+    {
+        $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
+        $statusFile = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime' . DIRECTORY_SEPARATOR . 'status.json';
+
+        $payload = array_merge([
+            'last_cycle_at' => date('Y-m-d H:i:s'),
+            'timestamp' => microtime(true),
+        ], $data);
+
+        @file_put_contents($statusFile, json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
+    }
+
+    /**
      * Executa a geração de snapshots de todas as telas ativas em tempo real.
      * Deve ser executado dentro do cron-realtime.php (reutilizando a conexão MySQL).
      */
@@ -301,10 +390,12 @@ class RealtimeSnapshotService
 
         $queueModel = new \App\Models\SystemJobQueueModel();
         $queueStats = $queueModel->getQueueStats();
+        $workerStatus = $this->getWorkerStatus();
 
         $overviewData = [
             'greeting' => $greeting,
             'formattedDate' => $formattedDate,
+            'worker' => $workerStatus,
             'products' => [
                 'total' => $totalProducts,
                 'active' => $activeProducts,

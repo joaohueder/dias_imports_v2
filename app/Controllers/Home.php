@@ -626,6 +626,8 @@ class Home extends BaseController
                 $systemJobs = [];
             }
 
+            $realtimeWorkerStatus = (new \App\Services\RealtimeSnapshotService())->getWorkerStatus();
+
             $evolution = new EvolutionApiService();
             $evolutionSettings = $evolution->getSettings();
             $evolutionEncryptionReady = $evolution->isEncryptionReady();
@@ -681,6 +683,7 @@ class Home extends BaseController
             'landingLeadSetting' => $landingLeadSetting,
             'systemJobs' => $systemJobs ?? [],
             'realtimeScreens' => $realtimeScreens,
+            'realtimeWorkerStatus' => $realtimeWorkerStatus ?? [],
             'realtimeScreenSettings' => $realtimeScreenSettings,
             'isRealtimeActive' => $realtimeModel->isScreenActive('overview'),
             'realtimeInterval' => $realtimeModel->getInterval('overview'),

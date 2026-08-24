@@ -3,6 +3,21 @@
         <div class="overview-hero-meta">
             <span class="overview-date-badge"><i class="ti ti-calendar"></i> <?= esc($overviewData['formattedDate']) ?></span>
             <div class="overview-live-status">
+                <?php 
+                    $workerInfo = $overviewData['worker'] ?? [];
+                    $workerOnline = !empty($workerInfo['is_online']);
+                    $workerSecAgo = $workerInfo['seconds_ago'] ?? null;
+                ?>
+                <?php if ($workerOnline): ?>
+                    <a href="<?= site_url('configuracoes?tab=tempo-real') ?>" class="live-pill live-pill-success" title="Worker Realtime ativo. Último ciclo há <?= $workerSecAgo !== null ? $workerSecAgo . 's' : '0s' ?>">
+                        <span class="live-pulse"></span> Realtime Ativo
+                    </a>
+                <?php else: ?>
+                    <a href="<?= site_url('configuracoes?tab=tempo-real') ?>" class="live-pill live-pill-danger" title="Worker Realtime parado ou aguardando execução do Cron">
+                        <span class="live-pulse danger"></span> Realtime Inativo
+                    </a>
+                <?php endif; ?>
+
                 <?php if ($overviewData['operations']['evolution_configured']): ?>
                     <span class="live-pill live-pill-success" title="Evolution API conectada e pronta para disparos">
                         <span class="live-pulse"></span> Evolution API Conectada

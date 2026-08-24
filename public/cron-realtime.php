@@ -131,14 +131,28 @@ try {
 
     // 9. Loop de processamento Realtime
     $cycle = 0;
+    $totalProcessed = 0;
+    $totalFailed = 0;
+
     while ((microtime(true) - $startedAt) + $intervalSeconds <= $maxRuntimeSeconds) {
         $cycle++;
         try {
             // 1. Processa a fila de tarefas em background
             $results = $jobCenterService->processPendingQueue(10);
+            $totalProcessed += ($results['processed'] ?? 0);
+            $totalFailed += ($results['failed'] ?? 0);
 
             // 2. Atualiza snapshots de dados das telas ativas em tempo real
             $snapshotService->generateAllSnapshots();
+
+            // 3. Atualiza arquivo de status de saúde para o dashboard
+            $snapshotService->updateWorkerStatus([
+                'cycle' => $cycle,
+                'last_error' => null,
+                'jobs_processed' => $totalProcessed,
+                'jobs_failed' => $totalFailed,
+                'uptime_seconds' => round(microtime(true) - $startedAt),
+            ]);
 
             if (!empty($results['processed']) || !empty($results['failed'])) {
                 echo "[" . date('H:i:s') . "] Ciclo #{$cycle}: Processados: {$results['processed']} | Falhas: {$results['failed']}\n";
@@ -151,6 +165,14 @@ try {
             $writeLog('Erro no ciclo de processamento: ' . $cycleException->getMessage());
             echo "[" . date('H:i:s') . "] Erro no ciclo #{$cycle}: " . $cycleException->getMessage() . "\n";
             flush();
+
+            $snapshotService->updateWorkerStatus([
+                'cycle' => $cycle,
+                'last_error' => $cycleException->getMessage(),
+                'jobs_processed' => $totalProcessed,
+                'jobs_failed' => $totalFailed,
+                'uptime_seconds' => round(microtime(true) - $startedAt),
+            ]);
         }
 
         // Aguarda o intervalo configurado

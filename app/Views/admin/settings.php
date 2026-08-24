@@ -546,6 +546,126 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
         </div>
 
+        <!-- Mini Dashboard de Diagnóstico e Saúde do Realtime -->
+        <?php 
+            $wStatus = $realtimeWorkerStatus ?? [];
+            $isOnline = !empty($wStatus['is_online']);
+            $lastHeartbeat = $wStatus['last_heartbeat'] ?? 'Nunca executado';
+            $secondsAgo = $wStatus['seconds_ago'] ?? null;
+            $cycle = $wStatus['cycle'] ?? 0;
+            $jobsProc = $wStatus['jobs_processed'] ?? 0;
+            $jobsFail = $wStatus['jobs_failed'] ?? 0;
+            $lastError = $wStatus['last_error'] ?? null;
+            $snapshots = $wStatus['snapshots'] ?? [];
+            $recentErrors = $wStatus['recent_errors'] ?? [];
+        ?>
+        <div class="realtime-dashboard-card" style="margin-bottom: 24px; padding: 20px; background: var(--bg-card, #fff); border: 1px solid var(--border-color, #e5e7eb); border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: <?= $isOnline ? 'rgb(var(--success) / .12)' : 'rgb(var(--danger) / .12)' ?>; display: flex; align-items: center; justify-content: center; color: <?= $isOnline ? 'rgb(var(--success))' : 'rgb(var(--danger))' ?>; font-size: 20px;">
+                        <i class="ti <?= $isOnline ? 'ti-pulse' : 'ti-alert-circle' ?>"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 15px; font-weight: 600;">Status do Worker Realtime</h3>
+                        <p style="margin: 2px 0 0; font-size: 12px; color: rgb(var(--muted));">Diagnóstico em tempo real da saúde dos snapshots e ciclos</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <?php if ($isOnline): ?>
+                        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgb(var(--success) / .15); color: rgb(var(--success));">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--success)); box-shadow: 0 0 8px rgb(var(--success));"></span>
+                            ONLINE (Ciclo ativo há <?= $secondsAgo !== null ? $secondsAgo . 's' : '0s' ?>)
+                        </span>
+                    <?php else: ?>
+                        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: rgb(var(--danger) / .15); color: rgb(var(--danger));">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--danger));"></span>
+                            OFFLINE / PARADO
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Mini KPIs de Saúde -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div style="padding: 12px 14px; border-radius: 8px; background: rgb(var(--primary) / .04); border: 1px solid rgb(var(--primary) / .1);">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Último Batimento (Heartbeat)</div>
+                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: var(--text-color, #111);"><?= esc($lastHeartbeat) ?></div>
+                </div>
+                <div style="padding: 12px 14px; border-radius: 8px; background: rgb(var(--success) / .04); border: 1px solid rgb(var(--success) / .1);">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Tarefas Processadas</div>
+                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: rgb(var(--success));"><?= $jobsProc ?> executadas</div>
+                </div>
+                <div style="padding: 12px 14px; border-radius: 8px; background: <?= $jobsFail > 0 ? 'rgb(var(--danger) / .04)' : 'rgb(var(--primary) / .04)' ?>; border: 1px solid <?= $jobsFail > 0 ? 'rgb(var(--danger) / .1)' : 'rgb(var(--primary) / .1)' ?>;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Falhas de Tarefas</div>
+                    <div style="font-size: 14px; font-weight: 600; margin-top: 4px; color: <?= $jobsFail > 0 ? 'rgb(var(--danger))' : 'var(--text-color, #111)' ?>;"><?= $jobsFail ?> falhas</div>
+                </div>
+                <div style="padding: 12px 14px; border-radius: 8px; background: <?= !empty($lastError) ? 'rgb(var(--danger) / .08)' : 'rgb(var(--success) / .04)' ?>; border: 1px solid <?= !empty($lastError) ? 'rgb(var(--danger) / .2)' : 'rgb(var(--success) / .1)' ?>;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase;">Integridade do Ciclo</div>
+                    <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: <?= !empty($lastError) ? 'rgb(var(--danger))' : 'rgb(var(--success))' ?>;">
+                        <?= !empty($lastError) ? 'Erro detectado' : 'Tudo Operacional' ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade de Snapshots das Telas -->
+            <div style="margin-top: 16px;">
+                <h4 style="margin: 0 0 10px; font-size: 13px; font-weight: 600; color: rgb(var(--muted)); text-transform: uppercase; letter-spacing: 0.5px;">Snapshots Gerados em Disco</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+                    <?php 
+                    $screenTitles = [
+                        'overview' => 'Visão Geral',
+                        'whatsapp_groups' => 'Grupos WhatsApp',
+                        'job_center' => 'Central de Trabalho',
+                        'products' => 'Catálogo Produtos',
+                        'vip_leads' => 'Leads VIP',
+                        'users' => 'Usuários',
+                        'settings_company' => 'Config. Empresa',
+                        'settings_templates' => 'Modelos Mensagens',
+                    ];
+                    foreach ($screenTitles as $sKey => $sTitle): 
+                        $snap = $snapshots[$sKey] ?? ['exists' => false];
+                        $snapExists = !empty($snap['exists']);
+                    ?>
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: var(--bg-hover, #f9fafb); border: 1px solid var(--border-color, #e5e7eb); font-size: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: <?= $snapExists ? 'rgb(var(--success))' : 'rgb(var(--muted))' ?>;"></span>
+                                <span style="font-weight: 500;"><?= esc($sTitle) ?></span>
+                            </div>
+                            <div>
+                                <?php if ($snapExists): ?>
+                                    <span style="font-size: 11px; color: rgb(var(--muted));" title="Atualizado em <?= esc($snap['updated_at']) ?>">
+                                        <?= $snap['seconds_ago'] !== null ? $snap['seconds_ago'] . 's atrás' : 'OK' ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span style="font-size: 11px; color: rgb(var(--danger));">Aguardando cron</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Últimos Erros Se Existirem -->
+            <?php if (!empty($lastError) || !empty($recentErrors)): ?>
+                <div style="margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: rgb(var(--danger) / .06); border: 1px solid rgb(var(--danger) / .2);">
+                    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: rgb(var(--danger)); margin-bottom: 6px;">
+                        <i class="ti ti-alert-triangle"></i>
+                        <span>Últimos Erros Registrados:</span>
+                    </div>
+                    <?php if (!empty($lastError)): ?>
+                        <div style="font-size: 12px; font-family: monospace; color: rgb(var(--danger)); margin-bottom: 4px;">
+                            <strong>Último ciclo:</strong> <?= esc($lastError) ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php foreach ($recentErrors as $errLine): ?>
+                        <div style="font-size: 11px; font-family: monospace; color: rgb(var(--muted)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <?= esc($errLine) ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
         <?php if (empty($realtimeScreens)): ?>
             <div class="empty-state">
                 <i class="ti ti-refresh" aria-hidden="true"></i>
