@@ -442,6 +442,12 @@ window.getAppBaseUrl = () => {
             const url = new URL(window.location.href);
             name === 'layout' ? url.searchParams.delete('tab') : url.searchParams.set('tab', name);
             window.history.replaceState({}, '', url);
+
+            updateHeaderIndicator(name);
+            if (name === 'evolution' && rtEvolutionActive) scheduleInstanceStatusUpdate(300);
+            if (name === 'empresa' && rtCompanyActive) scheduleCompanyUpdate(300);
+            if (name === 'modelos-mensagens' && rtTemplatesActive) scheduleTemplatesUpdate(300);
+            if (name === 'tempo-real' && rtRealtimeActive) scheduleRealtimeUpdate(300);
         };
         tabs.forEach((tab) => tab.addEventListener('click', () => {
             const name = tab.dataset.settingsTab;
@@ -1016,7 +1022,13 @@ window.getAppBaseUrl = () => {
             });
             const payload = await response.json().catch(() => ({}));
             if (response.ok && payload.success) {
-                if (payload.html) container.innerHTML = payload.html;
+                if (payload.html) {
+                    // Evita sobrescrever se o usuário estiver interagindo com um input ou formulário
+                    const isFocusInside = container.contains(document.activeElement);
+                    if (!isFocusInside) {
+                        container.innerHTML = payload.html;
+                    }
+                }
                 if (footerTelemetry && payload.footerHtml) footerTelemetry.innerHTML = payload.footerHtml;
             }
         } catch (error) {
