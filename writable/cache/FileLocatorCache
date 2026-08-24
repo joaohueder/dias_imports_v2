@@ -388,5 +388,29 @@
         15 => 'C:\\Sistemas\\Dias Imports\\Dias Importes - Marketing v2\\dias_imports_v2\\app\\Database\\Migrations\\2026-08-23-192524_AddFaqAndFeaturesToProducts.php',
       ),
     ),
+    'CodeIgniter' => 
+    array (
+      '/Database/Migrations/' => 
+      array (
+      ),
+    ),
+    'Config' => 
+    array (
+      '/Database/Migrations/' => 
+      array (
+      ),
+    ),
+    'Psr\\Log' => 
+    array (
+      '/Database/Migrations/' => 
+      array (
+      ),
+    ),
+    'Laminas\\Escaper' => 
+    array (
+      '/Database/Migrations/' => 
+      array (
+      ),
+    ),
   ),
 );

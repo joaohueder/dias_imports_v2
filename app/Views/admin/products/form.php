@@ -180,11 +180,11 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                             <?php
                             $modelsList = [
                                 ['id' => 'model-1', 'name' => 'Oferta Direta & Hero', 'desc' => 'Estrutura clássica de alta conversão focada no produto e checkout imediato.', 'icon' => 'ti-layout-topbar', 'available' => true],
-                                ['id' => 'model-2', 'name' => 'Benefits & Prova', 'desc' => 'Foco ampliado em benefícios, diferenciais e confiança antes da compra.', 'icon' => 'ti-layout-list', 'available' => false],
-                                ['id' => 'model-3', 'name' => 'Minimal Compact', 'desc' => 'Visual limpo e direto, otimizado para navegação ultra-rápida com 1 polegar.', 'icon' => 'ti-pill', 'available' => false],
-                                ['id' => 'model-4', 'name' => 'Bento Box Modern', 'desc' => 'Blocos visuais modulares e modernos com hierarquia de informações clara.', 'icon' => 'ti-layout-grid', 'available' => false],
-                                ['id' => 'model-5', 'name' => 'Cyber Tech Glow', 'desc' => 'Estilo vibrante de alto impacto visual com contrastes marcantes.', 'icon' => 'ti-bolt', 'available' => false],
-                                ['id' => 'model-6', 'name' => 'Editorial Luxury', 'desc' => 'Estilo premium e sofisticado perfeito para perfumes e itens de luxo.', 'icon' => 'ti-crown', 'available' => false],
+                                ['id' => 'model-2', 'name' => 'Benefits & Prova', 'desc' => 'Foco ampliado em benefícios, diferenciais e confiança antes da compra.', 'icon' => 'ti-layout-list', 'available' => true],
+                                ['id' => 'model-3', 'name' => 'Minimal Compact', 'desc' => 'Visual limpo e direto, foto no topo e checkout com botão pill rápido.', 'icon' => 'ti-pill', 'available' => true],
+                                ['id' => 'model-4', 'name' => 'Bento Box Modern', 'desc' => 'Blocos visuais modulares e modernos com hierarquia de informações clara.', 'icon' => 'ti-layout-grid', 'available' => true],
+                                ['id' => 'model-5', 'name' => 'Cyber Tech Glow', 'desc' => 'Estilo vibrante de alto impacto visual com contrastes marcantes.', 'icon' => 'ti-bolt', 'available' => true],
+                                ['id' => 'model-6', 'name' => 'Editorial Luxury', 'desc' => 'Estilo premium e sofisticado perfeito para perfumes e itens de luxo.', 'icon' => 'ti-crown', 'available' => true],
                             ];
                             $currentModel = old('layout', $product->layout ?? 'model-1');
                             ?>
@@ -465,13 +465,6 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 <label for="about_content">Texto de Urgência & Conversão</label>
                                 <textarea id="about_content" name="about_content" class="form-control" data-lp-input="about-content" rows="4" placeholder="Descreva a urgência, escassez ou benefício marcante da oferta"><?= esc(old('about_content', $product->about_content ?? '')) ?></textarea>
                             </div>
-
-                            <!-- Botão CTA da Seção -->
-                            <div class="form-group col-full">
-                                <label for="about_cta_btn">Texto do Botão CTA (Seção de Urgência)</label>
-                                <input type="text" id="about_cta_btn" name="about_cta_btn" class="form-control" data-lp-input="about-cta-btn" value="<?= esc(old('about_cta_btn', $product->about_cta_btn ?? 'Garantir Meu Frasco no WhatsApp')) ?>" placeholder="Ex: Garantir Meu Frasco no WhatsApp">
-                                <small class="form-help-text">Botão de conversão com link direto para o WhatsApp posicionado logo abaixo do texto de urgência.</small>
-                            </div>
                         </div>
                     </div>
 
@@ -522,7 +515,6 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                 $lpGuarantee = old('guarantee_info', $product->guarantee_info ?? 'Produto conferido antes do envio');
                 $lpAboutTitle = old('about_title', $product->about_title ?? 'Últimas unidades em estoque');
                 $lpAboutContent = old('about_content', !empty($product->about_content) ? $product->about_content : 'Devido à alta demanda desta edição, restam pouquíssimos frascos disponíveis. Garanta o seu antes que o lote esgote definitivamente.');
-                $lpAboutCtaBtn = old('about_cta_btn', $product->about_cta_btn ?? 'Garantir Meu Frasco no WhatsApp');
                 $lpCheckoutTitle = old('checkout_title', $product->checkout_title ?? 'Fechar pedido pelo WhatsApp');
                 $lpCheckoutSubtitle = old('checkout_subtitle', $product->checkout_subtitle ?? 'A conversa abre com o produto e o preço já escritos. Você só confirma.');
 
@@ -547,22 +539,22 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                             <?php endif; ?>
                         </div>
 
-                        <div class="mobile-mockup-frame" style="border: 10px solid #0f172a; border-top: none; border-radius: 0 0 36px 36px; background: #f8fafc; overflow: hidden; height: 680px; position: relative; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);">
+                        <div class="mobile-mockup-frame" id="lp_mockup_frame" data-palette="<?= esc($product->color_palette ?? 'palette-aurora') ?>" data-model="<?= esc($product->template_model ?? 'model-1') ?>" data-btn-animation="<?= esc($product->btn_animation ?? 'btn-pulse') ?>" style="border: 10px solid #0f172a; border-top: none; border-radius: 0 0 36px 36px; background: #f8fafc; overflow: hidden; height: 680px; position: relative; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35);">
                             
                             <!-- Conteúdo da Tela do Mockup -->
-                            <div class="mobile-screen-content" id="lp_live_preview_container" style="height: 100%; overflow-y: auto; padding: 18px 14px 80px 14px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e293b; background-color: #f8fafc;">
+                            <div class="mobile-screen-content" id="lp_live_preview_container" data-palette="<?= esc($product->color_palette ?? 'palette-aurora') ?>" data-model="<?= esc($product->template_model ?? 'model-1') ?>" data-btn-animation="<?= esc($product->btn_animation ?? 'btn-pulse') ?>" style="height: 100%; overflow-y: auto; padding: 18px 14px 80px 14px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e293b; background-color: #f8fafc;">
                                 <!-- Badge Superior -->
-                                <div style="display: <?= !empty($lpBadge) ? 'inline-flex' : 'none' ?>; align-items: center; gap: 6px; background: #fce7f3; color: #be185d; padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;" id="mockup_badge_wrap">
+                                <div class="mockup-badge-wrap" style="display: <?= !empty($lpBadge) ? 'inline-flex' : 'none' ?>; align-items: center; gap: 6px; background: var(--lp-accent-badge, #fce7f3); color: var(--lp-accent-badge-text, #be185d); padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;" id="mockup_badge_wrap">
                                     <span id="mockup_badge"><?= esc($lpBadge) ?></span>
                                 </div>
 
                                 <!-- Título e Subtítulo -->
-                                <h1 id="mockup_title" style="font-size: 20px; font-weight: 900; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.4px; color: #0f172a; margin-bottom: 8px;"><?= esc($lpHeadline) ?></h1>
-                                <p id="mockup_subheadline" style="font-size: 11.5px; color: #475569; line-height: 1.55; margin-bottom: 16px;"><?= esc($lpSubheadline) ?></p>
+                                <h1 id="mockup_title" class="mockup-title" style="font-size: 20px; font-weight: 900; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.4px; color: #0f172a; margin-bottom: 8px;"><?= esc($lpHeadline) ?></h1>
+                                <p id="mockup_subheadline" class="mockup-subheadline" style="font-size: 11.5px; color: #475569; line-height: 1.55; margin-bottom: 16px;"><?= esc($lpSubheadline) ?></p>
 
                                 <!-- Galeria / Foto Principal -->
-                                <div style="position: relative; width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
-                                    <div id="mockup_discount_tag" style="position: absolute; top: 12px; left: 12px; background: #9d174d; color: #ffffff; font-size: 10px; font-weight: 900; padding: 5px 9px; border-radius: 6px; text-transform: uppercase; z-index: 2; box-shadow: 0 4px 12px rgba(157, 23, 77, 0.3); display: <?= $lpHasPromo ? 'block' : 'none' ?>;">
+                                <div class="mockup-gallery-wrapper" style="position: relative; width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 10px;">
+                                    <div id="mockup_discount_tag" style="position: absolute; top: 12px; left: 12px; background: var(--lp-primary, #9d174d); color: #ffffff; font-size: 10px; font-weight: 900; padding: 5px 9px; border-radius: 6px; text-transform: uppercase; z-index: 2; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); display: <?= $lpHasPromo ? 'block' : 'none' ?>;">
                                         -<?= $lpDiscount ?>% OFF
                                     </div>
                                     <img id="mockup_main_image" src="<?= esc($lpMainImg) ?>" alt="<?= esc($lpHeadline) ?>" style="width: 100%; height: 100%; object-fit: cover; display: <?= !empty($lpMainImg) ? 'block' : 'none' ?>;">
@@ -576,10 +568,10 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 </div>
 
                                 <!-- Miniaturas do Mockup -->
-                                <div id="mockup_gallery_thumbs" style="display: <?= $lpTotalImages > 1 ? 'flex' : 'none' ?>; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none;">
+                                <div id="mockup_gallery_thumbs" class="mockup-gallery-thumbs" style="display: <?= $lpTotalImages > 1 ? 'flex' : 'none' ?>; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none;">
                                     <?php if ($lpTotalImages > 1): ?>
                                         <?php foreach ($lpImages as $idx => $img): ?>
-                                            <button type="button" class="mockup-thumb-btn" data-thumb-src="<?= base_url('uploads/products/' . $img->image_path) ?>" data-thumb-idx="<?= $idx + 1 ?>" style="width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: <?= $idx === 0 ? '2px solid #9d174d' : '1px solid #e2e8f0' ?>; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: <?= $idx === 0 ? '1' : '0.65' ?>;">
+                                            <button type="button" class="mockup-thumb-btn" data-thumb-src="<?= base_url('uploads/products/' . $img->image_path) ?>" data-thumb-idx="<?= $idx + 1 ?>" style="width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: <?= $idx === 0 ? '2px solid var(--lp-primary, #9d174d)' : '1px solid #e2e8f0' ?>; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: <?= $idx === 0 ? '1' : '0.65' ?>;">
                                                 <img src="<?= base_url('uploads/products/' . $img->image_path) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Thumb">
                                             </button>
                                         <?php endforeach; ?>
@@ -587,19 +579,19 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 </div>
 
                                 <!-- Card de Preço e CTA -->
-                                <div style="background: #ffffff; border-radius: 16px; padding: 16px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 14px; border: 1px solid #f1f5f9;">
+                                <div class="mockup-price-card" style="background: #ffffff; border-radius: 16px; padding: 16px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 14px; border: 1px solid #f1f5f9;">
                                     <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;">
                                         <span id="mockup_old_price" style="font-size: 12px; color: #94a3b8; text-decoration: line-through; font-weight: 600; display: <?= $lpHasPromo ? 'inline' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></span>
-                                        <span id="mockup_current_price" style="font-size: 24px; font-weight: 900; color: #9d174d; letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
-                                        <span id="mockup_savings_tag" style="background: #fdf2f8; color: #9d174d; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; margin-left: auto; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
+                                        <span id="mockup_current_price" style="font-size: 24px; font-weight: 900; color: var(--lp-primary, #9d174d); letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
+                                        <span id="mockup_savings_tag" style="background: var(--lp-accent-badge, #fdf2f8); color: var(--lp-accent-badge-text, #9d174d); font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; margin-left: auto; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
                                     </div>
 
                                     <p id="mockup_savings_text" style="font-size: 10.5px; color: #475569; margin-bottom: 14px; display: <?= $lpHasPromo ? 'flex' : 'none' ?>; align-items: center; gap: 5px;">
-                                        <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #9d174d;"></span>
+                                        <span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--lp-primary, #9d174d);"></span>
                                         Você economiza R$ <?= $lpSavingsFormatted ?> neste preço
                                     </p>
 
-                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #9d174d; color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 8px 20px -4px rgba(131, 24, 67, 0.4);">
+                                    <div class="mockup-main-cta-btn" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: var(--lp-primary, #9d174d); color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; text-decoration: none; box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);">
                                         <span id="mockup_button_text"><?= esc($lpBtnText) ?></span>
                                         <i class="ti ti-arrow-narrow-right" style="font-size: 16px;"></i>
                                     </div>
@@ -608,21 +600,23 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                         <i class="ti ti-lock" style="font-size: 12px;"></i>
                                         <span id="mockup_urgency_text"><?= esc($lpUrgency) ?></span>
                                     </div>
+                                </div>
 
-                                    <!-- 3 Pilares -->
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f1f5f9; text-align: center;">
+                                <!-- 3 Pilares -->
+                                <div class="mockup-features-wrapper" style="background: #ffffff; border-radius: 16px; padding: 12px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 14px; border: 1px solid #f1f5f9;">
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center;">
                                         <div>
-                                            <i class="ti ti-message-circle" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <i class="ti ti-message-circle" style="color: var(--lp-primary, #9d174d); font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
                                             <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Atendimento humano</strong>
                                             <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Você fala com a loja</small>
                                         </div>
                                         <div>
-                                            <i class="ti ti-notes" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <i class="ti ti-notes" style="color: var(--lp-primary, #9d174d); font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
                                             <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Sem cadastro</strong>
                                             <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Nenhum formulário</small>
                                         </div>
                                         <div>
-                                            <i class="ti ti-currency-dollar" style="color: #9d174d; font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
+                                            <i class="ti ti-currency-dollar" style="color: var(--lp-primary, #9d174d); font-size: 14px; margin-bottom: 2px; display: inline-block;"></i>
                                             <strong style="display: block; font-size: 9.5px; font-weight: 800; color: #1e293b; margin-bottom: 1px;">Preço fechado</strong>
                                             <small style="font-size: 8.5px; color: #64748b; line-height: 1.2; display: block;">Confirmado antes</small>
                                         </div>
@@ -630,40 +624,40 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 </div>
 
                                 <!-- 3 Garantias -->
-                                <div style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 18px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 9px;">
+                                <div class="mockup-guarantees-card" style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 18px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 9px;">
                                     <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
-                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <i class="ti ti-check" style="color: var(--lp-primary, #9d174d); font-size: 15px; flex-shrink: 0;"></i>
                                         <span id="mockup_shipping_info"><?= esc($lpShipping) ?></span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
-                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <i class="ti ti-check" style="color: var(--lp-primary, #9d174d); font-size: 15px; flex-shrink: 0;"></i>
                                         <span id="mockup_payment_info"><?= esc($lpPayment) ?></span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #334155;">
-                                        <i class="ti ti-check" style="color: #9d174d; font-size: 15px; flex-shrink: 0;"></i>
+                                        <i class="ti ti-check" style="color: var(--lp-primary, #9d174d); font-size: 15px; flex-shrink: 0;"></i>
                                         <span id="mockup_guarantee_info"><?= esc($lpGuarantee) ?></span>
+                                    </div>
+                                    <div class="mockup-guarantee-cta-btn mockup-main-cta-btn" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: var(--lp-primary, #9d174d); color: #ffffff; font-size: 12px; font-weight: 800; padding: 11px 14px; border-radius: 11px; text-decoration: none; margin-top: 4px; box-shadow: 0 6px 16px -3px rgba(0, 0, 0, 0.22);">
+                                        <span id="mockup_button_text_3"><?= esc($lpBtnText) ?></span>
+                                        <i class="ti <?= esc(!empty($product->cta_icon) ? $product->cta_icon : 'ti-arrow-narrow-right') ?>" style="font-size: 15px;"></i>
                                     </div>
                                 </div>
 
                                 <!-- Bloco de Urgência / Escassez e Ação com Botão CTA -->
-                                <div style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border: 1px solid #f1f5f9;">
+                                <div class="mockup-urgency-card" style="background: #ffffff; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border: 1px solid #f1f5f9;">
                                     <h2 id="mockup_about_title" style="font-size: 13.5px; font-weight: 900; color: #0f172a; margin-bottom: 8px;"><?= esc($lpAboutTitle) ?></h2>
-                                    <div id="mockup_about_content" style="font-size: 11px; color: #475569; line-height: 1.6; margin-bottom: 12px; white-space: pre-line;">
+                                    <div id="mockup_about_content" style="font-size: 11px; color: #475569; line-height: 1.6; margin-bottom: 0; white-space: pre-line;">
                                         <?= nl2br(esc($lpAboutContent)) ?>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #0f172a; color: #ffffff; font-size: 11.5px; font-weight: 800; padding: 10px 14px; border-radius: 10px; text-decoration: none;">
-                                        <i class="ti ti-brand-whatsapp" style="font-size: 15px; color: #25d366;"></i>
-                                        <span id="mockup_about_cta_btn"><?= esc($lpAboutCtaBtn) ?></span>
                                     </div>
                                 </div>
 
                                 <!-- FAQ (Antes de fechar) Accordion Interativo -->
-                                <h2 style="font-size: 14px; font-weight: 900; color: #0f172a; margin-bottom: 10px;">Antes de fechar</h2>
+                                <h2 class="mockup-faq-heading" style="font-size: 14px; font-weight: 900; color: #0f172a; margin-bottom: 10px;">Antes de fechar</h2>
                                 <div class="mockup-faq-accordion" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;">
                                     <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
                                         <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
                                             <span>Como eu compro?</span>
-                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                            <i class="ti ti-plus" style="color: var(--lp-primary, #9d174d); font-size: 13px; transition: transform 0.2s ease;"></i>
                                         </button>
                                         <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
                                             É só clicar no botão. Você vai direto para o WhatsApp com o produto selecionado. Nós confirmamos seu endereço, calculamos o envio e combinamos o pagamento na hora.
@@ -672,7 +666,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                     <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
                                         <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
                                             <span>O preço desta página é o que eu pago?</span>
-                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                            <i class="ti ti-plus" style="color: var(--lp-primary, #9d174d); font-size: 13px; transition: transform 0.2s ease;"></i>
                                         </button>
                                         <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
                                             Sim. O valor mostrado nesta página é garantido no atendimento pelo WhatsApp. Sem surpresas ou taxas escondidas.
@@ -681,7 +675,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                     <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
                                         <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
                                             <span>Com quem eu estou falando?</span>
-                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                            <i class="ti ti-plus" style="color: var(--lp-primary, #9d174d); font-size: 13px; transition: transform 0.2s ease;"></i>
                                         </button>
                                         <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
                                             Você fala diretamente com a equipe da Dias Imports. Atendimento humano, rápido e transparente.
@@ -690,7 +684,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                     <div class="mockup-faq-card" style="background: #ffffff; border-radius: 12px; border: 1px solid #f1f5f9; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);">
                                         <button type="button" class="mockup-faq-btn" style="width: 100%; background: none; border: none; padding: 12px 14px; font-size: 11px; font-weight: 800; color: #0f172a; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
                                             <span>E se eu ficar com dúvida antes de decidir?</span>
-                                            <i class="ti ti-plus" style="color: #9d174d; font-size: 13px; transition: transform 0.2s ease;"></i>
+                                            <i class="ti ti-plus" style="color: var(--lp-primary, #9d174d); font-size: 13px; transition: transform 0.2s ease;"></i>
                                         </button>
                                         <div class="mockup-faq-ans" style="padding: 0 14px 12px 14px; font-size: 10.5px; color: #64748b; line-height: 1.5; display: none;">
                                             Chame pelo WhatsApp mesmo assim. Tiramos fotos reais, respondemos sobre tamanho, aplicação e prazo antes de você fechar.
@@ -699,16 +693,16 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 </div>
 
                                 <!-- Card de Fechamento -->
-                                <div style="background: #ffffff; border-radius: 16px; padding: 20px 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #f1f5f9; margin-bottom: 24px;">
+                                <div class="mockup-closing-card" style="background: #ffffff; border-radius: 16px; padding: 20px 14px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); text-align: center; border: 1px solid #f1f5f9; margin-bottom: 24px;">
                                     <h2 id="mockup_checkout_title" style="font-size: 14px; font-weight: 900; color: #0f172a; margin-bottom: 12px;"><?= esc($lpCheckoutTitle) ?></h2>
                                     
                                     <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
                                         <span id="mockup_closing_old_price" style="font-size: 12px; color: #94a3b8; text-decoration: line-through; font-weight: 600; display: <?= $lpHasPromo ? 'inline' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></span>
-                                        <span id="mockup_closing_current_price" style="font-size: 24px; font-weight: 900; color: #9d174d; letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
-                                        <span id="mockup_closing_savings_tag" style="background: #fdf2f8; color: #9d174d; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
+                                        <span id="mockup_closing_current_price" style="font-size: 24px; font-weight: 900; color: var(--lp-primary, #9d174d); letter-spacing: -0.5px;">R$ <?= $lpCurrentPriceFormatted ?></span>
+                                        <span id="mockup_closing_savings_tag" style="background: var(--lp-accent-badge, #fdf2f8); color: var(--lp-accent-badge-text, #9d174d); font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 6px; display: <?= $lpHasPromo ? 'inline-block' : 'none' ?>;">economize R$ <?= $lpSavingsFormatted ?></span>
                                     </div>
 
-                                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #9d174d; color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; box-shadow: 0 8px 20px -4px rgba(131, 24, 67, 0.4);">
+                                    <div class="mockup-closing-cta-btn" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: var(--lp-primary, #9d174d); color: #ffffff; font-size: 13px; font-weight: 800; padding: 13px 16px; border-radius: 12px; box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);">
                                         <span id="mockup_button_text_2"><?= esc($lpBtnText) ?></span>
                                         <i class="ti ti-arrow-narrow-right" style="font-size: 16px;"></i>
                                     </div>
@@ -716,7 +710,7 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                                 </div>
 
                                 <!-- Rodapé Mockup -->
-                                <div style="text-align: center; padding: 16px 0 10px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 9.5px; line-height: 1.6;">
+                                <div class="mockup-footer-wrap" style="text-align: center; padding: 16px 0 10px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 9.5px; line-height: 1.6;">
                                     <strong style="color: #64748b; font-weight: 800; display: block; font-size: 10.5px; margin-bottom: 2px;">Dias Imports</strong>
                                     <span>Barretos - SP</span><br>
                                     <span>Atendimento e pedidos pelo WhatsApp. Imagens meramente ilustrativas. Preço promocional válido para a compra feita por esta página.</span>
@@ -724,12 +718,12 @@ $metaAdsActive = (bool) old('meta_ads_active', $product->meta_ads_active ?? 1);
                             </div>
 
                             <!-- Barra Fixa Inferior Fake no Preview -->
-                            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-top: 1px solid #e2e8f0; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; z-index: 10; box-shadow: 0 -4px 16px rgba(0,0,0,0.06);">
+                            <div class="mockup-sticky-bar" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-top: 1px solid #e2e8f0; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; z-index: 10; box-shadow: 0 -4px 16px rgba(0,0,0,0.06);">
                                 <div style="display: flex; flex-direction: column; min-width: 65px;">
                                     <small id="mockup_sticky_old_price" style="font-size: 9px; color: #94a3b8; text-decoration: line-through; line-height: 1; font-weight: 600; display: <?= $lpHasPromo ? 'block' : 'none' ?>;">R$ <?= $lpOldPriceFormatted ?></small>
-                                    <strong id="mockup_sticky_price" style="font-size: 16px; font-weight: 900; color: #9d174d; display: block; line-height: 1.1; letter-spacing: -0.3px;">R$ <?= $lpCurrentPriceFormatted ?></strong>
+                                    <strong id="mockup_sticky_price" style="font-size: 16px; font-weight: 900; color: var(--lp-primary, #9d174d); display: block; line-height: 1.1; letter-spacing: -0.3px;">R$ <?= $lpCurrentPriceFormatted ?></strong>
                                 </div>
-                                <div style="background: #9d174d; color: #ffffff; font-size: 11px; font-weight: 800; padding: 9px 14px; border-radius: 9px; display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1; box-shadow: 0 4px 12px -2px rgba(131, 24, 67, 0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <div class="mockup-sticky-cta-btn" style="background: var(--lp-primary, #9d174d); color: #ffffff; font-size: 11px; font-weight: 800; padding: 9px 14px; border-radius: 9px; display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1; box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     <span id="mockup_sticky_btn_text" style="overflow: hidden; text-overflow: ellipsis;"><?= esc($lpBtnText) ?></span>
                                     <i class="ti ti-arrow-narrow-right" style="flex-shrink: 0; font-size: 14px;"></i>
                                 </div>
@@ -840,6 +834,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Landing Page Live Preview Logic
+    const mockupFrame = document.getElementById('lp_mockup_frame');
     const mockupScreen = document.getElementById('lp_live_preview_container');
     const landingInputs = document.querySelectorAll('[data-lp-input]');
     const modelRadios = document.querySelectorAll('[data-lp-model-radio]');
@@ -847,12 +842,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnAnimRadios = document.querySelectorAll('[data-lp-btnanim-radio]');
 
     function updateLpPreview() {
-        // Atualizar classes visuais dos cards de seleção
+        // Atualizar classes visuais dos cards de seleção e data-model no mockup
         modelRadios.forEach(r => {
             const card = r.closest('.template-model-card');
             if (card) {
                 if (r.checked) {
                     card.classList.add('active');
+                    if (mockupScreen) {
+                        mockupScreen.setAttribute('data-model', r.value);
+                    }
+                    if (mockupFrame) {
+                        mockupFrame.setAttribute('data-model', r.value);
+                    }
                 } else {
                     card.classList.remove('active');
                 }
@@ -867,6 +868,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (card) {
                 if (p.checked) {
                     card.classList.add('active');
+                    if (mockupScreen) {
+                        mockupScreen.setAttribute('data-palette', p.value);
+                    }
+                    if (mockupFrame) {
+                        mockupFrame.setAttribute('data-palette', p.value);
+                    }
                 } else {
                     card.classList.remove('active');
                 }
@@ -877,10 +884,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         btnAnimRadios.forEach(ba => {
-            const card = ba.closest('.btn-anim-card');
+            const card = ba.closest('.template-model-card') || ba.closest('.btn-anim-card');
             if (card) {
                 if (ba.checked) {
                     card.classList.add('active');
+                    if (mockupScreen) {
+                        mockupScreen.setAttribute('data-btn-animation', ba.value);
+                    }
+                    if (mockupFrame) {
+                        mockupFrame.setAttribute('data-btn-animation', ba.value);
+                    }
                 } else {
                     card.classList.remove('active');
                 }
@@ -909,10 +922,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (target === 'button-text') {
                 const btn = mockupScreen?.querySelector('#mockup_button_text');
                 const btn2 = mockupScreen?.querySelector('#mockup_button_text_2');
+                const btn3 = mockupScreen?.querySelector('#mockup_button_text_3');
                 const btnSticky = mockupScreen?.querySelector('#mockup_sticky_btn_text');
                 if (btn) btn.textContent = value || 'Quero aproveitar agora';
-                if (btn2) btn2.textContent = value || 'Garantir meu exemplar no WhatsApp';
-                if (btnSticky) btnSticky.textContent = value || 'Garantir meu exemplar no WhatsApp';
+                if (btn2) btn2.textContent = value || 'Quero aproveitar agora';
+                if (btn3) btn3.textContent = value || 'Quero aproveitar agora';
+                if (btnSticky) btnSticky.textContent = value || 'Quero aproveitar agora';
             } else if (target === 'urgency-text') {
                 const u = mockupScreen?.querySelector('#mockup_urgency_text');
                 if (u) u.textContent = value || 'Compra sem cadastro. Você fala direto com a loja.';
@@ -920,9 +935,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const iconClass = value || 'ti-arrow-narrow-right';
                 const mainBtnIcon = mockupScreen?.querySelector('#mockup_button_text')?.nextElementSibling;
                 const closeBtnIcon = mockupScreen?.querySelector('#mockup_button_text_2')?.nextElementSibling;
+                const guaranteeBtnIcon = mockupScreen?.querySelector('#mockup_button_text_3')?.nextElementSibling;
                 const stickyBtnIcon = mockupScreen?.querySelector('#mockup_sticky_btn_text')?.nextElementSibling;
                 if (mainBtnIcon) mainBtnIcon.className = 'ti ' + iconClass;
                 if (closeBtnIcon) closeBtnIcon.className = 'ti ' + iconClass;
+                if (guaranteeBtnIcon) guaranteeBtnIcon.className = 'ti ' + iconClass;
                 if (stickyBtnIcon) stickyBtnIcon.className = 'ti ' + iconClass;
             } else if (target === 'shipping-info') {
                 const s = mockupScreen?.querySelector('#mockup_shipping_info');
@@ -939,9 +956,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (target === 'about-content') {
                 const ac = mockupScreen?.querySelector('#mockup_about_content');
                 if (ac) ac.textContent = value || 'Devido à alta demanda desta edição, restam pouquíssimos frascos disponíveis. Garanta o seu antes que o lote esgote definitivamente.';
-            } else if (target === 'about-cta-btn') {
-                const act = mockupScreen?.querySelector('#mockup_about_cta_btn');
-                if (act) act.textContent = value || 'Garantir Meu Frasco no WhatsApp';
             } else if (target === 'checkout-title') {
                 const ct = mockupScreen?.querySelector('#mockup_checkout_title');
                 if (ct) ct.textContent = value || 'Fechar pedido pelo WhatsApp';
@@ -1019,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 closingSavingsTag.style.display = 'inline-block';
             }
             if (savingsText) {
-                savingsText.innerHTML = `<span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #9d174d;"></span> Você economiza R$ ${savingsStr} neste preço`;
+                savingsText.innerHTML = `<span style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--lp-primary, #9d174d);"></span> Você economiza R$ ${savingsStr} neste preço`;
                 savingsText.style.display = 'flex';
             }
             if (discountTag) {
@@ -1078,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const thumb = document.createElement('button');
                         thumb.type = 'button';
                         const isActive = (previewImg?.src === img.src) || (!previewImg?.dataset.activeSrc && idx === 0);
-                        thumb.style.cssText = `width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: ${isActive ? '2px solid #9d174d' : '1px solid #e2e8f0'}; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: ${isActive ? '1' : '0.65'};`;
+                        thumb.style.cssText = `width: 46px; height: 46px; border-radius: 10px; overflow: hidden; border: ${isActive ? '2px solid var(--lp-primary, #9d174d)' : '1px solid #e2e8f0'}; padding: 0; background: #fff; cursor: pointer; flex-shrink: 0; transition: all 0.2s ease; opacity: ${isActive ? '1' : '0.65'};`;
                         
                         const thumbImg = document.createElement('img');
                         thumbImg.src = img.src;
@@ -1097,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Atualizar borda ativa dos thumbs
                             thumbsContainer.querySelectorAll('button').forEach((b, bIdx) => {
                                 if (bIdx === idx) {
-                                    b.style.border = '2px solid #9d174d';
+                                    b.style.border = '2px solid var(--lp-primary, #9d174d)';
                                     b.style.opacity = '1';
                                 } else {
                                     b.style.border = '1px solid #e2e8f0';
@@ -1190,7 +1204,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 b.style.border = '1px solid #e2e8f0';
                 b.style.opacity = '0.65';
             });
-            this.style.border = '2px solid #9d174d';
+            this.style.border = '2px solid var(--lp-primary, #9d174d)';
             this.style.opacity = '1';
         });
     });
@@ -1667,7 +1681,1075 @@ function setCoverImage(id, btn) {
     });
 }
 </script>
+    <!-- Google Fonts: Inter & Cormorant Garamond -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Definições de Paletas no Mockup do Admin (Isolado do Dashboard Admin) */
+#lp_live_preview_container,
+#lp_mockup_frame,
+#lp_live_preview_container[data-palette="palette-aurora"],
+#lp_mockup_frame[data-palette="palette-aurora"] {
+    --lp-primary: #9d174d;
+    --lp-primary-hover: #831843;
+    --lp-accent-badge: #fce7f3;
+    --lp-accent-badge-text: #be185d;
+}
+
+#lp_live_preview_container[data-palette="palette-emerald"],
+#lp_mockup_frame[data-palette="palette-emerald"] {
+    --lp-primary: #10b981;
+    --lp-primary-hover: #059669;
+    --lp-accent-badge: #d1fae5;
+    --lp-accent-badge-text: #047857;
+}
+
+#lp_live_preview_container[data-palette="palette-amber"],
+#lp_mockup_frame[data-palette="palette-amber"] {
+    --lp-primary: #f59e0b;
+    --lp-primary-hover: #d97706;
+    --lp-accent-badge: #fef3c7;
+    --lp-accent-badge-text: #b45309;
+}
+
+#lp_live_preview_container[data-palette="palette-ocean"],
+#lp_mockup_frame[data-palette="palette-ocean"] {
+    --lp-primary: #2563eb;
+    --lp-primary-hover: #1d4ed8;
+    --lp-accent-badge: #dbeafe;
+    --lp-accent-badge-text: #1e40af;
+}
+
+#lp_live_preview_container[data-palette="palette-crimson"],
+#lp_mockup_frame[data-palette="palette-crimson"] {
+    --lp-primary: #dc2626;
+    --lp-primary-hover: #b91c1c;
+    --lp-accent-badge: #fee2e2;
+    --lp-accent-badge-text: #991b1b;
+}
+
+#lp_live_preview_container[data-palette="palette-obsidian"],
+#lp_mockup_frame[data-palette="palette-obsidian"] {
+    --lp-primary: #0f172a;
+    --lp-primary-hover: #334155;
+    --lp-accent-badge: #f1f5f9;
+    --lp-accent-badge-text: #0f172a;
+}
+
+/* ==========================================================================
+   AS 6 ANIMAÇÕES DO BOTÃO CTA NO MOCKUP DO ADMIN
+   ========================================================================== */
+#lp_live_preview_container .mockup-main-cta-btn,
+#lp_live_preview_container .mockup-closing-cta-btn,
+#lp_mockup_frame .mockup-sticky-cta-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 1. btn-pulse: Pulso / Batimento VIP */
+#lp_live_preview_container[data-btn-animation="btn-pulse"] .mockup-main-cta-btn,
+#lp_live_preview_container[data-btn-animation="btn-pulse"] .mockup-closing-cta-btn,
+#lp_mockup_frame[data-btn-animation="btn-pulse"] .mockup-sticky-cta-btn {
+    animation: lpMockupBtnPulse 2.2s infinite ease-in-out;
+}
+@keyframes lpMockupBtnPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.25);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 12px 28px -2px var(--lp-primary, #9d174d), 0 0 16px var(--lp-primary, #9d174d);
+    }
+}
+
+/* 2. btn-shimmer: Brilho Shimmer Metálico */
+#lp_live_preview_container[data-btn-animation="btn-shimmer"] .mockup-main-cta-btn::after,
+#lp_live_preview_container[data-btn-animation="btn-shimmer"] .mockup-closing-cta-btn::after,
+#lp_mockup_frame[data-btn-animation="btn-shimmer"] .mockup-sticky-cta-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(
+        60deg,
+        rgba(255, 255, 255, 0) 20%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 80%
+    );
+    transform: rotate(25deg);
+    animation: lpMockupBtnShimmer 3s infinite ease-in-out;
+    pointer-events: none;
+}
+@keyframes lpMockupBtnShimmer {
+    0% { left: -100%; }
+    40%, 100% { left: 200%; }
+}
+
+/* 3. btn-shake: Vibração Shake */
+#lp_live_preview_container[data-btn-animation="btn-shake"] .mockup-main-cta-btn,
+#lp_live_preview_container[data-btn-animation="btn-shake"] .mockup-closing-cta-btn,
+#lp_mockup_frame[data-btn-animation="btn-shake"] .mockup-sticky-cta-btn {
+    animation: lpMockupBtnShake 4s infinite ease-in-out;
+}
+@keyframes lpMockupBtnShake {
+    0%, 80%, 100% { transform: translateX(0) scale(1); }
+    82% { transform: translateX(-4px) rotate(-1deg); }
+    84% { transform: translateX(4px) rotate(1deg); }
+    86% { transform: translateX(-4px) rotate(-1deg); }
+    88% { transform: translateX(4px) rotate(1deg); }
+    90% { transform: translateX(0) scale(1.02); }
+}
+
+/* 4. btn-bounce: Salto Bounce */
+#lp_live_preview_container[data-btn-animation="btn-bounce"] .mockup-main-cta-btn,
+#lp_live_preview_container[data-btn-animation="btn-bounce"] .mockup-closing-cta-btn,
+#lp_mockup_frame[data-btn-animation="btn-bounce"] .mockup-sticky-cta-btn {
+    animation: lpMockupBtnBounce 2.6s infinite ease-in-out;
+}
+@keyframes lpMockupBtnBounce {
+    0%, 75%, 100% { transform: translateY(0); }
+    80% { transform: translateY(-7px); }
+    85% { transform: translateY(0); }
+    90% { transform: translateY(-3px); }
+    95% { transform: translateY(0); }
+}
+
+/* 5. btn-glow: Glow Neon Fluido */
+#lp_live_preview_container[data-btn-animation="btn-glow"] .mockup-main-cta-btn,
+#lp_live_preview_container[data-btn-animation="btn-glow"] .mockup-closing-cta-btn,
+#lp_mockup_frame[data-btn-animation="btn-glow"] .mockup-sticky-cta-btn {
+    animation: lpMockupBtnGlow 2s infinite alternate ease-in-out;
+}
+@keyframes lpMockupBtnGlow {
+    0% {
+        box-shadow: 0 0 5px var(--lp-primary, #9d174d), 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 22px var(--lp-primary, #9d174d), 0 0 10px var(--lp-primary-hover, #831843);
+    }
+}
+
+/* 6. btn-static: Estático Sofisticado */
+#lp_live_preview_container[data-btn-animation="btn-static"] .mockup-main-cta-btn,
+#lp_live_preview_container[data-btn-animation="btn-static"] .mockup-closing-cta-btn,
+#lp_mockup_frame[data-btn-animation="btn-static"] .mockup-sticky-cta-btn {
+    animation: none !important;
+}
+
+/* Reordenação do Mockup no Admin para o Modelo 2 (Benefits & Prova) */
+#lp_live_preview_container[data-model="model-2"] {
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #f1f5f9 !important;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-badge-wrap { 
+    order: 1; 
+    background: linear-gradient(135deg, var(--lp-primary, #9d174d) 0%, var(--lp-primary-hover, #be185d) 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-title { order: 2; }
+#lp_live_preview_container[data-model="model-2"] .mockup-subheadline { 
+    order: 3; 
+    background: #ffffff !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+    border-left: 3.5px solid var(--lp-primary, #9d174d) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+    margin-bottom: 14px !important;
+}
+#lp_live_preview_container .mockup-gallery-wrapper,
+#lp_live_preview_container[data-model="model-2"] .mockup-gallery-wrapper { 
+    order: 4; 
+    width: 100% !important;
+    height: 327px !important;
+    min-height: 327px !important;
+    flex-shrink: 0 !important;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-gallery-thumbs { 
+    order: 5; 
+    margin-bottom: 14px; 
+    flex-shrink: 0 !important;
+}
+
+/* Trazendo Garantias e Features para cima do Preço no Mockup */
+#lp_live_preview_container[data-model="model-2"] .mockup-guarantees-card { 
+    order: 6; 
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 14px 12px !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05) !important;
+    position: relative;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-guarantees-card::before {
+    content: "🛡️ GARANTIAS & PROCEDÊNCIA TESTADA";
+    display: block;
+    font-size: 8.5px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: var(--lp-primary, #9d174d);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-guarantees-card i {
+    color: #ffffff !important;
+    background: #10b981 !important;
+    padding: 2px !important;
+    font-size: 11px !important;
+    border-radius: 50% !important;
+    font-weight: 900 !important;
+}
+
+#lp_live_preview_container[data-model="model-2"] .mockup-features-wrapper {
+    order: 7;
+    margin-bottom: 14px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 12px 10px !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04) !important;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-features-wrapper > div > div {
+    background: #f8fafc;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 1px solid #edf2f7;
+}
+
+/* Card de Preço no Mockup */
+#lp_live_preview_container[data-model="model-2"] .mockup-price-card { 
+    order: 8; 
+    margin-bottom: 20px !important;
+    border: 2px solid var(--lp-primary, #9d174d) !important;
+    border-radius: 16px !important;
+    padding: 18px 14px 14px 14px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fffbfd 100%) !important;
+    box-shadow: 0 8px 24px -3px rgba(0, 0, 0, 0.18) !important;
+    position: relative !important;
+}
+#lp_live_preview_container[data-model="model-2"] .mockup-price-card::before {
+    content: "⚡ OFERTA DIRETA COM CONDIÇÃO ESPECIAL";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--lp-primary, #9d174d);
+    color: #ffffff;
+    font-size: 8.5px;
+    font-weight: 900;
+    padding: 2px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Restante do fluxo no Modelo 2 */
+#lp_live_preview_container[data-model="model-2"] .mockup-urgency-card { order: 9; }
+#lp_live_preview_container[data-model="model-2"] .mockup-faq-heading { order: 10; }
+#lp_live_preview_container[data-model="model-2"] .mockup-faq-accordion { order: 11; }
+#lp_live_preview_container[data-model="model-2"] .mockup-closing-card { order: 12; }
+#lp_live_preview_container[data-model="model-2"] .mockup-footer-wrap { order: 13; }
+
+/* =========================================
+   MODEL 3: MINIMAL COMPACT NO MOCKUP ADMIN
+   ========================================= */
+#lp_live_preview_container[data-model="model-3"] {
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #fafafa !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-badge-wrap { 
+    order: 1; 
+    align-self: center !important;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border-radius: 100px !important;
+    padding: 3px 10px !important;
+    margin-bottom: 10px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-gallery-wrapper { 
+    order: 2; 
+    width: 100% !important;
+    height: 327px !important;
+    min-height: 327px !important;
+    flex-shrink: 0 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 8px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-gallery-thumbs { 
+    order: 3; 
+    margin-bottom: 12px !important; 
+    flex-shrink: 0 !important;
+    justify-content: center !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-title { 
+    order: 4; 
+    text-align: center !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.4px !important;
+    margin-bottom: 4px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-subheadline { 
+    order: 5; 
+    text-align: center !important;
+    font-size: 11px !important;
+    color: #64748b !important;
+    margin-bottom: 14px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-price-card { 
+    order: 6; 
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 14px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+    margin-bottom: 14px !important;
+    text-align: center !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-price-card > div:first-child {
+    justify-content: center !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-price-card a,
+#lp_live_preview_container[data-model="model-3"] .mockup-price-card div.mockup-main-cta-btn {
+    border-radius: 100px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-features-wrapper {
+    order: 7;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
+    border: 1px solid #f1f5f9 !important;
+    margin-bottom: 12px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-guarantees-card {
+    order: 8;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    padding: 12px 14px !important;
+    border: 1px solid #f1f5f9 !important;
+    margin-bottom: 14px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-urgency-card { 
+    order: 9; 
+    border-radius: 16px !important;
+    border: 1px dashed #cbd5e1 !important;
+    background: #ffffff !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-urgency-card div[style*="background: #0f172a"] {
+    border-radius: 100px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-faq-heading { order: 10; }
+#lp_live_preview_container[data-model="model-3"] .mockup-faq-accordion { order: 11; }
+#lp_live_preview_container[data-model="model-3"] .mockup-closing-card { 
+    order: 12; 
+    border-radius: 20px !important;
+}
+#lp_live_preview_container[data-model="model-3"] .mockup-footer-wrap { order: 13; }
+
+/* =========================================
+   MODEL 4: BENTO BOX MODERN NO MOCKUP ADMIN
+   ========================================= */
+#lp_live_preview_container[data-model="model-4"] > * {
+    flex-shrink: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-badge-wrap { 
+    order: 1; 
+    align-self: flex-start !important;
+    background: #ffffff !important;
+    color: var(--lp-primary, #9d174d) !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 3px 10px !important;
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-title { 
+    order: 2; 
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.4px !important;
+    background: #ffffff !important;
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-subheadline { 
+    order: 3; 
+    font-size: 11px !important;
+    color: #4b5563 !important;
+    background: #ffffff !important;
+    padding: 10px 14px !important;
+    border-radius: 14px !important;
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-gallery-wrapper { 
+    order: 4; 
+    width: 100% !important;
+    height: 327px !important;
+    min-height: 327px !important;
+    flex-shrink: 0 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-gallery-thumbs { 
+    order: 5; 
+    margin-bottom: 0 !important; 
+    flex-shrink: 0 !important;
+    background: #ffffff !important;
+    padding: 8px 10px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-price-card { 
+    order: 6; 
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 18px !important;
+    padding: 16px 14px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+    margin-bottom: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-price-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 4px !important;
+    height: 100% !important;
+    background: var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-features-wrapper {
+    order: 7;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-features-wrapper > div {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    border: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-features-wrapper > div > div {
+    background: #ffffff !important;
+    padding: 10px 8px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-features-wrapper > div > div:last-child {
+    grid-column: span 2 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-guarantees-card {
+    order: 8;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    padding: 12px 14px !important;
+    border: none !important;
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-urgency-card { 
+    order: 9; 
+    border-radius: 16px !important;
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-faq-heading { 
+    order: 10; 
+    background: #ffffff !important;
+    padding: 12px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-faq-accordion { 
+    order: 11; 
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-faq-accordion > div {
+    border-radius: 14px !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-closing-card { 
+    order: 12; 
+    border-radius: 18px !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-4"] .mockup-footer-wrap { 
+    order: 13; 
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    margin-top: 4px !important;
+}
+
+/* =========================================
+   MODEL 5: CYBER TECH GLOW NO MOCKUP ADMIN
+   ========================================= */
+#lp_live_preview_container[data-model="model-5"] {
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #0f172a !important; /* Fundo escuro */
+    gap: 12px !important;
+    padding: 12px !important;
+}
+#lp_live_preview_container[data-model="model-5"] > * {
+    flex-shrink: 0 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-badge-wrap { 
+    order: 1; 
+    align-self: center !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 100px !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-badge-wrap span {
+    background: var(--lp-primary, #9d174d) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 100px !important;
+    padding: 4px 14px !important;
+    box-shadow: 0 0 14px var(--lp-primary, #9d174d) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 900 !important;
+    display: inline-block !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-title { 
+    order: 2; 
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.5px !important;
+    background: transparent !important;
+    color: #f8fafc !important;
+    padding: 0 4px !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-subheadline { 
+    order: 3; 
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    background: transparent !important;
+    padding: 0 8px !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-gallery-wrapper { 
+    order: 4; 
+    width: 100% !important;
+    height: 327px !important;
+    min-height: 327px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) !important;
+    margin-bottom: 0 !important;
+    border: 1px solid #334155 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-gallery-thumbs { 
+    order: 5; 
+    margin-bottom: 0 !important; 
+    background: #1e293b !important;
+    padding: 8px 10px !important;
+    border-radius: 16px !important;
+    border: 1px solid #334155 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card { 
+    order: 6; 
+    background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+    border-radius: 20px !important;
+    padding: 18px 14px !important;
+    box-shadow: 0 0 20px var(--lp-primary, #9d174d) !important;
+    margin-bottom: 0 !important;
+    position: relative !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card span[id="mockup_old_price"] {
+    color: #64748b !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card span[id="mockup_current_price"] {
+    color: var(--lp-primary, #9d174d) !important;
+    text-shadow: 0 0 10px var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card span[id="mockup_savings_tag"] {
+    background: var(--lp-primary, #9d174d) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card p[id="mockup_savings_text"] {
+    color: #94a3b8 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card p[id="mockup_savings_text"] span {
+    background: var(--lp-primary, #9d174d) !important;
+    box-shadow: 0 0 5px var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card > div.mockup-main-cta-btn {
+    background: var(--lp-primary, #9d174d) !important;
+    box-shadow: 0 4px 15px var(--lp-primary, #9d174d) !important;
+    border: none !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-price-card > div:last-child {
+    color: #94a3b8 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper {
+    order: 7;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper > div > div {
+    background: #111827 !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    border: 1px solid #1f2937 !important;
+    display: flex !important;
+    align-items: center !important;
+    text-align: left !important;
+    gap: 10px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper > div > div i {
+    color: var(--lp-primary, #9d174d) !important;
+    font-size: 18px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 6px !important;
+    border-radius: 8px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper > div > div strong {
+    color: #f8fafc !important;
+    font-size: 11px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-features-wrapper > div > div small {
+    color: #94a3b8 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-guarantees-card {
+    order: 8;
+    background: #1e293b !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    border: 1px solid #334155 !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-guarantees-card h2 {
+    color: #f8fafc !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-guarantees-card p {
+    color: #cbd5e1 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-urgency-card { 
+    order: 9; 
+    border-radius: 16px !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-urgency-card h3 {
+    color: var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-urgency-card p {
+    color: #f8fafc !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-urgency-card div[style*="background: #0f172a"] {
+    background: var(--lp-primary, #9d174d) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-heading { 
+    order: 10; 
+    background: transparent !important;
+    padding: 12px 0 !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-heading h2 {
+    color: #f8fafc !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion { 
+    order: 11; 
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion > div {
+    border-radius: 12px !important;
+    border: 1px solid #334155 !important;
+    background: #1e293b !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion > div strong {
+    color: #f1f5f9 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion > div p,
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion > div span {
+    color: #94a3b8 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-faq-accordion > div i {
+    color: var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-closing-card { 
+    order: 12; 
+    border-radius: 20px !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+    background: linear-gradient(180deg, #1e293b, #0f172a) !important;
+    box-shadow: 0 0 20px var(--lp-primary, #9d174d) !important;
+    margin-bottom: 0 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-closing-card h2 {
+    color: #f8fafc !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-closing-card p {
+    color: #cbd5e1 !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-closing-card .mockup-closing-cta-btn {
+    background: var(--lp-primary, #9d174d) !important;
+    box-shadow: 0 4px 15px var(--lp-primary, #9d174d) !important;
+}
+#lp_live_preview_container[data-model="model-5"] .mockup-footer-wrap { 
+    order: 13; 
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 14px 0 !important;
+    margin-top: 4px !important;
+    color: #64748b !important;
+}
+
+/* =========================================
+   MOCKUP MODELO 6: EDITORIAL LUXURY
+   ========================================= */
+#lp_live_preview_container[data-model="model-6"] {
+    background-color: #faf9f6 !important;
+    background: #faf9f6 !important;
+    color: #2c2c2c !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-badge-wrap {
+    order: 1 !important;
+    text-align: center !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-badge-wrap span {
+    background: transparent !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+    color: var(--lp-primary, #9d174d) !important;
+    border-radius: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-size: 8.5px !important;
+    font-weight: 700 !important;
+    padding: 4px 10px !important;
+    box-shadow: none !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-title {
+    order: 2 !important;
+    font-family: 'Cormorant Garamond', serif, Georgia, 'Times New Roman' !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    color: #1a1a1a !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-subheadline {
+    order: 3 !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+    color: #555555 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0 !important;
+    padding: 0 4px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-wrapper {
+    order: 4 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-wrapper img {
+    border-radius: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-thumbs {
+    order: 5 !important;
+    padding: 6px 0 !important;
+    gap: 8px !important;
+    justify-content: center !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-thumbs img,
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-thumbs button {
+    border-radius: 0 !important;
+    border: 1px solid #e5e5e5 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-gallery-thumbs button:hover {
+    border-color: var(--lp-primary, #9d174d) !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card {
+    order: 6 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-top: 1px solid #e5e5e5 !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    border-radius: 0 !important;
+    padding: 16px 0 !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card span[id="mockup_old_price"] {
+    font-size: 12px !important;
+    color: #888888 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card span[id="mockup_current_price"] {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 28px !important;
+    font-weight: 500 !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card span[id="mockup_savings_tag"] {
+    background: #f4f4f4 !important;
+    color: #333333 !important;
+    border-radius: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 8.5px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card p[id="mockup_savings_text"] {
+    display: none !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-price-card .mockup-main-cta-btn {
+    border-radius: 0 !important;
+    background: var(--lp-primary, #9d174d) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    box-shadow: none !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper {
+    order: 7 !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper > div > div {
+    background: transparent !important;
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 0 !important;
+    padding: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    text-align: left !important;
+    gap: 10px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper > div > div i {
+    color: var(--lp-primary, #9d174d) !important;
+    margin-bottom: 0 !important;
+    font-size: 16px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper > div > div strong {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 14px !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-features-wrapper > div > div small {
+    color: #666666 !important;
+    font-size: 10px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card {
+    order: 8 !important;
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+    padding: 20px 14px !important;
+    text-align: center !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card h2 {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 18px !important;
+    color: #ffffff !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-guarantees-card p {
+    color: #cccccc !important;
+    font-size: 10.5px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-urgency-card {
+    order: 9 !important;
+    background: transparent !important;
+    border: 1px solid var(--lp-primary, #9d174d) !important;
+    border-radius: 0 !important;
+    padding: 16px 12px !important;
+    text-align: center !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-urgency-card h3 {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 16px !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-urgency-card p {
+    color: #555555 !important;
+    font-size: 10.5px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-urgency-card div[style*="background: #0f172a"] {
+    background: #f4f4f4 !important;
+    color: #1a1a1a !important;
+    border-radius: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-faq-heading {
+    order: 10 !important;
+    margin-bottom: 0 !important;
+    padding: 8px 0 !important;
+    text-align: center !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-faq-heading h2 {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 18px !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-faq-accordion {
+    order: 11 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-faq-accordion > div {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 10px 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-faq-accordion > div strong {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 13px !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-closing-card {
+    order: 12 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 20px 0 !important;
+    text-align: center !important;
+    margin-bottom: 0 !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-closing-card h2 {
+    font-family: 'Cormorant Garamond', serif, Georgia !important;
+    font-size: 20px !important;
+    color: #1a1a1a !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-closing-card p {
+    color: #555555 !important;
+    font-size: 10.5px !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-closing-card .mockup-closing-cta-btn {
+    border-radius: 0 !important;
+    background: var(--lp-primary, #9d174d) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+}
+
+#lp_live_preview_container[data-model="model-6"] .mockup-footer-wrap {
+    order: 13 !important;
+    background: transparent !important;
+    border-top: 1px solid #e5e5e5 !important;
+    border-radius: 0 !important;
+    padding: 16px 0 !important;
+    color: #888888 !important;
+}
 </style>
 <?= $this->endSection() ?>
