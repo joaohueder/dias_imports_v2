@@ -100,6 +100,13 @@ try {
 
     CronRealtimeBoot::init($paths);
 
+    // Inicializa a sessão antes de emitir qualquer header HTTP para evitar conflito de ini_set()
+    try {
+        if (session_status() === PHP_SESSION_NONE) {
+            session();
+        }
+    } catch (\Throwable) {}
+
     // Desabilita buffers para permitir streaming de saída em tempo real se chamado via Web
     while (ob_get_level() > 0) {
         ob_end_flush();

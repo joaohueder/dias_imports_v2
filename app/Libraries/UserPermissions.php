@@ -95,42 +95,52 @@ class UserPermissions
 
     public static function hasPermission(string $module, string $action = 'view'): bool
     {
-        if (session_status() !== PHP_SESSION_ACTIVE && empty($_SESSION)) {
+        if (session_status() !== PHP_SESSION_ACTIVE && (PHP_SAPI === 'cli' || empty($_SESSION))) {
             return true;
         }
 
-        $role = session()->get('user_role');
-        if ($role === 'admin') {
+        try {
+            $session = session();
+            $role = $session->get('user_role');
+            if ($role === 'admin') {
+                return true;
+            }
+
+            $permissions = $session->get('user_permissions') ?? [];
+            return !empty($permissions[$module][$action]);
+        } catch (\Throwable) {
             return true;
         }
-
-        $permissions = session()->get('user_permissions') ?? [];
-        return !empty($permissions[$module][$action]);
     }
 
     public static function hasAnyPermissionInGroup(string $groupKey): bool
     {
-        if (session_status() !== PHP_SESSION_ACTIVE && empty($_SESSION)) {
+        if (session_status() !== PHP_SESSION_ACTIVE && (PHP_SAPI === 'cli' || empty($_SESSION))) {
             return true;
         }
 
-        $role = session()->get('user_role');
-        if ($role === 'admin') {
-            return true;
-        }
-
-        $group = self::MODULE_GROUPS[$groupKey] ?? null;
-        if (! $group || empty($group['modules'])) {
-            return false;
-        }
-
-        foreach (array_keys($group['modules']) as $modKey) {
-            if (self::hasPermission($modKey, 'view')) {
+        try {
+            $session = session();
+            $role = $session->get('user_role');
+            if ($role === 'admin') {
                 return true;
             }
-        }
 
-        return false;
+            $group = self::MODULE_GROUPS[$groupKey] ?? null;
+            if (! $group || empty($group['modules'])) {
+                return false;
+            }
+
+            foreach (array_keys($group['modules']) as $modKey) {
+                if (self::hasPermission($modKey, 'view')) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (\Throwable) {
+            return true;
+        }
     }
 
     public static function hasAnySettingsPermission(): bool
@@ -140,23 +150,28 @@ class UserPermissions
 
     public static function canAccessRouteKey(string $navKey): bool
     {
-        if (session_status() !== PHP_SESSION_ACTIVE && empty($_SESSION)) {
+        if (session_status() !== PHP_SESSION_ACTIVE && (PHP_SAPI === 'cli' || empty($_SESSION))) {
             return true;
         }
 
-        $role = session()->get('user_role');
-        if ($role === 'admin') {
+        try {
+            $session = session();
+            $role = $session->get('user_role');
+            if ($role === 'admin') {
+                return true;
+            }
+
+            return match ($navKey) {
+                'overview' => true,
+                'whatsapp' => self::hasPermission('whatsapp_groups', 'view'),
+                'products' => self::hasPermission('products', 'view'),
+                'vip' => self::hasPermission('vip_leads', 'view'),
+                'users' => self::hasPermission('users', 'view'),
+                'settings' => self::hasAnySettingsPermission(),
+                default => false,
+            };
+        } catch (\Throwable) {
             return true;
         }
-
-        return match ($navKey) {
-            'overview' => true,
-            'whatsapp' => self::hasPermission('whatsapp_groups', 'view'),
-            'products' => self::hasPermission('products', 'view'),
-            'vip' => self::hasPermission('vip_leads', 'view'),
-            'users' => self::hasPermission('users', 'view'),
-            'settings' => self::hasAnySettingsPermission(),
-            default => false,
-        };
     }
 }
