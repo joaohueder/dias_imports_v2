@@ -2565,3 +2565,14 @@ DEBUG - 2026-08-24 13:21:36 --> Session: Class initialized using 'CodeIgniter\Se
 INFO - 2026-08-24 13:21:36 --> CSRF token verified.
 DEBUG - 2026-08-24 13:21:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-08-24 13:22:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-24 13:24:05 --> MySQL server has gone away
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query()
+ 2 SYSTEMPATH\Database\BaseConnection.php(908): CodeIgniter\Database\MySQLi\Connection->execute()
+ 3 SYSTEMPATH\Database\BaseConnection.php(669): CodeIgniter\Database\BaseConnection->simpleQuery()
+ 4 SYSTEMPATH\Database\BaseConnection.php(660): CodeIgniter\Database\BaseConnection->_ping()
+ 5 SYSTEMPATH\Database\BaseConnection.php(638): CodeIgniter\Database\BaseConnection->ping()
+ 6 APPPATH\Services\JobCenterService.php(220): CodeIgniter\Database\BaseConnection->reconnect()
+ 7 FCPATH\cron-runner.php(79): App\Services\JobCenterService->processPendingQueue()
+WARNING - 2026-08-24 13:24:06 --> Falha ao enviar mídia do produto via Evolution API, tentando texto puro: A Evolution API rejeitou os dados enviados.
+DEBUG - 2026-08-24 13:24:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
