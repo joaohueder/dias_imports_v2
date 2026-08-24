@@ -52,3 +52,12 @@
 [20:44:13] Ciclo #46 (489.9ms | uptime 248s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
 [20:44:19] Ciclo #47 (493.8ms | uptime 254s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
 [20:44:24] Ciclo #48 (489.8ms | uptime 259s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+[20:44:30] Ciclo #49 (486.9ms | uptime 265s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+[20:44:35] Ciclo #50 (487.2ms | uptime 270s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+[20:44:41] Ciclo #51 (486.4ms | uptime 276s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+[20:44:46] Ciclo #52 (491.6ms | uptime 281s): Tarefas: 0 proc / 0 falhas | Snapshots gerados: 8 telas (OK)
+
+============================================================
+[20:44:51] Worker finalizado com sucesso após 286s de execução (52 ciclos).
+Total de tarefas processadas: 0 | Total de falhas: 0
+============================================================

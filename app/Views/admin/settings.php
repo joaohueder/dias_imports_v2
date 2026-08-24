@@ -11,6 +11,9 @@ $isFluid = $layoutMaxWidth === 'fluid';
 $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 ?>
 <section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>"
+    data-realtime-feed-url="<?= site_url('configuracoes/tempo-real/feed') ?>"
+    data-company-feed-url="<?= site_url('configuracoes/empresa/feed') ?>"
+    data-templates-feed-url="<?= site_url('configuracoes/modelos-mensagens/feed') ?>"
     data-rt-company-active="<?= !empty($realtimeScreenSettings['settings_company']['active']) ? '1' : '0' ?>"
     data-rt-company-interval="<?= esc((string) ($realtimeScreenSettings['settings_company']['interval'] ?? 5)) ?>"
     data-rt-evolution-active="<?= !empty($realtimeScreenSettings['settings_evolution']['active']) ? '1' : '0' ?>"

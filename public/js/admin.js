@@ -910,8 +910,9 @@ window.getAppBaseUrl = () => {
         if (!container) return;
 
         companyRequest = new AbortController();
+        const feedUrl = settings.dataset.companyFeedUrl || `${window.location.origin}/configuracoes/empresa/feed`;
         try {
-            const response = await fetch(`${window.location.origin}/configuracoes/empresa/feed?_t=${Date.now()}`, {
+            const response = await fetch(`${feedUrl}?_t=${Date.now()}`, {
                 headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 credentials: 'same-origin',
                 cache: 'no-store',
@@ -948,8 +949,9 @@ window.getAppBaseUrl = () => {
         if (!container) return;
 
         templatesRequest = new AbortController();
+        const feedUrl = settings.dataset.templatesFeedUrl || `${window.location.origin}/configuracoes/modelos-mensagens/feed`;
         try {
-            const response = await fetch(`${window.location.origin}/configuracoes/modelos-mensagens/feed?_t=${Date.now()}`, {
+            const response = await fetch(`${feedUrl}?_t=${Date.now()}`, {
                 headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 credentials: 'same-origin',
                 cache: 'no-store',
@@ -1004,8 +1006,9 @@ window.getAppBaseUrl = () => {
         if (!container) return;
 
         realtimeRequest = new AbortController();
+        const feedUrl = settings.dataset.realtimeFeedUrl || `${window.location.origin}/configuracoes/tempo-real/feed`;
         try {
-            const response = await fetch(`${window.location.origin}/configuracoes/tempo-real/feed?_t=${Date.now()}`, {
+            const response = await fetch(`${feedUrl}?_t=${Date.now()}`, {
                 headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 credentials: 'same-origin',
                 cache: 'no-store',
