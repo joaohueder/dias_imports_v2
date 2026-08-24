@@ -123,9 +123,4 @@ try {
     }
     echo "\n[ERRO FATAL] " . $e->getMessage() . "\n";
     echo $e->getTraceAsString() . "\n";
-} finally {
-    try {
-        $db = \Config\Database::connect();
-        $db->close();
-    } catch (\Throwable $ignored) {}
 }

@@ -54,15 +54,31 @@ class Evolution extends BaseController
     public function instanceStatuses(): ResponseInterface
     {
         try {
-            $instances = array_map(static fn (array $instance): array => [
+            $service = new EvolutionApiService();
+            $settings = $service->getSettings();
+            $instances = $service->fetchInstances();
+
+            $statuses = array_map(static fn (array $instance): array => [
                 'name' => $instance['name'],
                 'state' => $instance['state'],
                 'connected' => $instance['connected'],
-            ], (new EvolutionApiService())->fetchInstances());
+            ], $instances);
+
+            $html = view('admin/settings/_evolution_instances', [
+                'evolutionInstances' => $instances,
+                'evolutionSettings' => $settings,
+            ]);
+
+            helper('telemetry');
+            $telemetry = get_footer_telemetry();
 
             return $this->response
                 ->setHeader('Cache-Control', 'no-store')
-                ->setJSON(['instances' => $instances]);
+                ->setJSON([
+                    'instances' => $statuses,
+                    'html' => $html,
+                    'footerHtml' => $telemetry['html'],
+                ]);
         } catch (RuntimeException $exception) {
             return $this->response
                 ->setStatusCode(503)

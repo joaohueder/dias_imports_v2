@@ -9,7 +9,7 @@ $helperInitials = static function(string $name): string {
     return mb_strtoupper(mb_substr($parts[0], 0, 1) . mb_substr(end($parts), 0, 1));
 };
 ?>
-<section class="users-view-container" data-users-module>
+<section class="users-view-container" data-users-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
     <!-- Top toolbar -->
     <div class="users-header-actions">
         <div class="users-search-box">
@@ -44,124 +44,7 @@ $helperInitials = static function(string $name): string {
 
     <!-- Cards Grid -->
     <div class="users-grid" data-users-grid>
-        <?php foreach ($users as $u): ?>
-            <?php
-                $isSelf = ((int) $u['id'] === $currentUserId);
-                $isAdmin = (($u['role'] ?? 'user') === 'admin');
-                $isActive = ((int) $u['is_active'] === 1);
-                $initials = $helperInitials($u['name']);
-                $createdAtFormatted = !empty($u['created_at']) ? date('d/m/Y', strtotime($u['created_at'])) : '--/--/----';
-
-                // Permissões resumo
-                $permissionsSummary = 'Acesso personalizado ao painel.';
-                if ($isAdmin) {
-                    $permissionsSummary = 'Acesso total ao painel.';
-                } else {
-                    $perms = !empty($u['permissions']) ? json_decode($u['permissions'], true) : [];
-                    if (empty($perms)) {
-                        $permissionsSummary = 'Apenas áreas públicas e perfil.';
-                    } else {
-                        $countPerms = 0;
-                        foreach ($perms as $p) {
-                            $countPerms += count($p);
-                        }
-                        $permissionsSummary = "Acesso configurado a {$countPerms} recurso(s).";
-                    }
-                }
-            ?>
-            <article class="user-card-item <?= ! $isActive ? 'is-inactive' : '' ?>"
-                     data-user-card
-                     data-id="<?= esc($u['id']) ?>"
-                     data-name="<?= esc(mb_strtolower($u['name'])) ?>"
-                     data-email="<?= esc(mb_strtolower($u['email'])) ?>"
-                     data-status="<?= $isActive ? 'active' : 'inactive' ?>"
-                     data-role="<?= $isAdmin ? 'admin' : 'user' ?>">
-
-                <div class="user-card-header">
-                    <div class="user-avatar-circle <?= $isAdmin ? 'is-admin' : '' ?>">
-                        <?= esc($initials) ?>
-                    </div>
-                    <div class="user-title-block">
-                        <div class="user-name-row">
-                            <h3 class="user-full-name"><?= esc($u['name']) ?></h3>
-                            <?php if ($isSelf): ?>
-                                <span class="badge-self">você</span>
-                            <?php endif; ?>
-                        </div>
-                        <span class="user-email-text"><?= esc($u['email']) ?></span>
-                    </div>
-                </div>
-
-                <div class="user-badges-row">
-                    <?php if ($isAdmin): ?>
-                        <span class="status-chip chip-role-admin">Administrador</span>
-                    <?php else: ?>
-                        <span class="status-chip chip-role-user">Usuário</span>
-                    <?php endif; ?>
-
-                    <?php if ($isActive): ?>
-                        <span class="status-chip chip-active">Ativo</span>
-                    <?php else: ?>
-                        <span class="status-chip chip-inactive">Inativo</span>
-                    <?php endif; ?>
-                </div>
-
-                <div class="user-permissions-block">
-                    <span class="perm-title">PERMISSÕES</span>
-                    <p class="perm-desc"><?= esc($permissionsSummary) ?></p>
-                </div>
-
-                <div class="user-footer-meta">
-                    <span class="user-created-date">Cadastrado em <?= esc($createdAtFormatted) ?></span>
-                </div>
-
-                <div class="user-card-actions">
-                    <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'edit')): ?>
-                        <a href="<?= site_url('usuarios/' . $u['id'] . '/editar') ?>" class="btn-card-action">
-                            <i class="ti ti-pencil"></i>
-                            <span>Editar</span>
-                        </a>
-
-                        <button type="button" class="btn-card-action" data-open-reset-pwd data-user-id="<?= esc($u['id']) ?>" data-user-name="<?= esc($u['name']) ?>">
-                            <i class="ti ti-key"></i>
-                            <span>Redefinir Senha</span>
-                        </button>
-
-                        <?php if (! $isSelf): ?>
-                            <form action="<?= site_url('usuarios/' . $u['id'] . '/status') ?>" method="post" data-confirm-action="user-status-<?= $isActive ? 'inativar' : 'ativar' ?>" data-action-name="<?= esc($u['name']) ?>">
-                                <?= csrf_field() ?>
-                                <button type="submit" class="btn-card-action">
-                                    <i class="ti ti-power"></i>
-                                    <span><?= $isActive ? 'Inativar' : 'Ativar' ?></span>
-                                </button>
-                            </form>
-                        <?php else: ?>
-                            <button type="button" class="btn-card-action disabled" disabled title="Não é possível alterar seu próprio status">
-                                <i class="ti ti-power"></i>
-                                <span>Inativar</span>
-                            </button>
-                        <?php endif; ?>
-                    <?php endif; ?>
-
-                    <?php if (\App\Libraries\UserPermissions::hasPermission('users', 'delete')): ?>
-                        <?php if (! $isSelf): ?>
-                            <form action="<?= site_url('usuarios/' . $u['id'] . '/excluir') ?>" method="post" data-confirm-action="user-delete" data-action-name="<?= esc($u['name']) ?>">
-                                <?= csrf_field() ?>
-                                <button type="submit" class="btn-card-action text-danger">
-                                    <i class="ti ti-trash"></i>
-                                    <span>Excluir</span>
-                                </button>
-                            </form>
-                        <?php else: ?>
-                            <button type="button" class="btn-card-action disabled" disabled title="Não é possível excluir seu próprio usuário">
-                                <i class="ti ti-trash"></i>
-                                <span>Excluir</span>
-                            </button>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </div>
-            </article>
-        <?php endforeach; ?>
+        <?= view('admin/users/_cards', ['users' => $users, 'currentUserId' => $currentUserId]) ?>
     </div>
 
     <!-- Empty search state -->
@@ -202,4 +85,8 @@ $helperInitials = static function(string $name): string {
         </form>
     </div>
 </dialog>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script src="<?= base_url('js/users.js?v=' . (defined('APP_VERSION') ? APP_VERSION : time())) ?>" defer></script>
 <?= $this->endSection() ?>

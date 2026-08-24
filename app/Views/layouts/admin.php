@@ -81,23 +81,29 @@ $globalSuccess = session()->getFlashdata('success');
 
         <div class="sidebar-footer">
             <div class="user-card">
-                <span class="avatar" aria-hidden="true"><?= esc($userInitials) ?></span>
-                <span class="user-meta">
-                    <span class="user-name"><?= esc($userName) ?></span>
-                    <span class="user-email"><?= esc($userEmail) ?></span>
-                </span>
-                <form action="<?= site_url('recarregar-permissoes') ?>" method="post" data-processing-title="Atualizando permissões" data-processing-message="Sincronizando seus acessos e permissões.">
-                    <?= csrf_field() ?>
-                    <button class="icon-button" type="submit" aria-label="Recarregar permissões" title="Recarregar Permissões">
-                        <i class="ti ti-refresh" aria-hidden="true"></i>
-                    </button>
-                </form>
-                <form action="<?= site_url('logout') ?>" method="post" data-confirm-action="logout" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
-                    <?= csrf_field() ?>
-                    <button class="logout-button" type="submit" aria-label="Sair do sistema" title="Sair">
-                        <i class="ti ti-logout" aria-hidden="true"></i>
-                    </button>
-                </form>
+                <div class="user-card-main">
+                    <span class="avatar" aria-hidden="true"><?= esc($userInitials) ?></span>
+                    <div class="user-meta">
+                        <span class="user-name" title="<?= esc($userName) ?>"><?= esc($userName) ?></span>
+                        <span class="user-email" title="<?= esc($userEmail) ?>"><?= esc($userEmail) ?></span>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <form action="<?= site_url('recarregar-permissoes') ?>" method="post" data-processing-title="Atualizando permissões" data-processing-message="Sincronizando seus acessos e permissões.">
+                        <?= csrf_field() ?>
+                        <button class="user-action-btn reload-btn" type="submit" aria-label="Recarregar permissões" title="Recarregar Permissões">
+                            <i class="ti ti-refresh" aria-hidden="true"></i>
+                            <span>Sincronizar</span>
+                        </button>
+                    </form>
+                    <form action="<?= site_url('logout') ?>" method="post" data-confirm-action="logout" data-processing-title="Encerrando sua sessão" data-processing-message="Protegendo seus dados antes de sair.">
+                        <?= csrf_field() ?>
+                        <button class="user-action-btn logout-btn" type="submit" aria-label="Sair do sistema" title="Sair da conta">
+                            <i class="ti ti-logout" aria-hidden="true"></i>
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </aside>
@@ -114,14 +120,28 @@ $globalSuccess = session()->getFlashdata('success');
         <header class="topbar">
             <div class="breadcrumb">Painel <span aria-hidden="true">/</span> <strong><?= esc($pageTitle) ?></strong></div>
             <div class="topbar-actions">
-                <span class="status-pill" title="Host do Banco de Dados">
-                    <i class="ti ti-database" aria-hidden="true"></i>
-                    <span><?= esc(config('Database')->default['hostname'] ?? env('database.default.hostname', 'localhost')) ?></span>
+                <?php
+                // Verifica se a tela atual possui atualização em tempo real ativa
+                $isScreenRtActive = false;
+                if (isset($isRealtimeActive) && $isRealtimeActive) {
+                    $isScreenRtActive = true;
+                } elseif (isset($realtimeScreenSettings) && is_array($realtimeScreenSettings)) {
+                    // Na tela de configurações, verifica se a aba atual está com tempo real ativo
+                    $activeTabKey = 'settings_' . ($activeSettingsTab === 'empresa' ? 'company' : ($activeSettingsTab === 'modelos-mensagens' ? 'templates' : $activeSettingsTab));
+                    if (!empty($realtimeScreenSettings[$activeTabKey]['active'])) {
+                        $isScreenRtActive = true;
+                    }
+                }
+                ?>
+                <span class="status-pill realtime-active" data-realtime-indicator <?= ! $isScreenRtActive ? 'style="display: none;"' : '' ?> title="Esta tela está sendo atualizada automaticamente em tempo real">
+                    <span class="status-dot-pulse" aria-hidden="true"></span>
+                    <span>Tempo Real Ativo</span>
                 </span>
             </div>
         </header>
 
         <main class="page-content" id="main-content" tabindex="-1">
+            <?php if ($activePage !== 'overview'): ?>
             <header class="page-header">
                 <div>
                     <p class="eyebrow">Painel administrativo</p>
@@ -129,19 +149,17 @@ $globalSuccess = session()->getFlashdata('success');
                     <p class="page-description"><?= esc($pageDescription) ?></p>
                 </div>
             </header>
+            <?php endif; ?>
             <?= $this->renderSection('content') ?>
         </main>
 
         <footer class="panel-footer">
             <span>&copy; <?= date('Y') ?> Dias Imports</span>
             <?php
-            $db = \Config\Database::connect();
-            $query = $db->query("SHOW STATUS LIKE 'Threads_connected'");
-            $row = $query->getRow();
-            $connections = $row ? $row->Value : 'N/A';
-            $loadTime = number_format(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4);
+            helper('telemetry');
+            $telemetry = get_footer_telemetry();
             ?>
-            <span>Conexões no Banco: <strong><?= esc($connections) ?></strong> | Tempo de Carregamento: <strong><?= esc($loadTime) ?>s</strong></span>
+            <span data-footer-telemetry><?= $telemetry['html'] ?></span>
             <span>Painel Administrativo <span class="footer-version">v<?= esc(defined('APP_VERSION') ? APP_VERSION : '2026.08.0002') ?></span></span>
         </footer>
     </div>

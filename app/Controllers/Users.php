@@ -51,12 +51,18 @@ class Users extends BaseController
         $firstName = trim(explode(' ', $userName)[0] ?? 'Usuário');
         $userInitials = $this->extractInitials($userName);
 
+        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $isRealtimeActive = $realtimeModel->isScreenActive('users');
+        $realtimeInterval = $realtimeModel->getInterval('users');
+
         return view('admin/users/index', [
             'pageTitle' => 'Usuários',
             'pageDescription' => 'Controle quem acessa o painel e quais áreas cada pessoa pode usar.',
             'pageIcon' => 'ti-users',
             'activePage' => 'users',
             'layoutMaxWidth' => $layoutMaxWidth,
+            'isRealtimeActive' => $isRealtimeActive,
+            'realtimeInterval' => $realtimeInterval,
             'userName' => $userName,
             'userEmail' => $userEmail,
             'firstName' => $firstName,
@@ -65,6 +71,52 @@ class Users extends BaseController
             'users' => $users,
             'counts' => $counts,
             'currentUserId' => $currentUserId,
+        ]);
+    }
+
+    public function feed(): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $userModel = new UserModel();
+        $users = $userModel->orderBy('id', 'ASC')->findAll();
+
+        $currentUserId = (int) session()->get('user_id');
+        $counts = [
+            'total' => count($users),
+            'active' => 0,
+            'inactive' => 0,
+            'admin' => 0,
+        ];
+
+        foreach ($users as $u) {
+            if ((int) $u['is_active'] === 1) {
+                $counts['active']++;
+            } else {
+                $counts['inactive']++;
+            }
+            if (($u['role'] ?? 'user') === 'admin') {
+                $counts['admin']++;
+            }
+        }
+
+        $htmlCards = view('admin/users/_cards', [
+            'users' => $users,
+            'currentUserId' => $currentUserId,
+        ]);
+
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
+        return $this->response->setJSON([
+            'success' => true,
+            'counts' => $counts,
+            'htmlCards' => $htmlCards,
+            'totalResults' => count($users),
+            'footerHtml' => $telemetry['html'],
+            'telemetry' => [
+                'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                'loadTime' => $telemetry['loadTime'],
+            ],
         ]);
     }
 

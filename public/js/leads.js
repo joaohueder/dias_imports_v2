@@ -2,9 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const leadsContainer = document.querySelector('[data-leads-module]');
     if (!leadsContainer) return;
 
-    const refreshCountdownEl = document.querySelector('[data-refresh-countdown]');
-    const refreshFillEl = document.querySelector('[data-refresh-fill]');
-    const refreshNowBtn = document.querySelector('[data-refresh-now]');
     const dashboardContainer = document.querySelector('[data-dashboard-container]');
     const leadsTbody = document.querySelector('[data-leads-tbody]');
     const searchInput = document.querySelector('[data-leads-search]');
@@ -43,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPeriod = parseInt(initialActivePeriodBtn.dataset.periodBtn, 10) || 7;
     }
 
-    const REFRESH_INTERVAL_MS = 30000; // 30 segundos
-    let remainingMs = REFRESH_INTERVAL_MS;
-    let timerId = null;
+    const isRealtimeActive = leadsContainer?.dataset.realtimeActive === '1';
+    const realtimeIntervalSec = parseInt(leadsContainer?.dataset.realtimeInterval, 10) || 5;
     let isFetching = false;
+    let realtimeTimer = null;
 
     const maskPhoneInput = (input) => {
         if (!input) return;
@@ -82,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const baseUrl = window.getAppBaseUrl ? window.getAppBaseUrl() : (document.querySelector('meta[name="base-url"]')?.getAttribute('content') || '');
-            const res = await fetch(`${baseUrl}/leads-vip/feed?${params.toString()}`, {
+            const res = await fetch(`${baseUrl}/leads-vip/feed?${params.toString()}&_t=${Date.now()}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
@@ -102,40 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (leadsCounter) {
                     leadsCounter.textContent = String(data.totalResults ?? 0);
                 }
+                if (data.footerHtml) {
+                    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
+                    if (footerTelemetry) {
+                        footerTelemetry.innerHTML = data.footerHtml;
+                    }
+                }
             }
         } catch (e) {
             console.error('Falha na sincronização de leads:', e);
         } finally {
             isFetching = false;
-            remainingMs = REFRESH_INTERVAL_MS;
-        }
-    };
-
-    const startTimer = () => {
-        const stepMs = 100;
-        clearInterval(timerId);
-        remainingMs = REFRESH_INTERVAL_MS;
-
-        timerId = setInterval(() => {
-            remainingMs -= stepMs;
-            if (remainingMs <= 0) {
-                remainingMs = 0;
-                updateProgressBar();
-                fetchLeads();
-            } else {
-                updateProgressBar();
-            }
-        }, stepMs);
-    };
-
-    const updateProgressBar = () => {
-        const pct = Math.max(0, Math.min(100, (remainingMs / REFRESH_INTERVAL_MS) * 100));
-        if (refreshFillEl) {
-            refreshFillEl.style.width = `${pct}%`;
-        }
-        if (refreshCountdownEl) {
-            const seconds = Math.ceil(remainingMs / 1000);
-            refreshCountdownEl.textContent = `${seconds}s`;
         }
     };
 
@@ -146,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('[data-period-btn]').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentPeriod = parseInt(btn.dataset.periodBtn, 10) || 7;
-                remainingMs = REFRESH_INTERVAL_MS;
                 fetchLeads();
             });
         });
@@ -230,14 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (dateInput) dateInput.value = '';
             clearDateBtn.remove();
             applyClientSideFilters();
-        });
-    }
-
-    if (refreshNowBtn) {
-        refreshNowBtn.addEventListener('click', () => {
-            remainingMs = REFRESH_INTERVAL_MS;
-            updateProgressBar();
-            fetchLeads();
         });
     }
 
@@ -377,5 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     bindPeriodButtons();
-    startTimer();
+
+    if (isRealtimeActive && realtimeIntervalSec > 0) {
+        realtimeTimer = setInterval(fetchLeads, realtimeIntervalSec * 1000);
+    }
 });

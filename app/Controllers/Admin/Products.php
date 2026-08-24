@@ -95,6 +95,10 @@ class Products extends BaseController
         $sendJob = (new \App\Models\SystemJobModel())->where('job_key', 'send_product_to_group')->first();
         $isSendJobActive = !empty($sendJob) && (int)$sendJob['is_active'] === 1;
 
+        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $isRealtimeActive = $realtimeModel->isScreenActive('products');
+        $realtimeInterval = $realtimeModel->getInterval('products');
+
         $data = [
             'pageTitle' => 'Produtos',
             'pageDescription' => 'Gerencie os produtos e suas landing pages.',
@@ -103,9 +107,74 @@ class Products extends BaseController
             'activeGroups' => (new \App\Models\WhatsappGroupModel())->where('status', 'active')->orderBy('name', 'ASC')->findAll(),
             'messageTemplates' => (new \App\Models\MessageTemplateModel())->where('is_active', 1)->orderBy('name', 'ASC')->findAll(),
             'isSendJobActive' => $isSendJobActive,
+            'isRealtimeActive' => $isRealtimeActive,
+            'realtimeInterval' => $realtimeInterval,
         ];
 
         return $this->renderPage('admin/products/index', $data);
+    }
+
+    public function feed(): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $products = $this->productModel->orderBy('created_at', 'DESC')->findAll();
+        
+        if (! empty($products)) {
+            $productIds = array_column($products, 'id');
+            $allImages = $this->productImageModel
+                ->whereIn('product_id', $productIds)
+                ->orderBy('is_cover', 'DESC')
+                ->orderBy('sort_order', 'ASC')
+                ->findAll();
+
+            $imagesByProduct = [];
+            foreach ($allImages as $img) {
+                $imagesByProduct[$img->product_id][] = $img;
+            }
+
+            $accessLogModel = new ProductAccessLogModel();
+            $batchStats = $accessLogModel->getBatchProductMetrics($productIds);
+
+            $jobQueueModel = new \App\Models\SystemJobQueueModel();
+            $sendsRows = $jobQueueModel->select("payload, COUNT(*) as cnt")
+                ->where('job_key', 'send_product_to_group')
+                ->groupBy('payload')
+                ->findAll();
+
+            $sendsByProduct = [];
+            foreach ($sendsRows as $sr) {
+                $pData = json_decode($sr['payload'] ?? '', true);
+                if (!empty($pData['product_id'])) {
+                    $pid = (int)$pData['product_id'];
+                    $sendsByProduct[$pid] = ($sendsByProduct[$pid] ?? 0) + (int)$sr['cnt'];
+                }
+            }
+
+            foreach ($products as $product) {
+                $product->images = $imagesByProduct[$product->id] ?? [];
+                $stat = $batchStats[$product->id] ?? ['pageviews' => 0, 'clicks' => 0, 'conversionRate' => 0];
+                $product->pageviews = $stat['pageviews'];
+                $product->clicks = $stat['clicks'];
+                $product->conversionRate = $stat['conversionRate'];
+                $product->sendsCount = $sendsByProduct[$product->id] ?? 0;
+            }
+        }
+
+        $htmlCards = view('admin/products/_cards', ['products' => $products]);
+
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
+        return $this->response->setJSON([
+            'success' => true,
+            'htmlCards' => $htmlCards,
+            'totalResults' => count($products),
+            'footerHtml' => $telemetry['html'],
+            'telemetry' => [
+                'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                'loadTime' => $telemetry['loadTime'],
+            ],
+        ]);
     }
 
     public function create()
@@ -322,7 +391,32 @@ class Products extends BaseController
 
         return $this->response->setJSON($stats);
     }
+    public function stats($id)
+    {
+        $product = $this->productModel->find($id);
 
+        if (!$product) {
+            return redirect()->to('produtos')->with('error', 'Produto não encontrado.');
+        }
+
+        $statsPeriod = (int) ($this->request->getGet('stats_period') ?: 7);
+        if (!in_array($statsPeriod, [7, 14, 21, 30], true)) {
+            $statsPeriod = 7;
+        }
+
+        $logModel = new ProductAccessLogModel();
+        $stats = $logModel->getProductMetrics((int) $id, $statsPeriod);
+
+        $data = [
+            'pageTitle' => 'Estatísticas do Produto',
+            'pageDescription' => 'Métricas de acesso e conversão.',
+            'activePage' => 'products',
+            'product' => $product,
+            'stats' => $stats,
+        ];
+
+        return $this->renderPage('admin/products/stats', $data);
+    }
     public function uploadImage()
     {
         $productId = $this->request->getPost('product_id');

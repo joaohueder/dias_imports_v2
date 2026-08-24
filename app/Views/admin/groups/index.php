@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="whatsapp-groups-wrap" data-groups-module>
+<div class="whatsapp-groups-wrap" data-groups-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
     <div class="users-header-actions" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; flex: 1;">
             <div class="users-search-box">

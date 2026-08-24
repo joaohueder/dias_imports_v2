@@ -50,10 +50,16 @@ class JobCenter extends BaseController
         $userInitials = mb_strtoupper(mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1));
         $layoutMaxWidth = $this->getLayoutMaxWidth();
 
+        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $isRealtimeActive = $realtimeModel->isScreenActive('job_center');
+        $realtimeInterval = $realtimeModel->getInterval('job_center');
+
         $data = array_merge([
             'activePage' => $activePage,
             'layoutMaxWidth' => $layoutMaxWidth,
             'navigation' => Home::NAVIGATION,
+            'isRealtimeActive' => $isRealtimeActive,
+            'realtimeInterval' => $realtimeInterval,
             'pageDescription' => $item['description'],
             'pageIcon' => $item['icon'],
             'pageTitle' => $item['label'],
@@ -72,10 +78,19 @@ class JobCenter extends BaseController
             ->orderBy('id', 'DESC')
             ->findAll(100);
 
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
         return $this->response->setJSON([
             'success' => true,
             'stats'   => $stats,
             'items'   => $queueItems,
+            'footerHtml' => $telemetry['html'],
+            'telemetry' => [
+                'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                'loadTime' => $telemetry['loadTime'],
+            ],
         ]);
     }
 

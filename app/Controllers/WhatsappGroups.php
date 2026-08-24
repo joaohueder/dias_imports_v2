@@ -46,6 +46,10 @@ class WhatsappGroups extends BaseController
         $syncJob = $systemJobModel->getByKey('sync_whatsapp_groups');
         $isSyncJobActive = $syncJob && !empty($syncJob['is_active']);
 
+        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $isRealtimeActive = $realtimeModel->isScreenActive('whatsapp_groups');
+        $realtimeInterval = $realtimeModel->getInterval('whatsapp_groups');
+
         return view('admin/groups/index', array_merge($data, [
             'pageTitle' => 'Grupos de WhatsApp',
             'pageDescription' => 'Gestão e sincronização dos grupos de WhatsApp da empresa.',
@@ -60,6 +64,8 @@ class WhatsappGroups extends BaseController
             'currentStatus' => $status,
             'searchQuery' => $search,
             'isSyncJobActive' => $isSyncJobActive,
+            'isRealtimeActive' => $isRealtimeActive,
+            'realtimeInterval' => $realtimeInterval,
         ]));
     }
 
@@ -72,11 +78,20 @@ class WhatsappGroups extends BaseController
 
         $htmlCards = view('admin/groups/_cards', ['groups' => $data['groups']]);
 
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
         return $this->response->setJSON([
             'success' => true,
             'metrics' => $data['metrics'],
             'htmlCards' => $htmlCards,
             'totalResults' => count($data['groups']),
+            'footerHtml' => $telemetry['html'],
+            'telemetry' => [
+                'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                'loadTime' => $telemetry['loadTime'],
+            ],
         ]);
     }
 

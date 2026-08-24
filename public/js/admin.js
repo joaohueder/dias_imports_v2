@@ -815,85 +815,211 @@ window.getAppBaseUrl = () => {
     }
 
     const instanceStatusUrl = settings.dataset.instanceStatusUrl;
-    const instanceCards = settings.querySelectorAll('[data-instance-card]');
     const evolutionPanel = settings.querySelector('[data-settings-panel="evolution"]');
+    const companyPanel = settings.querySelector('[data-settings-panel="empresa"]');
+    const templatesPanel = settings.querySelector('[data-settings-panel="modelos-mensagens"]');
+    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
+
+    const rtCompanyActive = settings.dataset.rtCompanyActive === '1';
+    const rtCompanyInterval = (parseInt(settings.dataset.rtCompanyInterval, 10) || 5) * 1000;
+
+    const rtEvolutionActive = settings.dataset.rtEvolutionActive === '1';
+    const rtEvolutionInterval = (parseInt(settings.dataset.rtEvolutionInterval, 10) || 5) * 1000;
+
+    const rtTemplatesActive = settings.dataset.rtTemplatesActive === '1';
+    const rtTemplatesInterval = (parseInt(settings.dataset.rtTemplatesInterval, 10) || 5) * 1000;
+
     let instanceStatusTimer = null;
     let instanceStatusRequest = null;
     let instanceStatusFailures = 0;
-    if (instanceStatusUrl && instanceCards.length > 0) {
-        const stateLabels = {
-            open: 'Conectada',
-            connected: 'Conectada',
-            close: 'Desconectada',
-            closed: 'Desconectada',
-            disconnected: 'Desconectada',
-            connecting: 'Conectando',
-            unknown: 'Desconhecido',
-        };
-        const updateInstanceCard = (instance) => {
-            if (!instance || typeof instance.name !== 'string') return;
-            const card = [...instanceCards].find((item) => item.dataset.instanceCard === instance.name);
-            if (!card) return;
-            const status = card.querySelector('[data-instance-status]');
-            const connectForm = card.querySelector('[data-qr-connect-form]');
-            const disconnectForm = card.querySelector('[data-instance-disconnect]');
-            const sendTestButton = card.querySelector('[data-instance-send-test]');
-            const connected = instance.connected === true;
-            const state = typeof instance.state === 'string' ? instance.state.toLowerCase() : 'unknown';
-            if (status) {
-                status.classList.toggle('connected', connected);
-                status.classList.toggle('disconnected', !connected);
-                status.querySelector('i').className = `ti ${connected ? 'ti-circle-check-filled' : 'ti-circle-x-filled'}`;
-                status.querySelector('span').textContent = connected ? 'Conectada' : (stateLabels[state] || state);
-            }
-            if (connectForm) connectForm.hidden = connected;
-            if (disconnectForm) disconnectForm.hidden = !connected;
-            if (sendTestButton) sendTestButton.hidden = !connected;
-        };
-        const isEvolutionVisible = () => !document.hidden && (!evolutionPanel || !evolutionPanel.hidden);
-        const scheduleInstanceStatusUpdate = (delay = 5000) => {
+
+    let companyTimer = null;
+    let companyRequest = null;
+
+    let templatesTimer = null;
+    let templatesRequest = null;
+
+    const isPanelVisible = (panel) => !document.hidden && panel && !panel.hidden;
+
+    // --- Evolution Realtime ---
+    if (instanceStatusUrl) {
+        const scheduleInstanceStatusUpdate = (delay = rtEvolutionInterval) => {
             window.clearTimeout(instanceStatusTimer);
-            if (isEvolutionVisible()) instanceStatusTimer = window.setTimeout(refreshInstanceStatuses, delay);
+            if (isPanelVisible(evolutionPanel) && rtEvolutionActive) {
+                instanceStatusTimer = window.setTimeout(refreshInstanceStatuses, delay);
+            }
         };
+
         const refreshInstanceStatuses = async () => {
-            if (!isEvolutionVisible() || instanceStatusRequest) return;
+            if (!isPanelVisible(evolutionPanel) || !rtEvolutionActive || instanceStatusRequest) return;
             instanceStatusRequest = new AbortController();
-            let nextDelay = 5000;
+            let nextDelay = rtEvolutionInterval;
             try {
-                const response = await fetch(instanceStatusUrl, {
+                const response = await fetch(`${instanceStatusUrl}?_t=${Date.now()}`, {
                     headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                     credentials: 'same-origin',
                     cache: 'no-store',
                     signal: instanceStatusRequest.signal,
                 });
                 const payload = await response.json().catch(() => ({}));
-                if (response.ok && Array.isArray(payload.instances)) {
+                if (response.ok) {
                     instanceStatusFailures = 0;
-                    payload.instances.forEach(updateInstanceCard);
+                    if (payload.html) {
+                        const container = settings.querySelector('[data-evolution-instances-container]');
+                        if (container) container.innerHTML = payload.html;
+                    }
+                    if (footerTelemetry && payload.footerHtml) {
+                        footerTelemetry.innerHTML = payload.footerHtml;
+                    }
                 } else {
                     instanceStatusFailures += 1;
-                    nextDelay = Math.min(60000, 5000 * Math.pow(2, Math.min(instanceStatusFailures, 4)));
+                    nextDelay = Math.min(60000, rtEvolutionInterval * Math.pow(2, Math.min(instanceStatusFailures, 4)));
                 }
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     instanceStatusFailures += 1;
-                    nextDelay = Math.min(60000, 5000 * Math.pow(2, Math.min(instanceStatusFailures, 4)));
+                    nextDelay = Math.min(60000, rtEvolutionInterval * Math.pow(2, Math.min(instanceStatusFailures, 4)));
                 }
             } finally {
                 instanceStatusRequest = null;
                 scheduleInstanceStatusUpdate(nextDelay);
             }
         };
-        document.addEventListener('visibilitychange', () => {
-            window.clearTimeout(instanceStatusTimer);
-            if (!isEvolutionVisible()) {
-                instanceStatusRequest?.abort();
-            } else {
-                refreshInstanceStatuses();
-            }
-        });
-        if (isEvolutionVisible()) scheduleInstanceStatusUpdate();
+
+        if (isPanelVisible(evolutionPanel) && rtEvolutionActive) scheduleInstanceStatusUpdate();
     }
+
+    // --- Empresa (WhatsApps) Realtime ---
+    const scheduleCompanyUpdate = (delay = rtCompanyInterval) => {
+        window.clearTimeout(companyTimer);
+        if (isPanelVisible(companyPanel) && rtCompanyActive) {
+            companyTimer = window.setTimeout(refreshCompanyFeed, delay);
+        }
+    };
+
+    const refreshCompanyFeed = async () => {
+        if (!isPanelVisible(companyPanel) || !rtCompanyActive || companyRequest) return;
+        const container = settings.querySelector('[data-company-whatsapps-container]');
+        if (!container) return;
+
+        companyRequest = new AbortController();
+        try {
+            const response = await fetch(`${window.location.origin}/configuracoes/empresa/feed?_t=${Date.now()}`, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin',
+                cache: 'no-store',
+                signal: companyRequest.signal,
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (response.ok && payload.success) {
+                if (payload.html) container.innerHTML = payload.html;
+                if (footerTelemetry && payload.footerHtml) footerTelemetry.innerHTML = payload.footerHtml;
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Error fetching company feed:', error);
+            }
+        } finally {
+            companyRequest = null;
+            scheduleCompanyUpdate();
+        }
+    };
+
+    if (isPanelVisible(companyPanel) && rtCompanyActive) scheduleCompanyUpdate();
+
+    // --- Modelos de Mensagens Realtime ---
+    const scheduleTemplatesUpdate = (delay = rtTemplatesInterval) => {
+        window.clearTimeout(templatesTimer);
+        if (isPanelVisible(templatesPanel) && rtTemplatesActive) {
+            templatesTimer = window.setTimeout(refreshTemplatesFeed, delay);
+        }
+    };
+
+    const refreshTemplatesFeed = async () => {
+        if (!isPanelVisible(templatesPanel) || !rtTemplatesActive || templatesRequest) return;
+        const container = settings.querySelector('[data-templates-list-container]');
+        if (!container) return;
+
+        templatesRequest = new AbortController();
+        try {
+            const response = await fetch(`${window.location.origin}/configuracoes/modelos-mensagens/feed?_t=${Date.now()}`, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin',
+                cache: 'no-store',
+                signal: templatesRequest.signal,
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (response.ok && payload.success) {
+                if (payload.html) container.innerHTML = payload.html;
+                if (footerTelemetry && payload.footerHtml) footerTelemetry.innerHTML = payload.footerHtml;
+                
+                // Re-apply filter if active
+                const activeFilterBtn = settings.querySelector('[data-template-filter] .filter-btn.active');
+                if (activeFilterBtn) {
+                    const filter = activeFilterBtn.dataset.filter;
+                    const cards = container.querySelectorAll('.template-card');
+                    let visibleCount = 0;
+                    cards.forEach(card => {
+                        const isInactive = card.classList.contains('inactive');
+                        let show = true;
+                        if (filter === 'active' && isInactive) show = false;
+                        if (filter === 'inactive' && !isInactive) show = false;
+                        card.style.display = show ? '' : 'none';
+                        if (show) visibleCount++;
+                    });
+                    const emptyState = container.querySelector('[data-templates-empty-filter]');
+                    if (emptyState) emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+                }
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Error fetching templates feed:', error);
+            }
+        } finally {
+            templatesRequest = null;
+            scheduleTemplatesUpdate();
+        }
+    };
+
+    if (isPanelVisible(templatesPanel) && rtTemplatesActive) scheduleTemplatesUpdate();
+
+    // Listener para troca de abas em configurações para acionar os timers corretos e sincronizar indicador no cabeçalho
+    const realtimeIndicator = document.querySelector('[data-realtime-indicator]');
+    const updateHeaderIndicator = (tabName) => {
+        if (!realtimeIndicator) return;
+        let isActive = false;
+        if (tabName === 'evolution') isActive = rtEvolutionActive;
+        else if (tabName === 'empresa') isActive = rtCompanyActive;
+        else if (tabName === 'modelos-mensagens') isActive = rtTemplatesActive;
+        
+        realtimeIndicator.style.display = isActive ? '' : 'none';
+    };
+
+    document.addEventListener('click', (event) => {
+        const tabBtn = event.target.closest('[data-settings-tab]');
+        if (tabBtn) {
+            const tabName = tabBtn.dataset.settingsTab;
+            updateHeaderIndicator(tabName);
+            if (tabName === 'evolution' && rtEvolutionActive) scheduleInstanceStatusUpdate(500);
+            if (tabName === 'empresa' && rtCompanyActive) scheduleCompanyUpdate(500);
+            if (tabName === 'modelos-mensagens' && rtTemplatesActive) scheduleTemplatesUpdate(500);
+        }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        window.clearTimeout(instanceStatusTimer);
+        window.clearTimeout(companyTimer);
+        window.clearTimeout(templatesTimer);
+        if (!document.hidden) {
+            if (isPanelVisible(evolutionPanel) && rtEvolutionActive) refreshInstanceStatuses();
+            if (isPanelVisible(companyPanel) && rtCompanyActive) refreshCompanyFeed();
+            if (isPanelVisible(templatesPanel) && rtTemplatesActive) refreshTemplatesFeed();
+        } else {
+            instanceStatusRequest?.abort();
+            companyRequest?.abort();
+            templatesRequest?.abort();
+        }
+    });
 
     const sendTestDialog = document.querySelector('[data-send-test-dialog]');
     const sendTestForm = sendTestDialog?.querySelector('[data-send-test-form]');

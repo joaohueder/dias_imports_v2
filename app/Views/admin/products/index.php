@@ -8,7 +8,7 @@ $counts = [
     'inactive' => count(array_filter($products, fn($p) => !$p->active)),
 ];
 ?>
-<section class="users-view-container" data-products-module>
+<section class="users-view-container" data-products-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
     <!-- Top toolbar -->
     <div class="users-header-actions">
         <div class="users-search-box">
@@ -53,7 +53,7 @@ $counts = [
     </div>
 
     <!-- Cards Grid -->
-    <div class="users-grid products-grid" data-products-grid>
+    <div class="users-grid products-grid" data-products-grid data-feed-url="<?= site_url('produtos/feed') ?>">
         <?= view('admin/products/_cards', [
             'products' => $products,
             'isSendJobActive' => $isSendJobActive,
@@ -357,6 +357,125 @@ document.addEventListener('DOMContentLoaded', function() {
                 applyFilters();
             }
         });
+    }
+
+    // ==========================================
+    // ATUALIZAÇÃO EM TEMPO REAL (POLLING 5s)
+    // ==========================================
+    const productsModule = document.querySelector('[data-products-module]');
+    const isRealtimeActive = productsModule?.dataset.realtimeActive === '1';
+    const realtimeInterval = parseInt(productsModule?.dataset.realtimeInterval, 10) || 5;
+
+    let isPolling = false;
+
+    async function pollProductsRealtime() {
+        if (isPolling) return;
+        // Se o modal de envio ou qualquer outro dialog estiver aberto, pausar o polling
+        const modalSend = document.getElementById('modal-send-product');
+        if (modalSend && modalSend.classList.contains('open')) return;
+
+        isPolling = true;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        try {
+            const feedUrl = productsGrid?.dataset.feedUrl || `${window.location.origin}/produtos/feed`;
+            const urlObj = new URL(feedUrl, window.location.origin);
+            urlObj.searchParams.set('_t', Date.now()); // Força requisição nova sem cache
+
+            const response = await fetch(urlObj.toString(), {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            const data = await response.json();
+
+            if (data.success) {
+                // Atualizar rodapé
+                if (data.footerHtml) {
+                    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
+                    if (footerTelemetry) {
+                        footerTelemetry.innerHTML = data.footerHtml;
+                    }
+                }
+
+                // Atualizar lista se o usuário não estiver digitando na busca
+                const isSearchFocused = document.activeElement === searchInput;
+                if (!isSearchFocused && typeof data.htmlCards === 'string' && productsGrid) {
+                    productsGrid.innerHTML = data.htmlCards;
+                    // Recalcular referências dos cards e aplicar filtros ativos
+                    const updatedCards = document.querySelectorAll('[data-product-card]');
+                    let visibleCount = 0;
+                    let cardsArray = Array.from(updatedCards);
+
+                    cardsArray.sort((a, b) => {
+                        if (currentSort === 'created_desc') {
+                            return (b.dataset.created || '').localeCompare(a.dataset.created || '');
+                        } else if (currentSort === 'created_asc') {
+                            return (a.dataset.created || '').localeCompare(b.dataset.created || '');
+                        } else if (currentSort === 'sends_desc') {
+                            return parseInt(b.dataset.sends || 0) - parseInt(a.dataset.sends || 0);
+                        } else if (currentSort === 'sends_asc') {
+                            return parseInt(a.dataset.sends || 0) - parseInt(b.dataset.sends || 0);
+                        } else if (currentSort === 'name_asc') {
+                            return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+                        } else if (currentSort === 'name_desc') {
+                            return (b.dataset.name || '').localeCompare(a.dataset.name || '');
+                        }
+                        return 0;
+                    });
+
+                    cardsArray.forEach(card => productsGrid.appendChild(card));
+
+                    let totalActive = 0;
+                    let totalInactive = 0;
+
+                    cardsArray.forEach(card => {
+                        const name = card.dataset.name || '';
+                        const status = card.dataset.status || '';
+
+                        if (status === 'active') totalActive++;
+                        else totalInactive++;
+
+                        const matchesSearch = currentSearch === '' || name.includes(currentSearch);
+                        const matchesStatus = currentFilter === 'all' || status === currentFilter;
+
+                        if (matchesSearch && matchesStatus) {
+                            card.style.display = '';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Atualizar badges
+                    const allBadge = document.querySelector('.filter-pill[data-filter="all"] .pill-badge');
+                    const activeBadge = document.querySelector('.filter-pill[data-filter="active"] .pill-badge');
+                    const inactiveBadge = document.querySelector('.filter-pill[data-filter="inactive"] .pill-badge');
+                    if (allBadge) allBadge.textContent = cardsArray.length;
+                    if (activeBadge) activeBadge.textContent = totalActive;
+                    if (inactiveBadge) inactiveBadge.textContent = totalInactive;
+
+                    if (emptyState) {
+                        emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+                    }
+                }
+            }
+        } catch (err) {
+            // Ignora falhas de rede transitórias silenciosamente
+        } finally {
+            isPolling = false;
+        }
+    }
+
+    if (isRealtimeActive && realtimeInterval > 0) {
+        setInterval(pollProductsRealtime, realtimeInterval * 1000);
     }
 });
 

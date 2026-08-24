@@ -41,6 +41,10 @@ class VipLeads extends BaseController
         $firstName = trim(explode(' ', $userName)[0] ?? 'Usuário');
         $userInitials = $this->extractInitials($userName);
 
+        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
+        $isRealtimeActive = $realtimeModel->isScreenActive('vip_leads');
+        $realtimeInterval = $realtimeModel->getInterval('vip_leads');
+
         return view('admin/leads/index', array_merge($data, [
             'pageTitle' => 'Leads VIP',
             'pageDescription' => 'Gestão e acompanhamento dos contatos captados pela Landing Page de Leads.',
@@ -48,6 +52,8 @@ class VipLeads extends BaseController
             'activePage' => 'vip',
             'layoutMaxWidth' => $layoutMaxWidth,
             'hasLeadsJs' => true,
+            'isRealtimeActive' => $isRealtimeActive,
+            'realtimeInterval' => $realtimeInterval,
             'userName' => $userName,
             'userEmail' => $userEmail,
             'firstName' => $firstName,
@@ -74,12 +80,21 @@ class VipLeads extends BaseController
         $htmlTable = view('admin/leads/_table_rows', ['leads' => $data['leads']]);
         $htmlMetrics = view('admin/leads/_metrics', $data['metrics']);
 
+        helper('telemetry');
+        $telemetry = get_footer_telemetry();
+
         return $this->response->setJSON([
             'success' => true,
             'metrics' => $data['metrics'],
             'htmlTable' => $htmlTable,
             'htmlMetrics' => $htmlMetrics,
             'totalResults' => count($data['leads']),
+            'footerHtml' => $telemetry['html'],
+            'telemetry' => [
+                'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                'loadTime' => $telemetry['loadTime'],
+            ],
         ]);
     }
 

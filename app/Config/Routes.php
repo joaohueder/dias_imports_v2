@@ -16,8 +16,13 @@ $routes->post('leads/capture', 'Landing::submitLead', ['filter' => 'csrf']);
 $routes->get('p/(:segment)', 'ProductLanding::show/$1');
 $routes->post('p/(:num)/track', 'ProductLanding::trackClick/$1', ['filter' => 'csrf']);
 
+// Rotas para Migrador e Sincronização Automática do Banco de Dados
+$routes->get('database/auto-migrate', 'DatabaseAutoMigrate::screen');
+$routes->post('database/auto-migrate/execute', 'DatabaseAutoMigrate::execute');
+
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Home::index');
+    $routes->get('visao-geral/feed', 'Home::overviewFeed');
 
     // Grupos de WhatsApp
     $routes->get('grupos-whatsapp', 'WhatsappGroups::index', ['filter' => 'permission:whatsapp_groups,view']);
@@ -32,6 +37,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
 
     // Produtos
     $routes->get('produtos', 'Admin\Products::index', ['filter' => 'permission:products,view']);
+    $routes->get('produtos/feed', 'Admin\Products::feed', ['filter' => 'permission:products,view']);
     $routes->get('produtos/novo', 'Admin\Products::create', ['filter' => 'permission:products,create']);
     $routes->post('produtos/novo', 'Admin\Products::store', ['filter' => ['permission:products,create', 'csrf']]);
     $routes->get('produtos/(:num)/editar', 'Admin\Products::edit/$1', ['filter' => 'permission:products,edit']);
@@ -64,6 +70,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
 
     // Usuários (Apenas administradores)
     $routes->get('usuarios', 'Users::index');
+    $routes->get('usuarios/feed', 'Users::feed');
     $routes->get('usuarios/novo', 'Users::create');
     $routes->post('usuarios/novo', 'Users::store', ['filter' => 'csrf']);
     $routes->get('usuarios/(:num)/editar', 'Users::edit/$1');
@@ -74,6 +81,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
 
     // Configurações gerais
     $routes->get('configuracoes', 'Home::settings');
+    $routes->get('configuracoes/empresa/feed', 'Home::companyWhatsappsFeed', ['filter' => 'permission:company,view']);
+    $routes->get('configuracoes/modelos-mensagens/feed', 'Home::messageTemplatesFeed', ['filter' => 'permission:message_templates,view']);
     $routes->post('configuracoes/layout', 'Home::saveLayoutSettings', ['filter' => ['permission:layout,edit', 'csrf']]);
     $routes->post('configuracoes/empresa', 'Home::saveCompanySettings', ['filter' => ['permission:company,edit', 'csrf']]);
     $routes->post('configuracoes/empresa/whatsapp', 'Home::saveCompanyWhatsapp', ['filter' => ['permission:company,create', 'csrf']]);
@@ -97,5 +106,7 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->get('landing-leads', 'Home::landingLeadsSettings', ['filter' => 'permission:landing_leads,view']);
     $routes->post('landing-leads', 'Home::saveLandingLeadSettings', ['filter' => ['permission:landing_leads,edit', 'csrf']]);
     $routes->post('configuracoes/central-trabalho', 'JobCenter::saveJobSettings', ['filter' => ['permission:central_trabalho,edit', 'csrf']]);
+    $routes->post('configuracoes/tempo-real', 'Home::saveRealtimeSettings', ['filter' => ['permission:realtime,edit', 'csrf']]);
+    $routes->post('configuracoes/tempo-real/(:num)/status', 'Home::toggleRealtimeScreen/$1', ['filter' => ['permission:realtime,edit', 'csrf']]);
 });
 

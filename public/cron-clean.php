@@ -91,9 +91,4 @@ try {
         'success' => false,
         'message' => 'Erro ao redefinir tarefas: ' . $e->getMessage(),
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-} finally {
-    try {
-        $db = \Config\Database::connect();
-        $db->close();
-    } catch (\Throwable $ignored) {}
 }

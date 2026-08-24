@@ -1,25 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="leads-module-wrap" data-leads-module>
-
-    <!-- Barra de regressão / atualização automática 30s no topo do painel -->
-    <div class="leads-auto-refresh-bar" data-refresh-bar-container>
-        <div class="refresh-bar-content">
-            <div class="refresh-status-badge">
-                <span class="status-pulse-dot" aria-hidden="true"></span>
-                <span>Sincronização em tempo real</span>
-                <span class="refresh-timer-info">(atualiza em <strong data-refresh-countdown>30s</strong>)</span>
-            </div>
-            <button type="button" class="btn-refresh-manual" data-refresh-now title="Atualizar agora">
-                <i class="ti ti-refresh" aria-hidden="true"></i>
-                <span>Atualizar agora</span>
-            </button>
-        </div>
-        <div class="refresh-progress-track">
-            <div class="refresh-progress-fill" data-refresh-fill style="width: 100%;"></div>
-        </div>
-    </div>
+<div class="leads-module-wrap" data-leads-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
 
     <!-- Dashboard de Métricas -->
     <section class="leads-dashboard-section" data-dashboard-container aria-label="Dashboard de Leads">

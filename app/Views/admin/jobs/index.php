@@ -1,21 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="job-center-container">
-    <!-- Header com indicador de sincronização e Barra de Progresso -->
-    <div style="background: rgb(var(--surface-secondary)); border: 1px solid rgb(var(--border)); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: rgb(var(--foreground));">
-                <i class="ti ti-refresh rotate" style="color: var(--primary, #6366f1); font-size: 16px;"></i>
-                <span>Sincronização em Tempo Real</span>
-                <span style="color: rgb(var(--foreground-muted)); font-weight: 400; margin-left: 4px;">(atualiza em <strong id="refresh-countdown">30s</strong>)</span>
-            </div>
-        </div>
-        <div style="height: 6px; background: rgba(99, 102, 241, 0.15); border-radius: 999px; overflow: hidden; position: relative;">
-            <div id="refresh-progress-bar" style="height: 100%; width: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 999px;"></div>
-        </div>
-    </div>
-
+<div class="job-center-container" data-jobs-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
     <!-- Grid de Métricas / Cards de Status -->
     <div class="job-stats-grid">
         <div class="job-stat-card">
@@ -548,41 +534,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateBatchActions();
     }
 
-    // Auto-atualização periódica a cada 30 segundos com barra de regressão suave
-    const progressBar = document.getElementById('refresh-progress-bar');
-    const countdownEl = document.getElementById('refresh-countdown');
-    const refreshInterval = 30000; // 30 segundos
-    const stepInterval = 100; // atualiza barra a cada 100ms
-    let elapsed = 0;
-    let progressTimer;
-
-    function startProgress() {
-        elapsed = 0;
-        if (progressBar) progressBar.style.width = '100%';
-        if (countdownEl) countdownEl.innerText = '30s';
-        
-        clearInterval(progressTimer);
-        progressTimer = setInterval(() => {
-            elapsed += stepInterval;
-            const remaining = refreshInterval - elapsed;
-            const percentage = Math.max((remaining / refreshInterval) * 100, 0);
-            
-            if (progressBar) progressBar.style.width = percentage + '%';
-            
-            if (countdownEl) {
-                const secondsLeft = Math.ceil(remaining / 1000);
-                countdownEl.innerText = secondsLeft + 's';
-            }
-            
-            if (elapsed >= refreshInterval) {
-                elapsed = 0;
-                if (progressBar) progressBar.style.width = '100%';
-                if (countdownEl) countdownEl.innerText = '30s';
-                fetchFeed();
-            }
-        }, stepInterval);
-    }
-
     function renderBadge(status) {
         if (status === 'pending') {
             return '<span class="job-badge pending"><i class="ti ti-clock"></i>Pendente</span>';
@@ -723,31 +674,61 @@ document.addEventListener('DOMContentLoaded', function () {
         filterTable();
     }
 
-    function fetchFeed() {
-        fetch('<?= site_url('central-trabalho/feed') ?>')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    if (data.stats) {
-                        const elP = document.getElementById('stat-pending');
-                        const elPr = document.getElementById('stat-processing');
-                        const elC = document.getElementById('stat-completed');
-                        const elF = document.getElementById('stat-failed');
-                        if (elP) elP.innerText = data.stats.pending;
-                        if (elPr) elPr.innerText = data.stats.processing;
-                        if (elC) elC.innerText = data.stats.completed;
-                        if (elF) elF.innerText = data.stats.failed;
-                    }
-                    if (data.items) {
-                        updateTableContent(data.items);
+    const jobsContainer = document.querySelector('[data-jobs-module]');
+    const isRealtimeActive = jobsContainer?.dataset.realtimeActive === '1';
+    const realtimeIntervalSec = parseInt(jobsContainer?.dataset.realtimeInterval, 10) || 5;
+    let isFetching = false;
+    let realtimeTimer = null;
+
+    async function fetchFeed() {
+        if (isFetching) return;
+        isFetching = true;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
+
+        try {
+            const res = await fetch('<?= site_url('central-trabalho/feed') ?>?_t=' + Date.now(), {
+                signal: controller.signal,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            clearTimeout(timeoutId);
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data.success) {
+                if (data.stats) {
+                    const elP = document.getElementById('stat-pending');
+                    const elPr = document.getElementById('stat-processing');
+                    const elC = document.getElementById('stat-completed');
+                    const elF = document.getElementById('stat-failed');
+                    if (elP) elP.innerText = data.stats.pending;
+                    if (elPr) elPr.innerText = data.stats.processing;
+                    if (elC) elC.innerText = data.stats.completed;
+                    if (elF) elF.innerText = data.stats.failed;
+                }
+                if (data.items) {
+                    updateTableContent(data.items);
+                }
+                if (data.footerHtml) {
+                    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
+                    if (footerTelemetry) {
+                        footerTelemetry.innerHTML = data.footerHtml;
                     }
                 }
-            })
-            .catch(() => {});
+            }
+        } catch (err) {
+            // Silencioso em caso de abort/offline
+        } finally {
+            isFetching = false;
+        }
     }
 
-    // Inicia o timer de progresso
-    startProgress();
+    if (isRealtimeActive && realtimeIntervalSec > 0) {
+        realtimeTimer = setInterval(fetchFeed, realtimeIntervalSec * 1000);
+    }
 });
 </script>
 <?= $this->endSection() ?>

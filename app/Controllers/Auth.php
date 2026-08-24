@@ -91,6 +91,7 @@ class Auth extends BaseController
 
     public function logout(): RedirectResponse
     {
+        helper('cookie');
         $userId = session()->get('user_id');
         if ($userId !== null) {
             (new RememberTokenModel())->where('user_id', $userId)->delete();
@@ -113,6 +114,14 @@ class Auth extends BaseController
             'user_role' => $user['role'] ?? 'user',
             'user_permissions' => !empty($user['permissions']) ? json_decode($user['permissions'], true) : [],
         ]);
+
+        // Abre e registra conexão de sessão persistente ao autenticar
+        try {
+            $connLogModel = new \App\Models\DbConnectionLogModel();
+            $connLogModel->logConnection();
+        } catch (\Throwable $e) {
+            log_message('error', 'Erro ao registrar conexão no login: ' . $e->getMessage());
+        }
     }
 
     private function persistRememberToken(int $userId): void
@@ -146,6 +155,7 @@ class Auth extends BaseController
 
     private function restoreRememberedSession(): bool
     {
+        helper('cookie');
         $cookie = get_cookie(self::REMEMBER_COOKIE);
         if (! is_string($cookie) || ! preg_match('/^([a-f0-9]{24}):([a-f0-9]{64})$/', $cookie, $parts)) {
             return false;

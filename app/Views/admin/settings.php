@@ -10,7 +10,13 @@ $presets = [
 $isFluid = $layoutMaxWidth === 'fluid';
 $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 ?>
-<section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>">
+<section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>"
+    data-rt-company-active="<?= !empty($realtimeScreenSettings['settings_company']['active']) ? '1' : '0' ?>"
+    data-rt-company-interval="<?= esc((string) ($realtimeScreenSettings['settings_company']['interval'] ?? 5)) ?>"
+    data-rt-evolution-active="<?= !empty($realtimeScreenSettings['settings_evolution']['active']) ? '1' : '0' ?>"
+    data-rt-evolution-interval="<?= esc((string) ($realtimeScreenSettings['settings_evolution']['interval'] ?? 5)) ?>"
+    data-rt-templates-active="<?= !empty($realtimeScreenSettings['settings_templates']['active']) ? '1' : '0' ?>"
+    data-rt-templates-interval="<?= esc((string) ($realtimeScreenSettings['settings_templates']['interval'] ?? 5)) ?>">
     <div class="settings-layout">
         <aside class="settings-sidebar">
             <nav class="settings-tabs" role="tablist" aria-label="Categorias de configurações">
@@ -48,6 +54,12 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <button class="settings-tab <?= $activeSettingsTab === 'central-trabalho' ? 'active' : '' ?>" type="button" role="tab" id="central-trabalho-tab" aria-selected="<?= $activeSettingsTab === 'central-trabalho' ? 'true' : 'false' ?>" aria-controls="central-trabalho-panel" data-settings-tab="central-trabalho">
                         <i class="ti ti-briefcase" aria-hidden="true"></i>
                         <span>Central de Trabalho</span>
+                    </button>
+                <?php endif; ?>
+                <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'view')): ?>
+                    <button class="settings-tab <?= $activeSettingsTab === 'tempo-real' ? 'active' : '' ?>" type="button" role="tab" id="realtime-tab" aria-selected="<?= $activeSettingsTab === 'tempo-real' ? 'true' : 'false' ?>" aria-controls="realtime-panel" data-settings-tab="tempo-real">
+                        <i class="ti ti-refresh" aria-hidden="true"></i>
+                        <span>Atualização em Tempo Real</span>
                     </button>
                 <?php endif; ?>
             </nav>
@@ -142,24 +154,8 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </form>
             <?php endif; ?>
 
-            <div class="whatsapp-list">
-                <?php if ($companyWhatsapps === []): ?>
-                    <div class="whatsapp-empty"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i><p>Nenhum WhatsApp cadastrado.</p><span>Adicione o primeiro número de atendimento.</span></div>
-                <?php else: foreach ($companyWhatsapps as $whatsapp): ?>
-                    <article class="whatsapp-item <?= (int) $whatsapp['is_active'] !== 1 ? 'inactive' : '' ?>">
-                        <div class="whatsapp-identity"><strong><?= esc($whatsapp['name']) ?></strong><span>— <?= esc($whatsapp['phone']) ?></span><?php if ((int) $whatsapp['is_default'] === 1): ?><span class="default-badge">Padrão</span><?php elseif ((int) $whatsapp['is_active'] !== 1): ?><span class="inactive-badge">Inativo</span><?php endif; ?></div>
-                        <div class="whatsapp-actions">
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit') && (int) $whatsapp['is_default'] !== 1 && (int) $whatsapp['is_active'] === 1): ?><form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/padrao') ?>" method="post" data-confirm-action="default" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact" type="submit"><i class="ti ti-star"></i>Tornar padrão</button></form><?php endif; ?>
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'edit')): ?>
-                            <button class="button secondary compact" type="button" data-edit-whatsapp data-id="<?= esc($whatsapp['id']) ?>" data-name="<?= esc($whatsapp['name']) ?>" data-phone="<?= esc($whatsapp['phone']) ?>"><i class="ti ti-pencil"></i>Editar</button>
-                            <form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/status') ?>" method="post" data-confirm-action="<?= (int) $whatsapp['is_active'] === 1 ? 'deactivate' : 'activate' ?>" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact" type="submit"><i class="ti ti-power"></i><?= (int) $whatsapp['is_active'] === 1 ? 'Inativar' : 'Ativar' ?></button></form>
-                            <?php endif; ?>
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('company', 'delete')): ?>
-                            <form action="<?= site_url('configuracoes/empresa/whatsapp/' . $whatsapp['id'] . '/excluir') ?>" method="post" data-confirm-action="delete" data-whatsapp-name="<?= esc($whatsapp['name']) ?>"><?= csrf_field() ?><button class="button secondary compact danger" type="submit"><i class="ti ti-trash"></i>Excluir</button></form>
-                            <?php endif; ?>
-                        </div>
-                    </article>
-                <?php endforeach; endif; ?>
+            <div class="whatsapp-list-container" data-company-whatsapps-container>
+                <?= view('admin/settings/_company_whatsapps', ['companyWhatsapps' => $companyWhatsapps]) ?>
             </div>
         </section>
     </div>
@@ -216,33 +212,8 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 
             <?php if ($evolutionLoadError): ?><div class="settings-alert error" role="alert"><i class="ti ti-cloud-off" aria-hidden="true"></i><?= esc($evolutionLoadError) ?></div><?php endif; ?>
 
-            <div class="instance-list">
-                <?php if ($evolutionInstances === []): ?>
-                    <div class="whatsapp-empty"><i class="ti ti-plug-connected-x" aria-hidden="true"></i><p>Nenhuma instância disponível.</p><span>Salve e teste as credenciais; depois crie a primeira instância.</span></div>
-                <?php else: foreach ($evolutionInstances as $instance): ?>
-                    <?php $isDefaultInstance = ($evolutionSettings['default_instance_name'] ?? null) === $instance['name']; ?>
-                    <article class="instance-card" data-instance-card="<?= esc($instance['name']) ?>">
-                        <div class="instance-main">
-                            <div class="instance-heading">
-                                <span class="instance-avatar"><?php if ($instance['profile_picture'] !== ''): ?><img src="<?= esc($instance['profile_picture']) ?>" alt=""><?php else: ?><i class="ti ti-brand-whatsapp" aria-hidden="true"></i><?php endif; ?></span>
-                                <span><strong><?= esc($instance['profile_name']) ?></strong><small><?= esc($instance['name']) ?></small></span>
-                                <?php if ($isDefaultInstance): ?><span class="default-badge">Padrão</span><?php endif; ?>
-                            </div>
-                            <dl class="instance-data"><div><dt>Status</dt><dd class="connection-status <?= $instance['connected'] ? 'connected' : 'disconnected' ?>" data-instance-status aria-live="polite"><i class="ti <?= $instance['connected'] ? 'ti-circle-check-filled' : 'ti-circle-x-filled' ?>" aria-hidden="true"></i><span><?= $instance['connected'] ? 'Conectada' : esc(ucfirst($instance['state'])) ?></span></dd></div><?php if ($instance['number'] !== ''): ?><div><dt>Número</dt><dd><?= esc($instance['number']) ?></dd></div><?php endif; ?></dl>
-                        </div>
-                        <div class="instance-actions">
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit') && ! $isDefaultInstance): ?><form action="<?= site_url('configuracoes/evolution/instancias/padrao') ?>" method="post" data-confirm-action="evolution-default" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit"><i class="ti ti-star"></i>Tornar padrão</button></form><?php endif; ?>
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'edit')): ?>
-                            <form action="<?= site_url('configuracoes/evolution/instancias/conectar') ?>" method="post" data-qr-connect-form data-instance-label="<?= esc($instance['profile_name']) ?>" <?= $instance['connected'] ? 'hidden' : '' ?>><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit"><i class="ti ti-qrcode"></i>Conectar</button></form>
-                            <button class="button secondary compact send-test-trigger" type="button" data-instance-send-test data-instance-name="<?= esc($instance['name']) ?>" data-instance-label="<?= esc($instance['profile_name']) ?>" <?= $instance['connected'] ? '' : 'hidden' ?>><i class="ti ti-send" aria-hidden="true"></i>Testar envio</button>
-                            <form action="<?= site_url('configuracoes/evolution/instancias/desconectar') ?>" method="post" data-confirm-action="evolution-logout" data-action-name="<?= esc($instance['name']) ?>" data-instance-disconnect <?= $instance['connected'] ? '' : 'hidden' ?>><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact" type="submit"><i class="ti ti-plug-x"></i>Desconectar</button></form>
-                            <?php endif; ?>
-                            <?php if (\App\Libraries\UserPermissions::hasPermission('evolution', 'delete')): ?>
-                            <form action="<?= site_url('configuracoes/evolution/instancias/excluir') ?>" method="post" data-confirm-action="evolution-delete" data-action-name="<?= esc($instance['name']) ?>"><?= csrf_field() ?><input type="hidden" name="instance_name" value="<?= esc($instance['name']) ?>"><button class="button secondary compact danger" type="submit"><i class="ti ti-trash"></i>Excluir</button></form>
-                            <?php endif; ?>
-                        </div>
-                    </article>
-                <?php endforeach; endif; ?>
+            <div class="instance-list-container" data-evolution-instances-container>
+                <?= view('admin/settings/_evolution_instances', ['evolutionInstances' => $evolutionInstances, 'evolutionSettings' => $evolutionSettings]) ?>
             </div>
         </section>
     </div>
@@ -404,79 +375,9 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
             </div>
         </div>
 
-        <?php if ($messageTemplates === []): ?>
-            <div class="template-empty-state">
-                <div class="template-empty-icon"><i class="ti ti-message-2" aria-hidden="true"></i></div>
-                <p>Nenhum modelo cadastrado.</p>
-                <span>Crie o primeiro modelo reutilizável para disparo.</span>
-            </div>
-        <?php else: ?>
-            <div class="templates-grid" data-templates-grid>
-                <?php foreach ($messageTemplates as $tpl): ?>
-                    <article class="template-card <?= (int)$tpl['is_active'] !== 1 ? 'inactive' : '' ?>">
-                        <div class="template-card-header">
-                            <div class="template-card-title-group">
-                                <h3 class="template-title"><?= esc($tpl['name']) ?></h3>
-                                <div class="template-meta-row">
-                                    <span class="template-badge <?= (int)$tpl['is_active'] === 1 ? 'active' : 'inactive' ?>"><?= (int)$tpl['is_active'] === 1 ? 'Ativo' : 'Inativo' ?></span>
-                                    <span class="template-sends-badge"><i class="ti ti-send" aria-hidden="true"></i> <?= (int)$tpl['send_count'] ?> envios</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="template-content-preview">
-                            <?php
-                                $sampleContent = strtr($tpl['content'], [
-                                    '{{nome}}' => 'iPhone 15 Pro Max 256GB',
-                                    '{{descricao}}' => 'Titânio Natural, tela Super Retina XDR e chip A17 Pro.',
-                                    '{{preco}}' => 'R$ 7.890,00',
-                                    '{{preco_promocional}}' => 'R$ 6.990,00',
-                                    '{{desconto}}' => '12% OFF',
-                                    '{{link}}' => 'https://diasimports.com.br/p/iphone-15',
-                                ]);
-                            ?>
-                            <pre><?= esc($sampleContent) ?></pre>
-                        </div>
-
-                        <div class="template-card-footer">
-                            <span class="template-meta">Criado em <?= $tpl['created_at'] ? date('d/m/Y', strtotime($tpl['created_at'])) : date('d/m/Y') ?></span>
-                            <div class="template-actions">
-                                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'edit')): ?>
-                                <button class="button secondary compact icon-btn" type="button" data-edit-template data-id="<?= esc($tpl['id']) ?>" data-name="<?= esc($tpl['name']) ?>" data-content="<?= esc($tpl['content']) ?>" title="Editar Modelo">
-                                    <i class="ti ti-edit" aria-hidden="true"></i> Editar
-                                </button>
-                                <form action="<?= site_url('configuracoes/modelos-mensagens/' . $tpl['id'] . '/status') ?>" method="post" data-confirm-action="<?= (int)$tpl['is_active'] === 1 ? 'deactivate' : 'activate' ?>" data-action-name="<?= esc($tpl['name']) ?>">
-                                    <?= csrf_field() ?>
-                                    <button class="button secondary compact" type="submit" title="<?= (int)$tpl['is_active'] === 1 ? 'Inativar Modelo' : 'Ativar Modelo' ?>">
-                                        <i class="ti <?= (int)$tpl['is_active'] === 1 ? 'ti-eye-off' : 'ti-eye' ?>" aria-hidden="true"></i>
-                                        <?= (int)$tpl['is_active'] === 1 ? 'Inativar' : 'Ativar' ?>
-                                    </button>
-                                </form>
-                                <?php endif; ?>
-                                <?php if (\App\Libraries\UserPermissions::hasPermission('message_templates', 'delete')): ?>
-                                <form action="<?= site_url('configuracoes/modelos-mensagens/' . $tpl['id'] . '/excluir') ?>" method="post" data-confirm-action="delete" data-action-name="<?= esc($tpl['name']) ?>">
-                                    <?= csrf_field() ?>
-                                    <button class="button secondary compact danger" type="submit" title="Excluir Modelo">
-                                        <i class="ti ti-trash" aria-hidden="true"></i> Excluir
-                                    </button>
-                                </form>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="template-empty-state" data-templates-empty-filter style="display: none; grid-column: 1 / -1; margin-top: 16px;">
-                <div class="template-empty-icon"><i class="ti ti-message-off" aria-hidden="true"></i></div>
-                <p>Nenhum modelo encontrado para o filtro selecionado.</p>
-                <span>Tente alternar para outra visualização.</span>
-                <button type="button" class="button secondary" data-templates-clear-filters style="margin-top: 8px;">
-                    <i class="ti ti-filter-off" aria-hidden="true"></i>
-                    <span>Limpar Filtro</span>
-                </button>
-            </div>
-        <?php endif; ?>
+        <div class="templates-list-container" data-templates-list-container>
+            <?= view('admin/settings/_message_templates', ['messageTemplates' => $messageTemplates]) ?>
+        </div>
     </div>
     <?php endif; ?>
 
@@ -599,6 +500,53 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     </form>
                 <?php endforeach; ?>
             </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'view')): ?>
+    <div class="settings-tab-panel realtime-panel" id="realtime-panel" role="tabpanel" aria-labelledby="realtime-tab" data-settings-panel="tempo-real" <?= $activeSettingsTab !== 'tempo-real' ? 'hidden' : '' ?>>
+        <div class="setting-intro">
+            <h2>Atualização em Tempo Real</h2>
+            <p>Configure quais telas do sistema devem ser atualizadas automaticamente em tempo real (a cada 5 segundos). O processo abre uma conexão nova, atualiza a tela e o rodapé, e fecha a conexão.</p>
+        </div>
+
+        <?php if (empty($realtimeScreens)): ?>
+            <div class="empty-state">
+                <i class="ti ti-refresh" aria-hidden="true"></i>
+                <p>Nenhuma tela configurada para atualização em tempo real.</p>
+            </div>
+        <?php else: ?>
+            <form action="<?= site_url('configuracoes/tempo-real') ?>" method="post" data-dirty-form>
+                <?= csrf_field() ?>
+                <div class="jobs-list" style="gap: 8px;">
+                    <?php foreach ($realtimeScreens as $screen): ?>
+                        <div class="job-settings-card" style="padding: 12px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px;">
+                            <div class="job-card-title" style="margin: 0; flex: 1;">
+                                <h3 style="margin: 0; font-size: 14px; font-weight: 500; text-align: left;"><?= esc($screen['screen_name']) ?></h3>
+                            </div>
+                            <div class="job-card-toggle" style="margin: 0; display: flex; align-items: center;">
+                                <label class="toggle-switch" title="<?= $screen['is_active'] ? 'Atualização ativa' : 'Atualização inativa' ?>" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="screens[<?= $screen['id'] ?>][is_active]" value="1" <?= $screen['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-label-text" style="font-size: 13px;"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
+                                </label>
+                            </div>
+                            <input type="hidden" name="screens[<?= $screen['id'] ?>][interval]" value="<?= esc((string) $screen['refresh_interval_seconds']) ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'edit')): ?>
+                <div class="save-bar" data-form-save-bar hidden>
+                    <p><strong>Alterações não salvas</strong><span>Salve para aplicar as novas configurações de atualização em tempo real.</span></p>
+                    <div class="save-actions">
+                        <button class="button secondary" type="button" data-cancel-form>Cancelar</button>
+                        <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </form>
         <?php endif; ?>
     </div>
     <?php endif; ?>
