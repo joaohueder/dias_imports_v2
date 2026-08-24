@@ -122,13 +122,23 @@ class RealtimeSnapshotService
         $logFile = $realtimeDir . DIRECTORY_SEPARATOR . 'realtime.log';
 
         if ($isWindows) {
-            // Windows background execution via WScript/cmd start /B
-            $cmd = sprintf('start /B "" "%s" "%s" > "%s" 2>&1', $phpBinary, $cronScript, $logFile);
-            @pclose(@popen($cmd, 'r'));
+            // Windows background execution via cmd /c start /B
+            $cmd = sprintf('cmd /c start /B "" "%s" "%s" > "%s" 2>&1', $phpBinary, $cronScript, $logFile);
+            if (function_exists('pclose') && function_exists('popen')) {
+                @pclose(@popen($cmd, 'r'));
+            } elseif (function_exists('shell_exec')) {
+                @shell_exec($cmd);
+            }
         } else {
             // Linux / Unix background execution
             $cmd = sprintf('nohup "%s" "%s" > "%s" 2>&1 &', $phpBinary, $cronScript, $logFile);
-            @exec($cmd);
+            if (function_exists('exec')) {
+                \exec($cmd);
+            } elseif (function_exists('shell_exec')) {
+                \shell_exec($cmd);
+            } elseif (function_exists('popen') && function_exists('pclose')) {
+                @pclose(@popen($cmd, 'r'));
+            }
         }
 
         return true;
