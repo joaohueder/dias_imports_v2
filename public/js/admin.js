@@ -204,34 +204,18 @@ window.getAppBaseUrl = () => {
         showProcessing(form, event.submitter);
     });
 
-    const errorDialog = document.querySelector('[data-error-dialog]');
-    const closeErrorButton = errorDialog?.querySelector('[data-close-error]');
-    if (errorDialog && closeErrorButton) {
-        const closeError = () => {
-            errorDialog.classList.remove('open');
-            errorDialog.setAttribute('aria-hidden', 'true');
-            appShell?.removeAttribute('inert');
-            document.body.classList.remove('processing-locked');
-            document.body.style.overflow = '';
-            window.setTimeout(() => { errorDialog.hidden = true; }, 200);
-        };
-        errorDialog.hidden = false;
-        errorDialog.setAttribute('aria-hidden', 'false');
-        appShell?.setAttribute('inert', '');
-        document.body.classList.add('processing-locked');
-        document.body.style.overflow = 'hidden';
-        window.requestAnimationFrame(() => {
-            errorDialog.classList.add('open');
-            closeErrorButton.focus();
-        });
-        closeErrorButton.addEventListener('click', closeError);
-        errorDialog.addEventListener('click', (event) => event.target === errorDialog && closeError());
-        document.addEventListener('keydown', (event) => event.key === 'Escape' && errorDialog.classList.contains('open') && closeError());
-    }
-
     const successDialog = document.querySelector('[data-success-dialog]');
     const closeSuccessButton = successDialog?.querySelector('[data-close-success]');
-    if (successDialog && closeSuccessButton) {
+    
+    window.showSuccessDialog = (title, message) => {
+        if (!successDialog || !closeSuccessButton) return;
+        
+        const titleEl = successDialog.querySelector('[data-success-title]');
+        const messageEl = successDialog.querySelector('[data-success-message]');
+        
+        if (titleEl) titleEl.textContent = title;
+        if (messageEl) messageEl.textContent = message;
+        
         const closeSuccess = () => {
             successDialog.classList.remove('open');
             successDialog.setAttribute('aria-hidden', 'true');
@@ -240,6 +224,7 @@ window.getAppBaseUrl = () => {
             document.body.style.overflow = '';
             window.setTimeout(() => { successDialog.hidden = true; }, 200);
         };
+        
         successDialog.hidden = false;
         successDialog.setAttribute('aria-hidden', 'false');
         appShell?.setAttribute('inert', '');
@@ -249,9 +234,68 @@ window.getAppBaseUrl = () => {
             successDialog.classList.add('open');
             closeSuccessButton.focus();
         });
-        closeSuccessButton.addEventListener('click', closeSuccess);
+        
+        // Remove listeners antigos para evitar duplicação
+        const newCloseBtn = closeSuccessButton.cloneNode(true);
+        closeSuccessButton.parentNode.replaceChild(newCloseBtn, closeSuccessButton);
+        
+        newCloseBtn.addEventListener('click', closeSuccess);
         successDialog.addEventListener('click', (event) => event.target === successDialog && closeSuccess());
         document.addEventListener('keydown', (event) => event.key === 'Escape' && successDialog.classList.contains('open') && closeSuccess());
+    };
+
+    if (successDialog && closeSuccessButton && successDialog.getAttribute('aria-hidden') === 'false') {
+        window.showSuccessDialog(
+            successDialog.querySelector('[data-success-title]')?.textContent || 'Operação realizada',
+            successDialog.querySelector('[data-success-message]')?.textContent || ''
+        );
+    }
+
+    const errorDialog = document.querySelector('[data-error-dialog]');
+    const closeErrorButton = errorDialog?.querySelector('[data-close-error]');
+    
+    window.showErrorDialog = (title, message) => {
+        if (!errorDialog || !closeErrorButton) return;
+        
+        const titleEl = errorDialog.querySelector('[data-error-title]');
+        const messageEl = errorDialog.querySelector('[data-error-message]');
+        
+        if (titleEl) titleEl.textContent = title;
+        if (messageEl) messageEl.textContent = message;
+        
+        const closeError = () => {
+            errorDialog.classList.remove('open');
+            errorDialog.setAttribute('aria-hidden', 'true');
+            appShell?.removeAttribute('inert');
+            document.body.classList.remove('processing-locked');
+            document.body.style.overflow = '';
+            window.setTimeout(() => { errorDialog.hidden = true; }, 200);
+        };
+        
+        errorDialog.hidden = false;
+        errorDialog.setAttribute('aria-hidden', 'false');
+        appShell?.setAttribute('inert', '');
+        document.body.classList.add('processing-locked');
+        document.body.style.overflow = 'hidden';
+        window.requestAnimationFrame(() => {
+            errorDialog.classList.add('open');
+            closeErrorButton.focus();
+        });
+        
+        // Remove listeners antigos para evitar duplicação
+        const newCloseBtn = closeErrorButton.cloneNode(true);
+        closeErrorButton.parentNode.replaceChild(newCloseBtn, closeErrorButton);
+        
+        newCloseBtn.addEventListener('click', closeError);
+        errorDialog.addEventListener('click', (event) => event.target === errorDialog && closeError());
+        document.addEventListener('keydown', (event) => event.key === 'Escape' && errorDialog.classList.contains('open') && closeError());
+    };
+
+    if (errorDialog && closeErrorButton && errorDialog.getAttribute('aria-hidden') === 'false') {
+        window.showErrorDialog(
+            errorDialog.querySelector('[data-error-title]')?.textContent || 'Não foi possível concluir',
+            errorDialog.querySelector('[data-error-message]')?.textContent || ''
+        );
     }
 
     const actionDialog = document.querySelector('[data-action-dialog]');

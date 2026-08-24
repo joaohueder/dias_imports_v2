@@ -134,6 +134,14 @@ $globalSuccess = session()->getFlashdata('success');
 
         <footer class="panel-footer">
             <span>&copy; <?= date('Y') ?> Dias Imports</span>
+            <?php
+            $db = \Config\Database::connect();
+            $query = $db->query("SHOW STATUS LIKE 'Threads_connected'");
+            $row = $query->getRow();
+            $connections = $row ? $row->Value : 'N/A';
+            $loadTime = number_format(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4);
+            ?>
+            <span>Conexões no Banco: <strong><?= esc($connections) ?></strong> | Tempo de Carregamento: <strong><?= esc($loadTime) ?>s</strong></span>
             <span>Painel Administrativo <span class="footer-version">v<?= esc(defined('APP_VERSION') ? APP_VERSION : '2026.08.0002') ?></span></span>
         </footer>
     </div>
@@ -199,33 +207,28 @@ $globalSuccess = session()->getFlashdata('success');
     </section>
 </div>
 
-<?php if (is_string($globalError) && $globalError !== ''): ?>
-<script>console.error(<?= json_encode('Erro do Sistema: ' . $globalError, JSON_UNESCAPED_UNICODE) ?>);</script>
-<div class="error-dialog" data-error-dialog hidden aria-hidden="true">
+<div class="error-dialog" data-error-dialog <?= (is_string($globalError) && $globalError !== '') ? '' : 'hidden' ?> aria-hidden="<?= (is_string($globalError) && $globalError !== '') ? 'false' : 'true' ?>">
     <section class="error-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="global-error-title" aria-describedby="global-error-message" tabindex="-1">
         <div class="error-dialog-icon" aria-hidden="true"><i class="ti ti-alert-triangle"></i></div>
         <p class="error-dialog-kicker">Algo não saiu como esperado</p>
-        <h2 id="global-error-title">Não foi possível concluir</h2>
-        <p id="global-error-message"><?= esc($globalError) ?></p>
+        <h2 id="global-error-title" data-error-title>Não foi possível concluir</h2>
+        <p id="global-error-message" data-error-message><?= esc($globalError ?? '') ?></p>
         <button class="button danger-solid" type="button" data-close-error><i class="ti ti-x" aria-hidden="true"></i>Entendi</button>
     </section>
 </div>
-<?php endif; ?>
 
-<?php if (is_string($globalSuccess) && $globalSuccess !== ''): ?>
-<div class="success-dialog" data-success-dialog hidden aria-hidden="true">
+<div class="success-dialog" data-success-dialog <?= (is_string($globalSuccess) && $globalSuccess !== '') ? '' : 'hidden' ?> aria-hidden="<?= (is_string($globalSuccess) && $globalSuccess !== '') ? 'false' : 'true' ?>">
     <section class="success-dialog-card" role="dialog" aria-modal="true" aria-labelledby="global-success-title" aria-describedby="global-success-message" tabindex="-1">
         <div class="success-dialog-icon" aria-hidden="true">
             <span class="success-dialog-ring" aria-hidden="true"></span>
             <i class="ti ti-mood-smile-beam"></i>
         </div>
         <p class="success-dialog-kicker">Tudo certo por aqui!</p>
-        <h2 id="global-success-title">Operação realizada</h2>
-        <p id="global-success-message"><?= esc($globalSuccess) ?></p>
+        <h2 id="global-success-title" data-success-title>Operação realizada</h2>
+        <p id="global-success-message" data-success-message><?= esc($globalSuccess ?? '') ?></p>
         <button class="button success-solid" type="button" data-close-success><i class="ti ti-check" aria-hidden="true"></i>Maravilha, entendi!</button>
     </section>
 </div>
-<?php endif; ?>
 
 <div class="confirm-dialog" data-action-dialog hidden>
     <section class="confirm-dialog-card" role="alertdialog" aria-modal="true" aria-labelledby="action-dialog-title" aria-describedby="action-dialog-message">

@@ -15,7 +15,7 @@
  */
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
-defined('APP_VERSION') || define('APP_VERSION', '2026.08.0207');
+defined('APP_VERSION') || define('APP_VERSION', '2026.08.0210');
 
 /*
  | --------------------------------------------------------------------------

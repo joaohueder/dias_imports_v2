@@ -412,22 +412,38 @@ function submitSendProduct() {
         btn.innerHTML = originalText;
         if (data.success) {
             closeSendModal();
-            if (window.Toast) {
+            if (typeof window.showSuccessDialog === 'function') {
+                window.showSuccessDialog('Disparos Enfileirados', data.message);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2500);
+            } else if (window.Toast) {
                 Toast.success(data.message);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
                 alert(data.message);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
         } else {
-            alert(data.message || 'Erro ao enfileirar disparos.');
+            if (typeof window.showErrorDialog === 'function') {
+                window.showErrorDialog('Erro ao enfileirar', data.message || 'Erro ao enfileirar disparos.');
+            } else {
+                alert(data.message || 'Erro ao enfileirar disparos.');
+            }
         }
     })
     .catch(err => {
         btn.disabled = false;
         btn.innerHTML = originalText;
-        alert('Falha na comunicação com o servidor: ' + err);
+        if (typeof window.showErrorDialog === 'function') {
+            window.showErrorDialog('Falha na comunicação', 'Falha na comunicação com o servidor: ' + err);
+        } else {
+            alert('Falha na comunicação com o servidor: ' + err);
+        }
     });
 }
 
