@@ -490,47 +490,55 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
         <!-- Endpoints de Execução e Limpeza (Webcron / URLs de Automação) -->
         <div class="webcron-card">
             <div class="webcron-header">
-                <div class="webcron-icon"><i class="ti ti-link"></i></div>
+                <div class="webcron-icon"><i class="ti ti-terminal-2"></i></div>
                 <div class="webcron-title-group">
-                    <h3>URLs de Execução e Manutenção (Webcron)</h3>
-                    <p>Utilize estas URLs em serviços de Cron externo (como EasyCron, cron-job.org) ou requisições agendadas.</p>
+                    <h3>Comandos de Execução e Manutenção (Cron Job / Servidor)</h3>
+                    <p>Copie e cole diretamente no agendador de tarefas / Cron Job da hospedagem (ex: cPanel, Hostinger) ou serviços webcron.</p>
                 </div>
             </div>
             
             <div class="webcron-items-grid">
                 <div class="webcron-item">
                     <div class="webcron-item-header">
-                        <span class="webcron-item-label">URL de Execução da Fila (cron-runner)</span>
+                        <span class="webcron-item-label">Comando para Execução da Fila (cron-runner)</span>
                         <span class="webcron-badge runner"><i class="ti ti-clock"></i> A cada 5 minutos</span>
                     </div>
+                    <?php 
+                        $runnerUrl = base_url('cron-runner.php') . '?token=' . esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') . '&limit=50';
+                        $runnerCmd = 'wget -O /dev/null ' . $runnerUrl;
+                    ?>
                     <div class="webcron-input-group">
-                        <div class="webcron-url-text" id="setting-cron-runner-url"><?= base_url('cron-runner.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?>&limit=50</div>
-                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-runner-url').textContent); alert('URL cron-runner copiada!');">
+                        <div class="webcron-url-text" id="setting-cron-runner-url" style="font-family: monospace; font-size: 12px;"><?= esc($runnerCmd) ?></div>
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-runner-url').textContent.trim()); alert('Comando cron-runner copiado!');">
                             <i class="ti ti-copy" aria-hidden="true"></i>
                             <span>Copiar</span>
                         </button>
                     </div>
                     <p class="webcron-hint">
                         <i class="ti ti-info-circle"></i>
-                        Processa o lote de tarefas pendentes na fila. Configure seu agendador para chamar esta URL <strong>a cada 5 minutos</strong>.
+                        Processa o lote de tarefas pendentes na fila. Cole este comando exato no campo "Comando para executar" do Cron da Hostinger <strong>a cada 5 minutos</strong>.
                     </p>
                 </div>
 
                 <div class="webcron-item">
                     <div class="webcron-item-header">
-                        <span class="webcron-item-label">URL de Limpeza de Fila Travada (cron-clean)</span>
+                        <span class="webcron-item-label">Comando para Limpeza de Fila Travada (cron-clean)</span>
                         <span class="webcron-badge clean"><i class="ti ti-clock"></i> A cada 10 minutos</span>
                     </div>
+                    <?php 
+                        $cleanUrl = base_url('cron-clean.php') . '?token=' . esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026');
+                        $cleanCmd = 'wget -O /dev/null ' . $cleanUrl;
+                    ?>
                     <div class="webcron-input-group">
-                        <div class="webcron-url-text" id="setting-cron-clean-url"><?= base_url('cron-clean.php') ?>?token=<?= esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026') ?></div>
-                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-clean-url').textContent); alert('URL cron-clean copiada!');">
+                        <div class="webcron-url-text" id="setting-cron-clean-url" style="font-family: monospace; font-size: 12px;"><?= esc($cleanCmd) ?></div>
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-clean-url').textContent.trim()); alert('Comando cron-clean copiado!');">
                             <i class="ti ti-copy" aria-hidden="true"></i>
                             <span>Copiar</span>
                         </button>
                     </div>
                     <p class="webcron-hint">
                         <i class="ti ti-info-circle"></i>
-                        Redefine automaticamente tarefas com status "Processando" de volta para "Pendente" e limpa travas de cache. Configure seu agendador para chamar esta URL <strong>a cada 10 minutos</strong>.
+                        Redefine automaticamente tarefas travadas e limpa locks. Cole este comando exato no Cron da Hostinger <strong>a cada 10 minutos</strong>.
                     </p>
                 </div>
             </div>
