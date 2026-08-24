@@ -129,6 +129,10 @@ try {
     $jobCenterService = new \App\Services\JobCenterService();
     $snapshotService  = new \App\Services\RealtimeSnapshotService();
 
+    echo "[" . date('H:i:s') . "] Conexão única MySQL estabelecida. Iniciando ciclo contínuo de 5s...\n";
+    echo str_repeat('-', 60) . "\n";
+    flush();
+
     // 9. Loop de processamento Realtime
     $cycle = 0;
     $totalProcessed = 0;
@@ -136,14 +140,19 @@ try {
 
     while ((microtime(true) - $startedAt) + $intervalSeconds <= $maxRuntimeSeconds) {
         $cycle++;
+        $cycleStart = microtime(true);
+
         try {
             // 1. Processa a fila de tarefas em background
             $results = $jobCenterService->processPendingQueue(10);
-            $totalProcessed += ($results['processed'] ?? 0);
-            $totalFailed += ($results['failed'] ?? 0);
+            $procCount = ($results['processed'] ?? 0);
+            $failCount = ($results['failed'] ?? 0);
+            $totalProcessed += $procCount;
+            $totalFailed += $failCount;
 
             // 2. Atualiza snapshots de dados das telas ativas em tempo real
-            $snapshotService->generateAllSnapshots();
+            $snapshotResults = $snapshotService->generateAllSnapshots();
+            $snapshotCount = count($snapshotResults);
 
             // 3. Atualiza arquivo de status de saúde para o dashboard
             $snapshotService->updateWorkerStatus([
@@ -154,16 +163,19 @@ try {
                 'uptime_seconds' => round(microtime(true) - $startedAt),
             ]);
 
-            if (!empty($results['processed']) || !empty($results['failed'])) {
-                echo "[" . date('H:i:s') . "] Ciclo #{$cycle}: Processados: {$results['processed']} | Falhas: {$results['failed']}\n";
-                flush();
-            }
-
             // Atualiza o heartbeat após processamento bem-sucedido
             @touch($heartbeatFile);
+
+            $cycleDuration = round((microtime(true) - $cycleStart) * 1000, 1);
+            $uptime = round(microtime(true) - $startedAt);
+
+            echo "[" . date('H:i:s') . "] Ciclo #{$cycle} ({$cycleDuration}ms | uptime {$uptime}s): "
+                . "Tarefas: {$procCount} proc / {$failCount} falhas | "
+                . "Snapshots gerados: {$snapshotCount} telas (OK)\n";
+            flush();
         } catch (\Throwable $cycleException) {
             $writeLog('Erro no ciclo de processamento: ' . $cycleException->getMessage());
-            echo "[" . date('H:i:s') . "] Erro no ciclo #{$cycle}: " . $cycleException->getMessage() . "\n";
+            echo "[" . date('H:i:s') . "] ❌ ERRO no ciclo #{$cycle}: " . $cycleException->getMessage() . "\n";
             flush();
 
             $snapshotService->updateWorkerStatus([
@@ -179,7 +191,11 @@ try {
         sleep($intervalSeconds);
     }
 
-    echo "\n[" . date('H:i:s') . "] Worker finalizado com sucesso após ~" . round(microtime(true) - $startedAt) . "s de execução.\n";
+    echo "\n" . str_repeat('=', 60) . "\n";
+    echo "[" . date('H:i:s') . "] Worker finalizado com sucesso após " . round(microtime(true) - $startedAt) . "s de execução ({$cycle} ciclos).\n";
+    echo "Total de tarefas processadas: {$totalProcessed} | Total de falhas: {$totalFailed}\n";
+    echo str_repeat('=', 60) . "\n";
+    flush();
 } catch (\Throwable $e) {
     $writeLog('Falha crítica no worker: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine());
     echo "\n[ERRO CRÍTICO] " . $e->getMessage() . "\n";
