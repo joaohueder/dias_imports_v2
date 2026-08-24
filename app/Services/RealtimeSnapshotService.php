@@ -194,12 +194,20 @@ class RealtimeSnapshotService
             }
         }
 
-        // Últimos erros do log se existirem
+        // Últimos erros do log se existirem (filtra apenas linhas de erro ou falha)
         $recentErrors = [];
         if (file_exists($logFile)) {
             $lines = @file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             if (is_array($lines) && !empty($lines)) {
-                $recentErrors = array_slice(array_reverse($lines), 0, 5);
+                $errorLines = array_filter($lines, static function ($line) {
+                    return stripos($line, 'error') !== false 
+                        || stripos($line, 'falha') !== false 
+                        || stripos($line, 'erro') !== false 
+                        || stripos($line, 'exception') !== false;
+                });
+                if (!empty($errorLines)) {
+                    $recentErrors = array_slice(array_reverse($errorLines), 0, 5);
+                }
             }
         }
 
