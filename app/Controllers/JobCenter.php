@@ -73,10 +73,18 @@ class JobCenter extends BaseController
 
     public function feed(): ResponseInterface
     {
-        $stats = $this->queueModel->getQueueStats();
-        $queueItems = $this->queueModel
-            ->orderBy('id', 'DESC')
-            ->findAll(100);
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('job_center');
+
+        if ($snapshot !== null && !empty($snapshot['data'])) {
+            $stats = $snapshot['data']['stats'];
+            $queueItems = $snapshot['data']['items'];
+        } else {
+            $stats = $this->queueModel->getQueueStats();
+            $queueItems = $this->queueModel
+                ->orderBy('id', 'DESC')
+                ->findAll(100);
+        }
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();

@@ -91,7 +91,15 @@ class Home extends BaseController
 
     public function overviewFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $overviewData = $this->getOverviewData();
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('overview');
+
+        if ($snapshot !== null && !empty($snapshot['data'])) {
+            $overviewData = $snapshot['data'];
+        } else {
+            $overviewData = $this->getOverviewData();
+        }
+
         $firstName = trim(explode(' ', (string) (session()->get('user_name') ?? 'Admin'))[0] ?? 'Admin');
         
         $htmlContent = view('admin/overview_content', [
@@ -502,8 +510,15 @@ class Home extends BaseController
 
     public function companyWhatsappsFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
-        $html = view('admin/settings/_company_whatsapps', ['companyWhatsapps' => $companyWhatsapps]);
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('settings_company');
+
+        if ($snapshot !== null && !empty($snapshot['data']['html'])) {
+            $html = $snapshot['data']['html'];
+        } else {
+            $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
+            $html = view('admin/settings/_company_whatsapps', ['companyWhatsapps' => $companyWhatsapps]);
+        }
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();
@@ -517,8 +532,15 @@ class Home extends BaseController
 
     public function messageTemplatesFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();
-        $html = view('admin/settings/_message_templates', ['messageTemplates' => $messageTemplates]);
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('settings_templates');
+
+        if ($snapshot !== null && !empty($snapshot['data']['html'])) {
+            $html = $snapshot['data']['html'];
+        } else {
+            $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();
+            $html = view('admin/settings/_message_templates', ['messageTemplates' => $messageTemplates]);
+        }
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();

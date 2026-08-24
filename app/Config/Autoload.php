@@ -58,7 +58,9 @@ class Autoload extends AutoloadConfig
      *
      * @var array<string, string>
      */
-    public $classmap = [];
+    public $classmap = [
+        'CodeIgniter\Database\MySQLi\Connection' => APPPATH . 'Database/MySQLi/Connection.php',
+    ];
 
     /**
      * -------------------------------------------------------------------

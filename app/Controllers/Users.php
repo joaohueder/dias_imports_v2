@@ -76,25 +76,33 @@ class Users extends BaseController
 
     public function feed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $userModel = new UserModel();
-        $users = $userModel->orderBy('id', 'ASC')->findAll();
-
         $currentUserId = (int) session()->get('user_id');
-        $counts = [
-            'total' => count($users),
-            'active' => 0,
-            'inactive' => 0,
-            'admin' => 0,
-        ];
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('users');
 
-        foreach ($users as $u) {
-            if ((int) $u['is_active'] === 1) {
-                $counts['active']++;
-            } else {
-                $counts['inactive']++;
-            }
-            if (($u['role'] ?? 'user') === 'admin') {
-                $counts['admin']++;
+        if ($snapshot !== null && !empty($snapshot['data'])) {
+            $counts = $snapshot['data']['counts'];
+            $users = $snapshot['data']['users'];
+        } else {
+            $userModel = new UserModel();
+            $users = $userModel->orderBy('id', 'ASC')->findAll();
+
+            $counts = [
+                'total' => count($users),
+                'active' => 0,
+                'inactive' => 0,
+                'admin' => 0,
+            ];
+
+            foreach ($users as $u) {
+                if ((int) $u['is_active'] === 1) {
+                    $counts['active']++;
+                } else {
+                    $counts['inactive']++;
+                }
+                if (($u['role'] ?? 'user') === 'admin') {
+                    $counts['admin']++;
+                }
             }
         }
 

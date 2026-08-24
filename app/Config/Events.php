@@ -59,3 +59,25 @@ Events::on('pre_system', static function (): void {
         });
     }
 });
+
+// Listener global para registrar nova conexão na primeira query de cada requisição/conexão
+Events::on('DBQuery', static function (): void {
+    static $logged = false;
+    if ($logged) {
+        return;
+    }
+    $logged = true;
+
+    try {
+        $db = \Config\Database::connect();
+        $now = date('Y-m-d H:i:s');
+        $db->simpleQuery("INSERT INTO `db_connection_logs` (`created_at`) VALUES ('{$now}')");
+
+        // Limpeza periódica de conexões com mais de 2 horas (1 em cada 50 conexões)
+        if (random_int(1, 50) === 1) {
+            $cutoff = date('Y-m-d H:i:s', strtotime('-2 hours'));
+            $db->simpleQuery("DELETE FROM `db_connection_logs` WHERE `created_at` < '{$cutoff}'");
+        }
+    } catch (\Throwable) {
+    }
+});

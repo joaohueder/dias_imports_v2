@@ -116,6 +116,26 @@ class Products extends BaseController
 
     public function feed(): \CodeIgniter\HTTP\ResponseInterface
     {
+        $snapshotService = new \App\Services\RealtimeSnapshotService();
+        $snapshot = $snapshotService->getSnapshot('products');
+
+        if ($snapshot !== null && !empty($snapshot['data'])) {
+            helper('telemetry');
+            $telemetry = get_footer_telemetry();
+
+            return $this->response->setJSON([
+                'success' => true,
+                'htmlCards' => $snapshot['data']['htmlCards'],
+                'totalResults' => $snapshot['data']['totalResults'],
+                'footerHtml' => $telemetry['html'],
+                'telemetry' => [
+                    'connectionsLastHour' => $telemetry['connectionsLastHour'],
+                    'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
+                    'loadTime' => $telemetry['loadTime'],
+                ],
+            ]);
+        }
+
         $products = $this->productModel->orderBy('created_at', 'DESC')->findAll();
         
         if (! empty($products)) {

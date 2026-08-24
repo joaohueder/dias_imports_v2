@@ -508,7 +508,42 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
     <div class="settings-tab-panel realtime-panel" id="realtime-panel" role="tabpanel" aria-labelledby="realtime-tab" data-settings-panel="tempo-real" <?= $activeSettingsTab !== 'tempo-real' ? 'hidden' : '' ?>>
         <div class="setting-intro">
             <h2>Atualização em Tempo Real</h2>
-            <p>Configure quais telas do sistema devem ser atualizadas automaticamente em tempo real (a cada 5 segundos). O processo abre uma conexão nova, atualiza a tela e o rodapé, e fecha a conexão.</p>
+            <p>Configure quais telas do sistema devem ser atualizadas automaticamente em tempo real e o intervalo em segundos para cada tela.</p>
+        </div>
+
+        <!-- Endpoints de Execução do Worker de Realtime (Cron Job / Webcron) -->
+        <div class="webcron-card" style="margin-bottom: 24px;">
+            <div class="webcron-header">
+                <div class="webcron-icon"><i class="ti ti-activity"></i></div>
+                <div class="webcron-title-group">
+                    <h3>Comando de Execução em Segundo Plano (Cron Job / Servidor)</h3>
+                    <p>Configure este comando no agendador de tarefas / Cron Job da hospedagem (Hostinger, cPanel) para processar o realtime com conexão única e contínua.</p>
+                </div>
+            </div>
+            
+            <div class="webcron-items-grid">
+                <div class="webcron-item">
+                    <div class="webcron-item-header">
+                        <span class="webcron-item-label">Comando para Worker Realtime (cron-realtime)</span>
+                        <span class="webcron-badge runner"><i class="ti ti-clock"></i> A cada 5 minutos</span>
+                    </div>
+                    <?php 
+                        $realtimeUrl = base_url('cron-realtime.php') . '?token=' . esc(env('app.cronToken') ?: 'dias_imports_cron_secret_2026');
+                        $realtimeCmd = 'wget -O /dev/null ' . $realtimeUrl;
+                    ?>
+                    <div class="webcron-input-group">
+                        <div class="webcron-url-text" id="setting-cron-realtime-url" style="font-family: monospace; font-size: 12px;"><?= esc($realtimeCmd) ?></div>
+                        <button class="button secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setting-cron-realtime-url').textContent.trim()); alert('Comando cron-realtime copiado!');">
+                            <i class="ti ti-copy" aria-hidden="true"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <p class="webcron-hint">
+                        <i class="ti ti-info-circle"></i>
+                        Mantém <strong>apenas 1 conexão MySQL</strong> aberta processando ciclos a cada 5s por 290s. Cole este comando exato no Cron da Hostinger <strong>a cada 5 minutos</strong>.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <?php if (empty($realtimeScreens)): ?>
@@ -521,18 +556,23 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                 <?= csrf_field() ?>
                 <div class="jobs-list" style="gap: 8px;">
                     <?php foreach ($realtimeScreens as $screen): ?>
-                        <div class="job-settings-card" style="padding: 12px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px;">
-                            <div class="job-card-title" style="margin: 0; flex: 1;">
+                        <div class="job-settings-card" style="padding: 12px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px; flex-wrap: wrap;">
+                            <div class="job-card-title" style="margin: 0; flex: 1; min-width: 200px;">
                                 <h3 style="margin: 0; font-size: 14px; font-weight: 500; text-align: left;"><?= esc($screen['screen_name']) ?></h3>
                             </div>
-                            <div class="job-card-toggle" style="margin: 0; display: flex; align-items: center;">
-                                <label class="toggle-switch" title="<?= $screen['is_active'] ? 'Atualização ativa' : 'Atualização inativa' ?>" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
-                                    <input type="checkbox" name="screens[<?= $screen['id'] ?>][is_active]" value="1" <?= $screen['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-label-text" style="font-size: 13px;"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
-                                </label>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <label for="interval_<?= $screen['id'] ?>" style="font-size: 13px; color: rgb(var(--muted)); white-space: nowrap; margin: 0;">Intervalo (s):</label>
+                                    <input type="number" id="interval_<?= $screen['id'] ?>" name="screens[<?= $screen['id'] ?>][interval]" value="<?= esc((string) $screen['refresh_interval_seconds']) ?>" min="1" max="3600" required style="width: 76px; padding: 4px 8px; font-size: 13px; text-align: center; border-radius: 6px; border: 1px solid var(--border-color, #d1d5db); background: var(--bg-card, #fff);" <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
+                                </div>
+                                <div class="job-card-toggle" style="margin: 0; display: flex; align-items: center;">
+                                    <label class="toggle-switch" title="<?= $screen['is_active'] ? 'Atualização ativa' : 'Atualização inativa' ?>" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="screens[<?= $screen['id'] ?>][is_active]" value="1" <?= $screen['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label-text" style="font-size: 13px;"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
+                                    </label>
+                                </div>
                             </div>
-                            <input type="hidden" name="screens[<?= $screen['id'] ?>][interval]" value="<?= esc((string) $screen['refresh_interval_seconds']) ?>">
                         </div>
                     <?php endforeach; ?>
                 </div>
