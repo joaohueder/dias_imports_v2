@@ -125,5 +125,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="<?= base_url('js/groups.js') ?>"></script>
+<script src="<?= base_url('js/groups.js?v=' . (defined('APP_VERSION') ? APP_VERSION : time())) ?>"></script>
 <?= $this->endSection() ?>
