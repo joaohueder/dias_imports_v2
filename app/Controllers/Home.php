@@ -623,12 +623,16 @@ class Home extends BaseController
         helper('telemetry');
         $telemetry = get_footer_telemetry();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'html' => $html,
-            'footerHtml' => $telemetry['html'],
-            'worker' => $realtimeWorkerStatus,
-        ]);
+        return $this->response
+            ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->setHeader('Pragma', 'no-cache')
+            ->setHeader('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT')
+            ->setJSON([
+                'success' => true,
+                'html' => $html,
+                'footerHtml' => $telemetry['html'],
+                'worker' => $realtimeWorkerStatus,
+            ]);
     }
 
     private function renderPage(string $activePage): string

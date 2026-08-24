@@ -221,6 +221,9 @@ class RealtimeSnapshotService
      */
     public function getWorkerStatus(): array
     {
+        // Limpa cache de status de arquivo do PHP (fundamental em servidores Linux / OPcache)
+        clearstatcache();
+
         $writablePath = defined('WRITEPATH') ? WRITEPATH : (realpath(__DIR__ . '/../../writable') ?: __DIR__ . '/../../writable');
         $realtimeDir = rtrim($writablePath, '/\\') . DIRECTORY_SEPARATOR . 'realtime';
         $heartbeatFile = $realtimeDir . DIRECTORY_SEPARATOR . 'heartbeat';

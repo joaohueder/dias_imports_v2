@@ -1001,20 +1001,23 @@ window.getAppBaseUrl = () => {
     // --- Painel Tempo Real (Diagnóstico e Worker Status) Realtime ---
     const scheduleRealtimeUpdate = (delay = rtRealtimeInterval) => {
         window.clearTimeout(realtimeTimer);
-        if (isPanelVisible(realtimePanel) && rtRealtimeActive) {
+        const panel = settings.querySelector('[data-settings-panel="tempo-real"]');
+        if (isPanelVisible(panel)) {
             realtimeTimer = window.setTimeout(refreshRealtimeFeed, delay);
         }
     };
 
     const refreshRealtimeFeed = async () => {
-        if (!isPanelVisible(realtimePanel) || !rtRealtimeActive || realtimeRequest) return;
+        const panel = settings.querySelector('[data-settings-panel="tempo-real"]');
+        if (!isPanelVisible(panel) || realtimeRequest) return;
         const container = settings.querySelector('[data-realtime-dashboard-container]');
         if (!container) return;
 
         realtimeRequest = new AbortController();
         const feedUrl = settings.dataset.realtimeFeedUrl || `${window.location.origin}/configuracoes/tempo-real/feed`;
         try {
-            const response = await fetch(`${feedUrl}?_t=${Date.now()}`, {
+            const separator = feedUrl.includes('?') ? '&' : '?';
+            const response = await fetch(`${feedUrl}${separator}_t=${Date.now()}`, {
                 headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 credentials: 'same-origin',
                 cache: 'no-store',
@@ -1023,11 +1026,7 @@ window.getAppBaseUrl = () => {
             const payload = await response.json().catch(() => ({}));
             if (response.ok && payload.success) {
                 if (payload.html) {
-                    // Evita sobrescrever se o usuário estiver interagindo com um input ou formulário
-                    const isFocusInside = container.contains(document.activeElement);
-                    if (!isFocusInside) {
-                        container.innerHTML = payload.html;
-                    }
+                    container.innerHTML = payload.html;
                 }
                 if (footerTelemetry && payload.footerHtml) footerTelemetry.innerHTML = payload.footerHtml;
             }
@@ -1041,7 +1040,7 @@ window.getAppBaseUrl = () => {
         }
     };
 
-    if (isPanelVisible(realtimePanel) && rtRealtimeActive) scheduleRealtimeUpdate();
+    scheduleRealtimeUpdate(1000);
 
     // Listener para troca de abas em configurações para acionar os timers corretos e sincronizar indicador no cabeçalho
     const realtimeIndicator = document.querySelector('[data-realtime-indicator]');
