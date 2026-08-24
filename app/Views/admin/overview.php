@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         abortController = new AbortController();
 
         try {
-            const response = await fetch(`${window.location.origin}/visao-geral/feed?_t=${Date.now()}`, {
+            const response = await fetch('<?= site_url('visao-geral/feed') ?>?_t=' + Date.now(), {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',

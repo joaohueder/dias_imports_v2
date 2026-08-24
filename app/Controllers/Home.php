@@ -91,33 +91,42 @@ class Home extends BaseController
 
     public function overviewFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $snapshot = $snapshotService->getSnapshot('overview');
+        try {
+            $snapshotService = new \App\Services\RealtimeSnapshotService();
+            $snapshot = $snapshotService->getSnapshot('overview');
 
-        if ($snapshot !== null && !empty($snapshot['data'])) {
-            $overviewData = $snapshot['data'];
-        } else {
-            $overviewData = $this->getOverviewData();
+            if ($snapshot !== null && !empty($snapshot['data'])) {
+                $overviewData = $snapshot['data'];
+            } else {
+                $overviewData = $this->getOverviewData();
+            }
+
+            $firstName = trim(explode(' ', (string) (session()->get('user_name') ?? 'Admin'))[0] ?? 'Admin');
+            
+            $htmlContent = view('admin/overview_content', [
+                'overviewData' => $overviewData,
+                'firstName' => $firstName,
+                'navigation' => self::NAVIGATION,
+            ]);
+
+            helper('telemetry');
+            $telemetry = get_footer_telemetry();
+
+            return $this->response->setJSON([
+                'success' => true,
+                'timestamp' => date('Y-m-d H:i:s'),
+                'data' => $overviewData,
+                'htmlContent' => $htmlContent,
+                'footerHtml' => $telemetry['html'] ?? null,
+            ]);
+        } catch (\Throwable $e) {
+            log_message('error', '[overviewFeed] Erro: ' . $e->getMessage() . ' no arquivo ' . $e->getFile() . ' linha ' . $e->getLine());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'error' => 'Erro interno ao carregar o feed.',
+                'message' => ENVIRONMENT !== 'production' ? $e->getMessage() : 'Erro interno',
+            ]);
         }
-
-        $firstName = trim(explode(' ', (string) (session()->get('user_name') ?? 'Admin'))[0] ?? 'Admin');
-        
-        $htmlContent = view('admin/overview_content', [
-            'overviewData' => $overviewData,
-            'firstName' => $firstName,
-            'navigation' => self::NAVIGATION,
-        ]);
-
-        helper('telemetry');
-        $telemetry = get_footer_telemetry();
-
-        return $this->response->setJSON([
-            'success' => true,
-            'timestamp' => date('Y-m-d H:i:s'),
-            'data' => $overviewData,
-            'htmlContent' => $htmlContent,
-            'footerHtml' => $telemetry['html'] ?? null,
-        ]);
     }
 
     public function whatsappGroups(): string
