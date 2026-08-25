@@ -42,11 +42,30 @@ class Landing extends BaseController
 
         $company = (new CompanyProfileModel())->first();
 
+        // Registra visualização de página diretamente no acesso ao /leads
+        try {
+            $logModel = new \App\Models\ProductAccessLogModel();
+            $logModel->recordEvent(0, 'pageview', $this->request->getIPAddress(), (string) $this->request->getUserAgent());
+        } catch (\Throwable $e) {
+            log_message('error', 'Erro ao gravar visualização de página na landing de leads: ' . $e->getMessage());
+        }
+
         return view('landing/leads', [
             'landing' => $landing,
             'company' => $company,
             'metaAds' => $metaAds,
         ]);
+    }
+
+    public function recordPageView(): ResponseInterface
+    {
+        $ip = $this->request->getIPAddress();
+        $ua = (string) $this->request->getUserAgent();
+
+        $logModel = new \App\Models\ProductAccessLogModel();
+        $logModel->recordEvent(0, 'pageview', $ip, $ua);
+
+        return $this->response->setJSON(['success' => true]);
     }
 
     public function submitLead(): ResponseInterface

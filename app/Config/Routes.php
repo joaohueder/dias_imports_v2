@@ -10,6 +10,7 @@ $routes->post('recarregar-permissoes', 'Auth::refreshPermissions', ['filter' => 
 
 // Landing page pública de captura de leads e submissão
 $routes->get('leads', 'Landing::index');
+$routes->post('leads/pageview', 'Landing::recordPageView');
 $routes->post('leads/capture', 'Landing::submitLead', ['filter' => 'csrf']);
 
 // Landing page pública do produto (slug)

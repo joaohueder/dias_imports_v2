@@ -63,6 +63,16 @@
     <!-- End Meta Pixel Code -->
     <?php endif; ?>
     
+    <script>
+        // Registra o pageview interno na primeira página que abre /leads
+        fetch('<?= base_url('leads/pageview') ?>', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).catch(e => console.error('Erro ao registrar pageview:', e));
+    </script>
+
     <style>
         /* ==========================================================================
            1. PALETAS DE CORES (6 PALETAS PREMIUM E HARMONIOSAS)

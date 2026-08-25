@@ -15,7 +15,7 @@
  */
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
-defined('APP_VERSION') || define('APP_VERSION', '2026.08.0263');
+defined('APP_VERSION') || define('APP_VERSION', '2026.08.0289');
 
 /*
  | --------------------------------------------------------------------------
@@ -85,4 +85,4 @@ defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest a
  | Versão do Sistema
  | --------------------------------------------------------------------------
  */
-defined('APP_VERSION')         || define('APP_VERSION', '2026.08.0243');
+// Versão do Sistema definida no início deste arquivo.
