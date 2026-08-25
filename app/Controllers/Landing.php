@@ -45,7 +45,7 @@ class Landing extends BaseController
         // Registra visualização de página diretamente no acesso ao /leads
         try {
             $logModel = new \App\Models\ProductAccessLogModel();
-            $logModel->recordEvent(0, 'pageview', $this->request->getIPAddress(), (string) $this->request->getUserAgent());
+            $logModel->recordEvent(0, 'pageview');
         } catch (\Throwable $e) {
             log_message('error', 'Erro ao gravar visualização de página na landing de leads: ' . $e->getMessage());
         }
@@ -59,13 +59,14 @@ class Landing extends BaseController
 
     public function recordPageView(): ResponseInterface
     {
-        $ip = $this->request->getIPAddress();
-        $ua = (string) $this->request->getUserAgent();
-
-        $logModel = new \App\Models\ProductAccessLogModel();
-        $logModel->recordEvent(0, 'pageview', $ip, $ua);
-
-        return $this->response->setJSON(['success' => true]);
+        try {
+            $logModel = new \App\Models\ProductAccessLogModel();
+            $logModel->recordEvent(0, 'pageview');
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Erro ao gravar visualização de página na rota leads/pageview: ' . $e->getMessage());
+            return $this->response->setJSON(['success' => false, 'error' => $e->getMessage()])->setStatusCode(500);
+        }
     }
 
     public function submitLead(): ResponseInterface
