@@ -120,23 +120,6 @@ $globalSuccess = session()->getFlashdata('success');
         <header class="topbar">
             <div class="breadcrumb">Painel <span aria-hidden="true">/</span> <strong><?= esc($pageTitle) ?></strong></div>
             <div class="topbar-actions">
-                <?php
-                // Verifica se a tela atual possui atualização em tempo real ativa
-                $isScreenRtActive = false;
-                if (isset($isRealtimeActive) && $isRealtimeActive) {
-                    $isScreenRtActive = true;
-                } elseif (isset($realtimeScreenSettings) && is_array($realtimeScreenSettings)) {
-                    // Na tela de configurações, verifica se a aba atual está com tempo real ativo
-                    $activeTabKey = 'settings_' . ($activeSettingsTab === 'empresa' ? 'company' : ($activeSettingsTab === 'modelos-mensagens' ? 'templates' : $activeSettingsTab));
-                    if (!empty($realtimeScreenSettings[$activeTabKey]['active'])) {
-                        $isScreenRtActive = true;
-                    }
-                }
-                ?>
-                <span class="status-pill realtime-active" data-realtime-indicator <?= ! $isScreenRtActive ? 'style="display: none;"' : '' ?> title="Esta tela está sendo atualizada automaticamente em tempo real">
-                    <span class="status-dot-pulse" aria-hidden="true"></span>
-                    <span>Tempo Real Ativo</span>
-                </span>
             </div>
         </header>
 

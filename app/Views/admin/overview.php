@@ -1,4 +1,4 @@
-﻿<div class="overview-dashboard" id="overviewDashboard" data-overview-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
+﻿<div class="overview-dashboard" id="overviewDashboard" data-overview-module>
     <div id="overviewContentWrapper">
         <?= view('admin/overview_content', [
             'overviewData' => $overviewData,
@@ -12,11 +12,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const overviewModule = document.querySelector('[data-overview-module]');
     if (!overviewModule) return;
-
-    const isRealtimeActive = overviewModule.getAttribute('data-realtime-active') === '1';
-    const realtimeInterval = parseInt(overviewModule.getAttribute('data-realtime-interval'), 10) || 5;
-    const contentWrapper = document.getElementById('overviewContentWrapper');
-    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
 
     function initTooltipHandlers() {
         const containers = document.querySelectorAll('.overview-chart-container');
@@ -93,54 +88,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializa tooltips inicialmente
     initTooltipHandlers();
-
-    let abortController = null;
-    let pollingTimer = null;
-
-    const fetchOverviewFeed = async () => {
-        if (abortController) {
-            abortController.abort();
-        }
-        abortController = new AbortController();
-
-        try {
-            const response = await fetch('<?= site_url('visao-geral/feed') ?>?_t=' + Date.now(), {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                signal: abortController.signal
-            });
-
-            if (!response.ok) throw new Error('Network response was not ok');
-
-            const data = await response.json();
-            if (data.success && data.htmlContent) {
-                // Atualiza conteúdo completo do dashboard
-                if (contentWrapper) {
-                    contentWrapper.innerHTML = data.htmlContent;
-                    initTooltipHandlers();
-                }
-
-                // Atualiza telemetria de rodapé se presente
-                if (footerTelemetry && data.footerHtml) {
-                    footerTelemetry.innerHTML = data.footerHtml;
-                }
-            }
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                console.error('Error fetching overview feed:', error);
-            }
-        } finally {
-            if (isRealtimeActive) {
-                pollingTimer = setTimeout(fetchOverviewFeed, realtimeInterval * 1000);
-            }
-        }
-    };
-
-    if (isRealtimeActive) {
-        pollingTimer = setTimeout(fetchOverviewFeed, realtimeInterval * 1000);
-    }
 });
 </script>

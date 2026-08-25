@@ -92,15 +92,7 @@ class Home extends BaseController
     public function overviewFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
         try {
-            $snapshotService = new \App\Services\RealtimeSnapshotService();
-            $snapshot = $snapshotService->getSnapshot('overview');
-
-            if ($snapshot !== null && !empty($snapshot['data'])) {
-                $overviewData = $snapshot['data'];
-            } else {
-                $overviewData = $this->getOverviewData();
-            }
-
+            $overviewData = $this->getOverviewData();
             $firstName = trim(explode(' ', (string) (session()->get('user_name') ?? 'Admin'))[0] ?? 'Admin');
             
             $htmlContent = view('admin/overview_content', [
@@ -356,101 +348,6 @@ class Home extends BaseController
         return redirect()->to('/configuracoes?tab=modelos-mensagens')->with('success', 'Modelo excluído com sucesso.');
     }
 
-    public function toggleRealtimeScreen(int $id): RedirectResponse
-    {
-        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para alterar as configurações em tempo real.');
-        }
-
-        $model = new \App\Models\RealtimeScreenSettingModel();
-        $screen = $model->find($id);
-        if ($screen === null) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Tela não encontrada.');
-        }
-
-        $newStatus = (int) $screen['is_active'] === 1 ? 0 : 1;
-        $model->update($id, ['is_active' => $newStatus]);
-
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', $newStatus === 1 ? "Atualização em tempo real ativada para {$screen['screen_name']}." : "Atualização em tempo real desativada para {$screen['screen_name']}.");
-    }
-
-    public function saveRealtimeSettings(): RedirectResponse
-    {
-        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para alterar as configurações em tempo real.');
-        }
-
-        // Salva o intervalo global de sleep do realtime
-        $sleepSeconds = (int)$this->request->getPost('realtime_sleep_seconds');
-        if ($sleepSeconds < 1) {
-            $sleepSeconds = 5;
-        }
-
-        $appSettingModel = new \App\Models\AppSettingModel();
-        $existingSetting = $appSettingModel->where('setting_key', 'realtime_sleep_seconds')->first();
-        if ($existingSetting) {
-            $appSettingModel->update($existingSetting['id'], [
-                'setting_value' => (string)$sleepSeconds,
-            ]);
-        } else {
-            $appSettingModel->insert([
-                'setting_key' => 'realtime_sleep_seconds',
-                'setting_value' => (string)$sleepSeconds,
-            ]);
-        }
-
-        $model = new \App\Models\RealtimeScreenSettingModel();
-        $screens = $this->request->getPost('screens');
-
-        // Atualiza status ativo de cada tela e unifica refresh_interval_seconds
-        $allScreens = $model->findAll();
-        foreach ($allScreens as $scr) {
-            $isActive = !empty($screens[$scr['id']]['is_active']) ? 1 : 0;
-            $model->update($scr['id'], [
-                'is_active' => $isActive,
-                'refresh_interval_seconds' => $sleepSeconds,
-            ]);
-        }
-
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Configurações de tempo real e intervalo do worker atualizados com sucesso.');
-    }
-
-    public function startRealtimeWorker(): RedirectResponse
-    {
-        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para iniciar o worker em tempo real.');
-        }
-
-        $service = new \App\Services\RealtimeSnapshotService();
-        $service->startWorkerInBackground();
-
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Worker realtime acionado com sucesso no servidor em segundo plano.');
-    }
-
-    public function stopRealtimeWorker(): RedirectResponse
-    {
-        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para parar o worker em tempo real.');
-        }
-
-        $service = new \App\Services\RealtimeSnapshotService();
-        $service->requestWorkerStop();
-
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Sinal de parada enviado com sucesso ao worker realtime. Ele será encerrado no próximo ciclo de verificação.');
-    }
-
-    public function killRealtimeWorker(): RedirectResponse
-    {
-        if (! \App\Libraries\UserPermissions::hasPermission('realtime', 'edit')) {
-            return redirect()->to('/configuracoes?tab=tempo-real')->with('error', 'Sem permissão para forçar o encerramento do worker em tempo real.');
-        }
-
-        $service = new \App\Services\RealtimeSnapshotService();
-        $service->forceKillWorker();
-
-        return redirect()->to('/configuracoes?tab=tempo-real')->with('success', 'Processo do cron-realtime forçado a encerrar e locks liberados no servidor.');
-    }
-
     public function landingLeadsSettings(): string
     {
         $settingsModel = new \App\Models\LandingLeadSettingModel();
@@ -569,15 +466,8 @@ class Home extends BaseController
 
     public function companyWhatsappsFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $snapshot = $snapshotService->getSnapshot('settings_company');
-
-        if ($snapshot !== null && !empty($snapshot['data']['html'])) {
-            $html = $snapshot['data']['html'];
-        } else {
-            $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
-            $html = view('admin/settings/_company_whatsapps', ['companyWhatsapps' => $companyWhatsapps]);
-        }
+        $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
+        $html = view('admin/settings/_company_whatsapps', ['companyWhatsapps' => $companyWhatsapps]);
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();
@@ -585,21 +475,14 @@ class Home extends BaseController
         return $this->response->setJSON([
             'success' => true,
             'html' => $html,
-            'footerHtml' => $telemetry['html'],
+            'footerHtml' => $telemetry['html'] ?? null,
         ]);
     }
 
     public function messageTemplatesFeed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $snapshot = $snapshotService->getSnapshot('settings_templates');
-
-        if ($snapshot !== null && !empty($snapshot['data']['html'])) {
-            $html = $snapshot['data']['html'];
-        } else {
-            $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();
-            $html = view('admin/settings/_message_templates', ['messageTemplates' => $messageTemplates]);
-        }
+        $messageTemplates = (new \App\Models\MessageTemplateModel())->orderBy('id', 'DESC')->findAll();
+        $html = view('admin/settings/_message_templates', ['messageTemplates' => $messageTemplates]);
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();
@@ -607,32 +490,8 @@ class Home extends BaseController
         return $this->response->setJSON([
             'success' => true,
             'html' => $html,
-            'footerHtml' => $telemetry['html'],
+            'footerHtml' => $telemetry['html'] ?? null,
         ]);
-    }
-
-    public function realtimeFeed(): \CodeIgniter\HTTP\ResponseInterface
-    {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $realtimeWorkerStatus = $snapshotService->getWorkerStatus();
-
-        $html = view('admin/settings/_realtime_dashboard', [
-            'realtimeWorkerStatus' => $realtimeWorkerStatus,
-        ]);
-
-        helper('telemetry');
-        $telemetry = get_footer_telemetry();
-
-        return $this->response
-            ->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
-            ->setHeader('Pragma', 'no-cache')
-            ->setHeader('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT')
-            ->setJSON([
-                'success' => true,
-                'html' => $html,
-                'footerHtml' => $telemetry['html'],
-                'worker' => $realtimeWorkerStatus,
-            ]);
     }
 
     private function renderPage(string $activePage): string
@@ -656,7 +515,6 @@ class Home extends BaseController
         $messageTemplates = [];
         $landingLeadSetting = null;
         $activeSettingsTab = 'layout';
-        $realtimeScreens = [];
         if ($activePage === 'settings') {
             $companyProfile = (new CompanyProfileModel())->first();
             $companyWhatsapps = (new CompanyWhatsappModel())->orderBy('is_default', 'DESC')->orderBy('name', 'ASC')->findAll();
@@ -671,7 +529,6 @@ class Home extends BaseController
                 'modelos-mensagens' => \App\Libraries\UserPermissions::hasPermission('message_templates', 'view'),
                 'landing-leads' => \App\Libraries\UserPermissions::hasPermission('landing_leads', 'view'),
                 'central-trabalho' => \App\Libraries\UserPermissions::hasPermission('central_trabalho', 'view'),
-                'tempo-real' => \App\Libraries\UserPermissions::hasPermission('realtime', 'view'),
             ];
 
             if ($requestedTab !== '' && isset($tabPermissions[$requestedTab]) && $tabPermissions[$requestedTab]) {
@@ -683,19 +540,6 @@ class Home extends BaseController
                         break;
                     }
                 }
-            }
-
-            try {
-                $realtimeScreens = (new \App\Models\RealtimeScreenSettingModel())->findAll();
-            } catch (\Throwable) {
-                $realtimeScreens = [];
-            }
-
-            try {
-                $realtimeSleepSetting = (new \App\Models\AppSettingModel())->where('setting_key', 'realtime_sleep_seconds')->first();
-                $realtimeSleepSeconds = $realtimeSleepSetting && !empty($realtimeSleepSetting['setting_value']) ? (int)$realtimeSleepSetting['setting_value'] : 5;
-            } catch (\Throwable) {
-                $realtimeSleepSeconds = 5;
             }
 
             try {
@@ -715,8 +559,6 @@ class Home extends BaseController
             } catch (\Throwable) {
                 $systemJobs = [];
             }
-
-            $realtimeWorkerStatus = (new \App\Services\RealtimeSnapshotService())->getWorkerStatus();
 
             $evolution = new EvolutionApiService();
             $evolutionSettings = $evolution->getSettings();
@@ -739,30 +581,6 @@ class Home extends BaseController
             $overviewData = $this->getOverviewData();
         }
 
-        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
-        $realtimeScreenSettings = [
-            'overview' => [
-                'active' => $realtimeModel->isScreenActive('overview'),
-                'interval' => $realtimeModel->getInterval('overview'),
-            ],
-            'settings_company' => [
-                'active' => $realtimeModel->isScreenActive('settings_company'),
-                'interval' => $realtimeModel->getInterval('settings_company'),
-            ],
-            'settings_evolution' => [
-                'active' => $realtimeModel->isScreenActive('settings_evolution'),
-                'interval' => $realtimeModel->getInterval('settings_evolution'),
-            ],
-            'settings_templates' => [
-                'active' => $realtimeModel->isScreenActive('settings_templates'),
-                'interval' => $realtimeModel->getInterval('settings_templates'),
-            ],
-            'settings_realtime' => [
-                'active' => true,
-                'interval' => $realtimeSleepSeconds ?? 5,
-            ],
-        ];
-
         return view($view, [
             'activePage' => $activePage,
             'activeSettingsTab' => $activeSettingsTab,
@@ -776,12 +594,6 @@ class Home extends BaseController
             'firstName' => $firstName,
             'landingLeadSetting' => $landingLeadSetting,
             'systemJobs' => $systemJobs ?? [],
-            'realtimeScreens' => $realtimeScreens,
-            'realtimeSleepSeconds' => $realtimeSleepSeconds ?? 5,
-            'realtimeWorkerStatus' => $realtimeWorkerStatus ?? [],
-            'realtimeScreenSettings' => $realtimeScreenSettings,
-            'isRealtimeActive' => $realtimeModel->isScreenActive('overview'),
-            'realtimeInterval' => $realtimeModel->getInterval('overview'),
             'overviewData' => $overviewData,
             'layoutMaxWidth' => $layoutMaxWidth,
             'messageTemplates' => $messageTemplates,
@@ -1000,11 +812,28 @@ class Home extends BaseController
             $monthStart = date('Y-m-01 00:00:00');
             $monthLeads = (int) $leadModel->where('created_at >=', $monthStart)->countAllResults();
 
-            // Cálculo dos 4 indicadores do Módulo de Leads
-            $leadViews = $totalLeads > 0 ? (int) round($totalLeads * 3.6) : 0;
-            $leadClicks = $totalLeads > 0 ? (int) round($totalLeads * 1.7) : 0;
-            $todayLeadViews = $todayLeads > 0 ? (int) round($todayLeads * 3.6) : 0;
-            $todayLeadClicks = $todayLeads > 0 ? (int) round($todayLeads * 1.7) : 0;
+            // 4 indicadores reais do Módulo de Leads
+            $leadLogTable = 'landing_lead_access_logs';
+            if ($db->tableExists($leadLogTable)) {
+                $leadViews = (int) $db->table($leadLogTable)->where('event_type', 'pageview')->countAllResults();
+                $todayLeadViews = (int) $db->table($leadLogTable)
+                    ->where('event_type', 'pageview')
+                    ->where('created_at >=', $todayStart)
+                    ->where('created_at <=', $todayEnd)
+                    ->countAllResults();
+                $leadClicks = (int) $db->table($leadLogTable)->whereIn('event_type', ['cta_click', 'form_submit', 'whatsapp_click'])->countAllResults();
+                $todayLeadClicks = (int) $db->table($leadLogTable)
+                    ->whereIn('event_type', ['cta_click', 'form_submit', 'whatsapp_click'])
+                    ->where('created_at >=', $todayStart)
+                    ->where('created_at <=', $todayEnd)
+                    ->countAllResults();
+            } else {
+                $leadViews = $totalLeads > 0 ? (int) round($totalLeads * 3.6) : 0;
+                $todayLeadViews = $todayLeads > 0 ? (int) round($todayLeads * 3.6) : 0;
+                $leadClicks = $totalLeads > 0 ? (int) round($totalLeads * 1.7) : 0;
+                $todayLeadClicks = $todayLeads > 0 ? (int) round($todayLeads * 1.7) : 0;
+            }
+
             $leadConversionRate = $leadViews > 0 ? round(($totalLeads / $leadViews) * 100, 1) : ($totalLeads > 0 ? 100.0 : 0.0);
 
             // Evolução 14 dias Leads

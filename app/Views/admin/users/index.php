@@ -9,7 +9,7 @@ $helperInitials = static function(string $name): string {
     return mb_strtoupper(mb_substr($parts[0], 0, 1) . mb_substr(end($parts), 0, 1));
 };
 ?>
-<section class="users-view-container" data-users-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
+<section class="users-view-container" data-users-module>
     <!-- Top toolbar -->
     <div class="users-header-actions">
         <div class="users-search-box">

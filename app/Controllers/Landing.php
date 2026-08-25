@@ -42,10 +42,10 @@ class Landing extends BaseController
 
         $company = (new CompanyProfileModel())->first();
 
-        // Registra visualização de página diretamente no acesso ao /leads
+        // Registra visualização de página na landing de leads
         try {
-            $logModel = new \App\Models\ProductAccessLogModel();
-            $logModel->recordEvent(0, 'pageview');
+            $leadLogModel = new \App\Models\LandingLeadAccessLogModel();
+            $leadLogModel->recordEvent('pageview');
         } catch (\Throwable $e) {
             log_message('error', 'Erro ao gravar visualização de página na landing de leads: ' . $e->getMessage());
         }
@@ -60,8 +60,8 @@ class Landing extends BaseController
     public function recordPageView(): ResponseInterface
     {
         try {
-            $logModel = new \App\Models\ProductAccessLogModel();
-            $logModel->recordEvent(0, 'pageview');
+            $leadLogModel = new \App\Models\LandingLeadAccessLogModel();
+            $leadLogModel->recordEvent('pageview');
             return $this->response->setJSON(['success' => true]);
         } catch (\Throwable $e) {
             log_message('error', 'Erro ao gravar visualização de página na rota leads/pageview: ' . $e->getMessage());

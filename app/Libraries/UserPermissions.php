@@ -85,10 +85,6 @@ class UserPermissions
                     'label' => 'Central de Trabalho',
                     'actions' => ['view', 'edit'],
                 ],
-                'realtime' => [
-                    'label' => 'Atualização em Tempo Real',
-                    'actions' => ['view', 'edit'],
-                ],
             ],
         ],
     ];

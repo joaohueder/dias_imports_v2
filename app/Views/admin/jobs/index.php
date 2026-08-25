@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="job-center-container" data-jobs-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
+<div class="job-center-container" data-jobs-module>
     <!-- Grid de Métricas / Cards de Status -->
     <div class="job-stats-grid">
         <div class="job-stat-card">
@@ -672,62 +672,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Reexecuta filtro atual se houver
         filterTable();
-    }
-
-    const jobsContainer = document.querySelector('[data-jobs-module]');
-    const isRealtimeActive = jobsContainer?.dataset.realtimeActive === '1';
-    const realtimeIntervalSec = parseInt(jobsContainer?.dataset.realtimeInterval, 10) || 5;
-    let isFetching = false;
-    let realtimeTimer = null;
-
-    async function fetchFeed() {
-        if (isFetching) return;
-        isFetching = true;
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4500);
-
-        try {
-            const res = await fetch('<?= site_url('central-trabalho/feed') ?>?_t=' + Date.now(), {
-                signal: controller.signal,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            });
-            clearTimeout(timeoutId);
-            if (!res.ok) return;
-            const data = await res.json();
-            if (data.success) {
-                if (data.stats) {
-                    const elP = document.getElementById('stat-pending');
-                    const elPr = document.getElementById('stat-processing');
-                    const elC = document.getElementById('stat-completed');
-                    const elF = document.getElementById('stat-failed');
-                    if (elP) elP.innerText = data.stats.pending;
-                    if (elPr) elPr.innerText = data.stats.processing;
-                    if (elC) elC.innerText = data.stats.completed;
-                    if (elF) elF.innerText = data.stats.failed;
-                }
-                if (data.items) {
-                    updateTableContent(data.items);
-                }
-                if (data.footerHtml) {
-                    const footerTelemetry = document.querySelector('[data-footer-telemetry]');
-                    if (footerTelemetry) {
-                        footerTelemetry.innerHTML = data.footerHtml;
-                    }
-                }
-            }
-        } catch (err) {
-            // Silencioso em caso de abort/offline
-        } finally {
-            isFetching = false;
-        }
-    }
-
-    if (isRealtimeActive && realtimeIntervalSec > 0) {
-        realtimeTimer = setInterval(fetchFeed, realtimeIntervalSec * 1000);
     }
 });
 </script>

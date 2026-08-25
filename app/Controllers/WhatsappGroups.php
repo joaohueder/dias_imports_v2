@@ -46,10 +46,6 @@ class WhatsappGroups extends BaseController
         $syncJob = $systemJobModel->getByKey('sync_whatsapp_groups');
         $isSyncJobActive = $syncJob && !empty($syncJob['is_active']);
 
-        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
-        $isRealtimeActive = $realtimeModel->isScreenActive('whatsapp_groups');
-        $realtimeInterval = $realtimeModel->getInterval('whatsapp_groups');
-
         return view('admin/groups/index', array_merge($data, [
             'pageTitle' => 'Grupos de WhatsApp',
             'pageDescription' => 'Gestão e sincronização dos grupos de WhatsApp da empresa.',
@@ -64,8 +60,6 @@ class WhatsappGroups extends BaseController
             'currentStatus' => $status,
             'searchQuery' => $search,
             'isSyncJobActive' => $isSyncJobActive,
-            'isRealtimeActive' => $isRealtimeActive,
-            'realtimeInterval' => $realtimeInterval,
         ]));
     }
 
@@ -73,30 +67,6 @@ class WhatsappGroups extends BaseController
     {
         $status = trim((string) ($this->request->getGet('status') ?? 'all'));
         $search = trim((string) ($this->request->getGet('q') ?? ''));
-
-        // Se for requisição padrão sem filtros, tenta obter o snapshot pré-processado
-        if ($status === 'all' && $search === '') {
-            $snapshotService = new \App\Services\RealtimeSnapshotService();
-            $snapshot = $snapshotService->getSnapshot('whatsapp_groups');
-
-            if ($snapshot !== null && !empty($snapshot['data'])) {
-                helper('telemetry');
-                $telemetry = get_footer_telemetry();
-
-                return $this->response->setJSON([
-                    'success' => true,
-                    'metrics' => $snapshot['data']['metrics'],
-                    'htmlCards' => $snapshot['data']['htmlCards'],
-                    'totalResults' => $snapshot['data']['totalResults'],
-                    'footerHtml' => $telemetry['html'],
-                    'telemetry' => [
-                        'connectionsLastHour' => $telemetry['connectionsLastHour'],
-                        'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
-                        'loadTime' => $telemetry['loadTime'],
-                    ],
-                ]);
-            }
-        }
 
         $data = $this->getGroupsData($status, $search);
 
@@ -110,11 +80,11 @@ class WhatsappGroups extends BaseController
             'metrics' => $data['metrics'],
             'htmlCards' => $htmlCards,
             'totalResults' => count($data['groups']),
-            'footerHtml' => $telemetry['html'],
+            'footerHtml' => $telemetry['html'] ?? null,
             'telemetry' => [
-                'connectionsLastHour' => $telemetry['connectionsLastHour'],
-                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
-                'loadTime' => $telemetry['loadTime'],
+                'connectionsLastHour' => $telemetry['connectionsLastHour'] ?? 0,
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'] ?? 500,
+                'loadTime' => $telemetry['loadTime'] ?? 0,
             ],
         ]);
     }

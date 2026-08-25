@@ -95,10 +95,6 @@ class Products extends BaseController
         $sendJob = (new \App\Models\SystemJobModel())->where('job_key', 'send_product_to_group')->first();
         $isSendJobActive = !empty($sendJob) && (int)$sendJob['is_active'] === 1;
 
-        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
-        $isRealtimeActive = $realtimeModel->isScreenActive('products');
-        $realtimeInterval = $realtimeModel->getInterval('products');
-
         $data = [
             'pageTitle' => 'Produtos',
             'pageDescription' => 'Gerencie os produtos e suas landing pages.',
@@ -107,8 +103,6 @@ class Products extends BaseController
             'activeGroups' => (new \App\Models\WhatsappGroupModel())->where('status', 'active')->orderBy('name', 'ASC')->findAll(),
             'messageTemplates' => (new \App\Models\MessageTemplateModel())->where('is_active', 1)->orderBy('name', 'ASC')->findAll(),
             'isSendJobActive' => $isSendJobActive,
-            'isRealtimeActive' => $isRealtimeActive,
-            'realtimeInterval' => $realtimeInterval,
         ];
 
         return $this->renderPage('admin/products/index', $data);
@@ -116,70 +110,45 @@ class Products extends BaseController
 
     public function feed(): \CodeIgniter\HTTP\ResponseInterface
     {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $snapshot = $snapshotService->getSnapshot('products');
+        $products = $this->productModel->orderBy('created_at', 'DESC')->findAll();
 
-        if ($snapshot !== null && !empty($snapshot['data'])) {
-            helper('telemetry');
-            $telemetry = get_footer_telemetry();
+        $statsModel = new \App\Models\ProductAccessStatModel();
+        $productIds = !empty($products) ? array_column($products, 'id') : [];
+        $statsByProduct = !empty($productIds) ? $statsModel->getAggregatedStatsForProducts($productIds) : [];
 
-            return $this->response->setJSON([
-                'success' => true,
-                'htmlCards' => $snapshot['data']['htmlCards'],
-                'totalResults' => $snapshot['data']['totalResults'],
-                'footerHtml' => $telemetry['html'],
-                'telemetry' => [
-                    'connectionsLastHour' => $telemetry['connectionsLastHour'],
-                    'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
-                    'loadTime' => $telemetry['loadTime'],
-                ],
-            ]);
+        $sendsByProduct = [];
+        if (!empty($productIds)) {
+            $db = \Config\Database::connect();
+            $sendCounts = $db->table('product_group_sends')
+                ->select('product_id, COUNT(id) as total_sends')
+                ->whereIn('product_id', $productIds)
+                ->groupBy('product_id')
+                ->get()
+                ->getResultArray();
+            foreach ($sendCounts as $row) {
+                $sendsByProduct[(int)$row['product_id']] = (int)$row['total_sends'];
+            }
         }
 
-        $products = $this->productModel->orderBy('created_at', 'DESC')->findAll();
-        
-        if (! empty($products)) {
-            $productIds = array_column($products, 'id');
-            $allImages = $this->productImageModel
-                ->whereIn('product_id', $productIds)
-                ->orderBy('is_cover', 'DESC')
-                ->orderBy('sort_order', 'ASC')
-                ->findAll();
-
-            $imagesByProduct = [];
-            foreach ($allImages as $img) {
-                $imagesByProduct[$img->product_id][] = $img;
-            }
-
-            $accessLogModel = new ProductAccessLogModel();
-            $batchStats = $accessLogModel->getBatchProductMetrics($productIds);
-
-            $jobQueueModel = new \App\Models\SystemJobQueueModel();
-            $sendsRows = $jobQueueModel->select("payload, COUNT(*) as cnt")
-                ->where('job_key', 'send_product_to_group')
-                ->groupBy('payload')
-                ->findAll();
-
-            $sendsByProduct = [];
-            foreach ($sendsRows as $sr) {
-                $pData = json_decode($sr['payload'] ?? '', true);
-                if (!empty($pData['product_id'])) {
-                    $pid = (int)$pData['product_id'];
-                    $sendsByProduct[$pid] = ($sendsByProduct[$pid] ?? 0) + (int)$sr['cnt'];
-                }
-            }
-
+        if (!empty($products)) {
             foreach ($products as $product) {
-                $product->images = $imagesByProduct[$product->id] ?? [];
-                $stat = $batchStats[$product->id] ?? ['pageviews' => 0, 'clicks' => 0, 'conversionRate' => 0];
-                $product->pageviews = $stat['pageviews'];
-                $product->clicks = $stat['clicks'];
+                $stat = $statsByProduct[$product->id] ?? [
+                    'uniqueVisitors' => 0,
+                    'totalViews' => 0,
+                    'ctaClicks' => 0,
+                    'conversionRate' => 0.0,
+                ];
+                $product->uniqueVisitors = $stat['uniqueVisitors'];
+                $product->totalViews = $stat['totalViews'];
+                $product->ctaClicks = $stat['ctaClicks'];
                 $product->conversionRate = $stat['conversionRate'];
                 $product->sendsCount = $sendsByProduct[$product->id] ?? 0;
             }
         }
 
-        $htmlCards = view('admin/products/_cards', ['products' => $products]);
+        $htmlCards = view('admin/products/_cards_grid', [
+            'products' => $products,
+        ]);
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();
@@ -188,11 +157,11 @@ class Products extends BaseController
             'success' => true,
             'htmlCards' => $htmlCards,
             'totalResults' => count($products),
-            'footerHtml' => $telemetry['html'],
+            'footerHtml' => $telemetry['html'] ?? null,
             'telemetry' => [
-                'connectionsLastHour' => $telemetry['connectionsLastHour'],
-                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
-                'loadTime' => $telemetry['loadTime'],
+                'connectionsLastHour' => $telemetry['connectionsLastHour'] ?? 0,
+                'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'] ?? 500,
+                'loadTime' => $telemetry['loadTime'] ?? 0,
             ],
         ]);
     }

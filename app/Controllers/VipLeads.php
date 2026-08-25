@@ -41,10 +41,6 @@ class VipLeads extends BaseController
         $firstName = trim(explode(' ', $userName)[0] ?? 'Usuário');
         $userInitials = $this->extractInitials($userName);
 
-        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
-        $isRealtimeActive = $realtimeModel->isScreenActive('vip_leads');
-        $realtimeInterval = $realtimeModel->getInterval('vip_leads');
-
         return view('admin/leads/index', array_merge($data, [
             'pageTitle' => 'Leads VIP',
             'pageDescription' => 'Gestão e acompanhamento dos contatos captados pela Landing Page de Leads.',
@@ -52,8 +48,6 @@ class VipLeads extends BaseController
             'activePage' => 'vip',
             'layoutMaxWidth' => $layoutMaxWidth,
             'hasLeadsJs' => true,
-            'isRealtimeActive' => $isRealtimeActive,
-            'realtimeInterval' => $realtimeInterval,
             'userName' => $userName,
             'userEmail' => $userEmail,
             'firstName' => $firstName,
@@ -74,31 +68,6 @@ class VipLeads extends BaseController
 
         $search = trim((string) ($this->request->getGet('q') ?? ''));
         $dateFilter = trim((string) ($this->request->getGet('date') ?? ''));
-
-        // Se for a consulta padrão (7 dias, sem filtro e sem busca), usa snapshot pré-processado
-        if ($days === 7 && $search === '' && $dateFilter === '') {
-            $snapshotService = new \App\Services\RealtimeSnapshotService();
-            $snapshot = $snapshotService->getSnapshot('vip_leads');
-
-            if ($snapshot !== null && !empty($snapshot['data'])) {
-                helper('telemetry');
-                $telemetry = get_footer_telemetry();
-
-                return $this->response->setJSON([
-                    'success' => true,
-                    'metrics' => $snapshot['data']['metrics'],
-                    'htmlTable' => $snapshot['data']['htmlTable'],
-                    'htmlMetrics' => $snapshot['data']['htmlMetrics'],
-                    'totalResults' => $snapshot['data']['totalResults'],
-                    'footerHtml' => $telemetry['html'],
-                    'telemetry' => [
-                        'connectionsLastHour' => $telemetry['connectionsLastHour'],
-                        'maxConnectionsPerHour' => $telemetry['maxConnectionsPerHour'],
-                        'loadTime' => $telemetry['loadTime'],
-                    ],
-                ]);
-            }
-        }
 
         $data = $this->getLeadsData($days, $search, $dateFilter);
 

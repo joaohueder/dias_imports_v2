@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="leads-module-wrap" data-leads-module data-realtime-active="<?= !empty($isRealtimeActive) ? '1' : '0' ?>" data-realtime-interval="<?= esc((string) ($realtimeInterval ?? 5)) ?>">
+<div class="leads-module-wrap" data-leads-module>
 
     <!-- Dashboard de Métricas -->
     <section class="leads-dashboard-section" data-dashboard-container aria-label="Dashboard de Leads">

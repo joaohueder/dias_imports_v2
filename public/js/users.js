@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const usersModule = document.querySelector('[data-users-module]');
     if (!usersModule) return;
 
-    const isRealtimeActive = usersModule.getAttribute('data-realtime-active') === '1';
-    const realtimeInterval = parseInt(usersModule.getAttribute('data-realtime-interval'), 10) || 5;
     const usersGrid = usersModule.querySelector('[data-users-grid]');
     const footerTelemetry = document.querySelector('[data-footer-telemetry]');
     
@@ -14,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillAdmin = document.querySelector('.filter-pill[data-filter="admin"] .pill-badge');
 
     let abortController = null;
-    let pollingTimer = null;
 
     const fetchUsersFeed = async () => {
         if (abortController) {
@@ -67,10 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error.name !== 'AbortError') {
                 console.error('Error fetching users feed:', error);
             }
-        } finally {
-            if (isRealtimeActive) {
-                pollingTimer = setTimeout(fetchUsersFeed, realtimeInterval * 1000);
-            }
         }
     };
 
@@ -109,13 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    if (isRealtimeActive) {
-        pollingTimer = setTimeout(fetchUsersFeed, realtimeInterval * 1000);
-    }
-
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
-        if (pollingTimer) clearTimeout(pollingTimer);
         if (abortController) abortController.abort();
     });
 });

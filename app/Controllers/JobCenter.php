@@ -50,16 +50,10 @@ class JobCenter extends BaseController
         $userInitials = mb_strtoupper(mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1));
         $layoutMaxWidth = $this->getLayoutMaxWidth();
 
-        $realtimeModel = new \App\Models\RealtimeScreenSettingModel();
-        $isRealtimeActive = $realtimeModel->isScreenActive('job_center');
-        $realtimeInterval = $realtimeModel->getInterval('job_center');
-
         $data = array_merge([
             'activePage' => $activePage,
             'layoutMaxWidth' => $layoutMaxWidth,
             'navigation' => Home::NAVIGATION,
-            'isRealtimeActive' => $isRealtimeActive,
-            'realtimeInterval' => $realtimeInterval,
             'pageDescription' => $item['description'],
             'pageIcon' => $item['icon'],
             'pageTitle' => $item['label'],
@@ -73,18 +67,10 @@ class JobCenter extends BaseController
 
     public function feed(): ResponseInterface
     {
-        $snapshotService = new \App\Services\RealtimeSnapshotService();
-        $snapshot = $snapshotService->getSnapshot('job_center');
-
-        if ($snapshot !== null && !empty($snapshot['data'])) {
-            $stats = $snapshot['data']['stats'];
-            $queueItems = $snapshot['data']['items'];
-        } else {
-            $stats = $this->queueModel->getQueueStats();
-            $queueItems = $this->queueModel
-                ->orderBy('id', 'DESC')
-                ->findAll(100);
-        }
+        $stats = $this->queueModel->getQueueStats();
+        $queueItems = $this->queueModel
+            ->orderBy('id', 'DESC')
+            ->findAll(100);
 
         helper('telemetry');
         $telemetry = get_footer_telemetry();

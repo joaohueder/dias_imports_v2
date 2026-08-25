@@ -40,10 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPeriod = parseInt(initialActivePeriodBtn.dataset.periodBtn, 10) || 7;
     }
 
-    const isRealtimeActive = leadsContainer?.dataset.realtimeActive === '1';
-    const realtimeIntervalSec = parseInt(leadsContainer?.dataset.realtimeInterval, 10) || 5;
     let isFetching = false;
-    let realtimeTimer = null;
 
     const maskPhoneInput = (input) => {
         if (!input) return;
@@ -342,8 +339,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     bindPeriodButtons();
-
-    if (isRealtimeActive && realtimeIntervalSec > 0) {
-        realtimeTimer = setInterval(fetchLeads, realtimeIntervalSec * 1000);
-    }
 });

@@ -10,18 +10,7 @@ $presets = [
 $isFluid = $layoutMaxWidth === 'fluid';
 $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
 ?>
-<section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>"
-    data-realtime-feed-url="<?= site_url('configuracoes/tempo-real/feed') ?>"
-    data-company-feed-url="<?= site_url('configuracoes/empresa/feed') ?>"
-    data-templates-feed-url="<?= site_url('configuracoes/modelos-mensagens/feed') ?>"
-    data-rt-company-active="<?= !empty($realtimeScreenSettings['settings_company']['active']) ? '1' : '0' ?>"
-    data-rt-company-interval="<?= esc((string) ($realtimeScreenSettings['settings_company']['interval'] ?? 5)) ?>"
-    data-rt-evolution-active="<?= !empty($realtimeScreenSettings['settings_evolution']['active']) ? '1' : '0' ?>"
-    data-rt-evolution-interval="<?= esc((string) ($realtimeScreenSettings['settings_evolution']['interval'] ?? 5)) ?>"
-    data-rt-templates-active="<?= !empty($realtimeScreenSettings['settings_templates']['active']) ? '1' : '0' ?>"
-    data-rt-templates-interval="<?= esc((string) ($realtimeScreenSettings['settings_templates']['interval'] ?? 5)) ?>"
-    data-rt-realtime-active="1"
-    data-rt-realtime-interval="<?= esc((string) ($realtimeSleepSeconds ?? 5)) ?>">
+<section class="settings-panel" data-layout-settings data-settings-root data-saved-width="<?= esc($layoutMaxWidth) ?>" data-active-tab="<?= esc($activeSettingsTab) ?>" data-instance-status-url="<?= site_url('configuracoes/evolution/instancias/status') ?>">
     <div class="settings-layout">
         <aside class="settings-sidebar">
             <nav class="settings-tabs" role="tablist" aria-label="Categorias de configurações">
@@ -59,12 +48,6 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     <button class="settings-tab <?= $activeSettingsTab === 'central-trabalho' ? 'active' : '' ?>" type="button" role="tab" id="central-trabalho-tab" aria-selected="<?= $activeSettingsTab === 'central-trabalho' ? 'true' : 'false' ?>" aria-controls="central-trabalho-panel" data-settings-tab="central-trabalho">
                         <i class="ti ti-briefcase" aria-hidden="true"></i>
                         <span>Central de Trabalho</span>
-                    </button>
-                <?php endif; ?>
-                <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'view')): ?>
-                    <button class="settings-tab <?= $activeSettingsTab === 'tempo-real' ? 'active' : '' ?>" type="button" role="tab" id="realtime-tab" aria-selected="<?= $activeSettingsTab === 'tempo-real' ? 'true' : 'false' ?>" aria-controls="realtime-panel" data-settings-tab="tempo-real">
-                        <i class="ti ti-refresh" aria-hidden="true"></i>
-                        <span>Atualização em Tempo Real</span>
                     </button>
                 <?php endif; ?>
             </nav>
@@ -505,79 +488,6 @@ $sliderValue = $isFluid ? 1800 : (int) $layoutMaxWidth;
                     </form>
                 <?php endforeach; ?>
             </div>
-        <?php endif; ?>
-    </div>
-    <?php endif; ?>
-
-    <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'view')): ?>
-    <div class="settings-tab-panel realtime-panel" id="realtime-panel" role="tabpanel" aria-labelledby="realtime-tab" data-settings-panel="tempo-real" <?= $activeSettingsTab !== 'tempo-real' ? 'hidden' : '' ?>>
-        <div class="setting-intro">
-            <h2>Atualização em Tempo Real</h2>
-            <p>Configure quais telas do sistema devem ser atualizadas automaticamente em tempo real e o intervalo em segundos para cada tela.</p>
-        </div>
-
-        <div data-realtime-dashboard-container>
-            <?= view('admin/settings/_realtime_dashboard', [
-                'realtimeWorkerStatus' => $realtimeWorkerStatus ?? [],
-            ]) ?>
-        </div>
-
-        <?php if (empty($realtimeScreens)): ?>
-            <div class="empty-state">
-                <i class="ti ti-refresh" aria-hidden="true"></i>
-                <p>Nenhuma tela configurada para atualização em tempo real.</p>
-            </div>
-        <?php else: ?>
-            <form action="<?= site_url('configuracoes/tempo-real') ?>" method="post" data-dirty-form>
-                <?= csrf_field() ?>
-
-                <div class="webcron-card" style="margin-bottom: 16px; padding: 16px 20px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-                        <div>
-                            <h3 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: rgb(var(--foreground));">
-                                <i class="ti ti-clock-pause" style="margin-right: 6px; color: #8b7cff;"></i>
-                                Intervalo Global de Execução do Worker Realtime
-                            </h3>
-                            <p style="margin: 0; font-size: 12px; color: rgb(var(--muted));">
-                                Tempo de pausa (sleep) entre cada ciclo de processamento do <code style="color: #8b7cff;">cron-realtime.php</code>. Todas as telas ativas sincronizam automaticamente neste mesmo intervalo.
-                            </p>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <label for="realtime_sleep_seconds" style="font-size: 13px; font-weight: 500; color: rgb(var(--foreground)); white-space: nowrap; margin: 0;">Pausa / Sleep (segundos):</label>
-                            <input type="number" id="realtime_sleep_seconds" name="realtime_sleep_seconds" value="<?= esc((string) ($realtimeSleepSeconds ?? 5)) ?>" min="1" max="60" required style="width: 80px; padding: 6px 10px; font-size: 14px; font-weight: 600; text-align: center; border-radius: 6px; border: 1px solid var(--border-color, #334155); background: var(--bg-card, #1e293b); color: rgb(var(--foreground));" <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="jobs-list" style="gap: 8px;">
-                    <?php foreach ($realtimeScreens as $screen): ?>
-                        <div class="job-settings-card" style="padding: 14px 20px; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin: 0; width: 100%; gap: 16px; flex-wrap: wrap;">
-                            <div class="job-card-title" style="margin: 0; flex: 1; min-width: 200px;">
-                                <h3 style="margin: 0; font-size: 14px; font-weight: 500; text-align: left; color: rgb(var(--foreground));"><?= esc($screen['screen_name']) ?></h3>
-                            </div>
-                            <div style="display: flex; align-items: center;">
-                                <div class="job-card-toggle" style="margin: 0; display: flex; align-items: center;">
-                                    <label class="toggle-switch" title="<?= $screen['is_active'] ? 'Atualização ativa' : 'Atualização inativa' ?>" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
-                                        <input type="checkbox" name="screens[<?= $screen['id'] ?>][is_active]" value="1" <?= $screen['is_active'] ? 'checked' : '' ?> <?= !\App\Libraries\UserPermissions::hasPermission('realtime', 'edit') ? 'disabled' : '' ?>>
-                                        <span class="toggle-slider"></span>
-                                        <span class="toggle-label-text" style="font-size: 13px; color: rgb(var(--foreground));"><?= $screen['is_active'] ? 'Ativo' : 'Inativo' ?></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <?php if (\App\Libraries\UserPermissions::hasPermission('realtime', 'edit')): ?>
-                <div class="save-bar" data-form-save-bar hidden>
-                    <p><strong>Alterações não salvas</strong><span>Salve para aplicar as novas configurações de atualização em tempo real.</span></p>
-                    <div class="save-actions">
-                        <button class="button secondary" type="button" data-cancel-form>Cancelar</button>
-                        <button class="button primary" type="submit"><i class="ti ti-device-floppy" aria-hidden="true"></i>Salvar Alterações</button>
-                    </div>
-                </div>
-                <?php endif; ?>
-            </form>
         <?php endif; ?>
     </div>
     <?php endif; ?>
